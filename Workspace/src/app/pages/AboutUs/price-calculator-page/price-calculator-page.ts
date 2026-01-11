@@ -28,21 +28,12 @@ export class PriceCalculatorPage implements OnInit {
   ngOnInit(): void {
     this.cargarPrecios();
   }
+
   cargarPrecios() {
-    this.priceS.getPrices().subscribe({
-      next: (data) => {
-        this.priceS.Prices = data;
-      },
-      error: (error) => {
-        console.error('Error al cargar los precios:', error);
-      }
-    });
+    
   }
 
   calcularPrecio() {
-    if (this.calculatorForm.valid) {
-      const { pages, copies, isDoubleSided, binding, isColor } = this.calculatorForm.value;
-      this.calculatedPrice = this.priceS.calculatePrice(pages, copies, isDoubleSided, binding, isColor);
-    }
+    
   }
 }

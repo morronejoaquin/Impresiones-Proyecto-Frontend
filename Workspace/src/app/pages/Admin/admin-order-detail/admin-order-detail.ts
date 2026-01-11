@@ -24,21 +24,7 @@ export class AdminOrderDetailPage implements OnInit {
   total = signal<number>(0);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-
-    forkJoin({
-      cart: this.cartsApi.getCartById(id),          
-      items: this.ordersApi.getOrdersFromCart(id)    
-    }).subscribe({
-      next: ({ cart, items }) => {
-        this.cart.set(cart);
-        this.items.set(items);
-        this.total.set(
-          items.reduce((acc, it) => acc + (Number(it.amount || 0) * Number(it.copies || 1)), 0)
-        );
-      },
-      error: (e) => console.error('No se pudo cargar el pedido', e)
-    });
+    
   }
 
   fileName(file: any): string {

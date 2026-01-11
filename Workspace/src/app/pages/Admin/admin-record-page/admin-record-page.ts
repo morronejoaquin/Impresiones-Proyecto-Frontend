@@ -23,12 +23,7 @@ export class AdminRecordPage {
   }
 
   loadCompletedCarts(): void {
-    this.cartService.getDeliveredCartsWithDetails().subscribe({
-      next: (cartsWithItems) => {
-        this.carts = cartsWithItems;
-      },
-      error: (err) => console.error('Error al cargar pedidos:', err)
-    });
+    
   }
 
   goToDetail(cart: CartWithItems){

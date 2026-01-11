@@ -31,38 +31,14 @@ export class ShowCartPage implements OnInit {
     }
   
     // Usamos getOrCreateActiveCart para asegurar que el usuario siempre tenga un carrito "pending"
-    this.cartService.getOrCreateActiveCart(userId).pipe(
-        switchMap(cart => {
-          this.currentCartId = cart.id;
-            return this.orderService.getOrdersFromCart(cart.id);
-        })
-    ).subscribe({
-        next: (orders) => {
-            this.orders = orders;
-            this.cartTotal = this.orderService.calculateTotal(this.orders);
-        },
-        error: (err) => {
-            console.error('Error fetching orders or cart:', err);
-            this.orders = [];
-            this.cartTotal = 0;
-        }
-    });
+    
   }
 
   updateCartTotal() {
-    this.cartTotal = this.orderService.calculateTotal(this.orders);
   }
 
   removeItem(orderId: string) {
-    this.orderService.deleteOrderFromCart(orderId).subscribe({
-      next: () => {
-        this.orders = this.orders.filter(order => order.id !== orderId);
-        this.updateCartTotal();
-      },
-      error: (err) => {
-        console.error('Error removing item from cart:', err);
-      }
-    });
+    
   }
 
   editItem(orderId: string) {
@@ -70,22 +46,7 @@ export class ShowCartPage implements OnInit {
   }
 
   clearCart() {
-    const userId = this.userService.getDecodedUserPayload()?.userId;
-  
-    if (!userId) {
-      console.error('No se encontró userId en el payload');
-      return;
-    }
-  
-    this.cartService.clearOrdersInCart(this.currentCartId).subscribe({
-      next: () => {
-            this.orders = [];
-            this.cartTotal = 0;
-          },
-        error: (e) => {
-            console.error('Error al vaciar el carrito:', e);
-        }
-    })
+    
   }
 
   proceedToPayment() {
