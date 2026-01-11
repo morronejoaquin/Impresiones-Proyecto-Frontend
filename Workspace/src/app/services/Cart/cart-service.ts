@@ -50,7 +50,7 @@ export class CartService {
   }
 
   getCartById(id: string) {
-    return this.http.get<Cart>(`http://localhost:3000/carts/${id}`);
+    return this.http.get<Cart>(`http://localhost:8080/carts/${id}`);
   }
 
 }

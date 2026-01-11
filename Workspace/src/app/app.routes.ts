@@ -9,7 +9,6 @@ import { UserRegisterPage } from './pages/Users/user-register-page/user-register
 import { AccountPage } from './pages/Users/account-page/account-page';
 import { UserEditPage } from './pages/Users/user-edit-page/user-edit-page';
 import { permissionGuard } from './guards/permission-guard';
-import { EditOrderPage } from './pages/Orders/edit-order-page/edit-order-page';
 import { CartPaymentPage } from './pages/Cart/cart-payment-page/cart-payment-page';
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
 
@@ -40,8 +39,6 @@ export const routes: Routes = [
   {
     path: 'make-order',
     component: MakeOrderPage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
   },
   {
     path: 'make-order/:orderId',
@@ -52,8 +49,6 @@ export const routes: Routes = [
   {
     path: 'cart',
     component: ShowCartPage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
   },
   {
     path: 'cart-payment',
@@ -74,11 +69,6 @@ export const routes: Routes = [
     data: { allowedRoles: ['guest', 'registered', 'admin'] }
   },
   {
-    path: 'edit-order/:orderId',
-    component: EditOrderPage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
-  }, {
     path: 'admin',
     loadComponent: () =>
       import('./pages/Admin/admin-page/admin-page').then(m => m.AdminPage),

@@ -1,4 +1,4 @@
-export default interface OrderItemCreateReques{
+export default interface OrderItemCreateRequest{
   isColor: boolean;
   isDoubleSided: boolean;
   binding: 'ringed' | 'stapled' | 'unringed';

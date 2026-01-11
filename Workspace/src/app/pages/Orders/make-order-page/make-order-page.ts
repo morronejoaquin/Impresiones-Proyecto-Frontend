@@ -9,6 +9,7 @@ import { UserService } from '../../../services/Users/user-service';
 import Cart from '../../../models/Cart/cart';
 import { OrderService } from '../../../services/Orders/order-service';
 import { NotificationService } from '../../../services/Notification/notification-service';
+import OrderItemCreateRequest from '../../../models/OrderItem/orderItemCreateRequest';
 
 GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf.worker.min.mjs';
@@ -33,6 +34,8 @@ export class MakeOrderPage implements OnInit{
   orderItemService: any;
   public editingOrderId: string | null = null;
 
+  readonly FILE_BASE_PATH = 'C:/print-files/'
+
 constructor(
     private zone: NgZone,
     private cartService: CartService,
@@ -48,13 +51,14 @@ constructor(
       pages: [1, [Validators.required, Validators.min(1)]],
       copies: [1, [Validators.required, Validators.min(1)]],
       isDoubleSided: [false],
-      binding: ['unringed', [Validators.required]],
+      binding: ['UNRINGED', [Validators.required]],
       isColor: [false],
       comments: [''],
       file: [null],
       amount: [0]
     });
   }
+
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -94,6 +98,7 @@ constructor(
       console.log('Tipo de archivo no soportado');
     }
   }
+
 
   async countPdfPages(file: File) {
     try {
@@ -135,6 +140,7 @@ constructor(
     return this.selectedFile ? this.selectedFile.size : null;
   }
 
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const orderId = params.get('orderId');
@@ -150,6 +156,7 @@ constructor(
     });
     this.calcularPrecio();
   }
+
 
   private loadOrderForEditing(orderId: string): void {
     this.orderService.getOrderById(orderId).subscribe({
@@ -185,6 +192,7 @@ constructor(
     });
   }
 
+
   calcularPrecio() {
     if (this.orderForm.valid) {
       const { pages, copies, isDoubleSided, binding, isColor } = this.orderForm.value;
@@ -192,82 +200,105 @@ constructor(
     }
   }
 
+
   addToCart() {
-    if (this.editingOrderId) {
-      this.updateOrderItem();
+    if ((!this.selectedFile && !this.editingOrderId) || !this.orderForm.valid) {
+      this.notificationService.error('Selecciona un archivo y completa todos los campos.');
+      return;
+    }
+    
+    const currentUser = this.userService.getDecodedUserPayload();
+    const userId = currentUser?.userId;
+
+    if (userId) {
+      this.cartService.getCartByUserId(userId).subscribe({
+        next: (carts) => {
+          if (carts.length > 0) {
+            this.createOrderItem(carts[0].id);
+          } else {
+            const newCart: Cart = {
+              userId,
+              total: 0,
+              status: 'pending'
+            } as Cart;
+
+            this.cartService.postCart(newCart).subscribe({
+              next: (createdCart) => {
+                this.createOrderItem(createdCart.id);
+              },
+              error: () => this.notificationService.error('Error creando el carrito')
+            });
+          }
+        },
+        error: () => this.notificationService.error('Error obteniendo carrito')
+      });
+
       return;
     }
 
-  if ((!this.selectedFile && !this.editingOrderId) || !this.orderForm.valid) {
-    this.notificationService.error('Selecciona un archivo y completa todos los campos.');
-    return;
-  }
-  const currentUser = this.userService.getDecodedUserPayload();
-  if (!currentUser) {
-    this.notificationService.info('Debes iniciar sesión para agregar productos al carrito.');
-    return;
-  }
+    
+    const storedCartId = localStorage.getItem('cartId');
 
-  const userId = currentUser.userId;
+    if (storedCartId) {
+      this.createOrderItem(storedCartId);
+      return;
+    }
 
-  this.cartService.getCartByUserId(userId).subscribe({
-    next: (carts) => {
-      if (Array.isArray(carts) && carts.length > 0) {
-        this.createOrderItem(carts[0].id);//aca es en la posicion cero pq siempre es un carrito por
-      } else {
-        const newCart: Partial<Cart> = {
-          userId: userId,
-          total: 0,
-          status: 'pending'
-        };
+    const guestCart: Cart = {
+      total: 0,
+      status: 'pending'
+    } as Cart;
 
-        this.cartService.postCart(newCart as Cart).subscribe({//aca le agrega el carrito al usuario
-          next: (createdCart) => {
-            this.createOrderItem(createdCart.id);
-          },
-          error: (err) => console.error('Error creando carrito:', err)
-        });
-      }
-    },
-    error: (err) => console.error('Error obteniendo carrito:', err)
-  });
+    this.cartService.postCart(guestCart).subscribe({
+      next: (createdCart) => {
+        localStorage.setItem('cartId', createdCart.id);
+        this.createOrderItem(createdCart.id);
+      },
+      error: () => this.notificationService.error('Error creando carrito de invitado')
+    });
 }
 
 
 private createOrderItem(cartId: string) {
   const f = this.orderForm.value;
-  const orderItem = {
-    ...f,
-    cartId: cartId,
-    file: this.selectedFileName,
-    amount: this.calculatedPrice,
+  const orderItemCreateRequest: OrderItemCreateRequest = {
+    isColor: f.isColor,
+    isDoubleSided: f.isDoubleSided,
+    binding: f.binding.toLowerCase() as any,
+    pages: this.isPdf ? f.pages : this.pageCount!,
+    comments: f.comments,
+    file: this.FILE_BASE_PATH + this.selectedFileName,
+    copies: f.copies,
+    amount: this.calculatedPrice!,
+    imageWidth: this.isImage ? this.imageWidth! : undefined,
+    imageHeight: this.isImage ? this.imageHeight! : undefined
   };
 
-  if (!this.isPdf) {
-    delete orderItem.pages;
-  }
-
-  this.orderService.postOrderToCart(orderItem).subscribe({
+  
+  this.orderService.postOrderToCart(cartId, orderItemCreateRequest).subscribe({
     next: () => {
       this.notificationService.success('Archivo agregado al carrito');
-
-      setTimeout(() => {
-        this.selectedFile = null;
-        this.selectedFileName = 'Selecciona un archivo';
-        this.orderForm.reset({
-          pages: 1,
-          copies: 1,
-          isDoubleSided: false,
-          binding: 'unringed', 
-          isColor: false,
-          comments: ''
-        });
-        this.calculatedPrice = null;
-      }, 500);
+      this.resetForm();
     },
     error: (err: any) => console.error('Error agregando item:', err)
   });
 }
+
+
+private resetForm() {
+  this.selectedFile = null;
+  this.selectedFileName = 'Selecciona un archivo';
+  this.orderForm.reset({
+    pages: 1,
+    copies: 1,
+    isDoubleSided: false,
+    binding: 'UNRINGED',
+    isColor: false,
+    comments: ''
+  });
+  this.calculatedPrice = null;
+}
+
 
 private updateOrderItem(): void {
   if (!this.editingOrderId) return;
