@@ -1,25 +1,85 @@
-@if(orders && orders.length > 0){
-  @for (item of orders; track item.id) {
-    <div class="cart-item">
-      <div class="item-details">
-        <div class="item-name">Archivo: {{ item.file }}</div>
-        <div class="item-quantity">Cantidad: {{ item.copies }}</div>
-        <div class="item-price">Precio: {{ item.amount | number:'1.2-2' }}</div>
-        <div class="item-iscolor">Color: {{ item.isColor ? 'Sí' : 'No' }}</div>
+<div class="cart-container">
+  <h2>Mi Carrito</h2>
+
+  @if(isLoading) {
+    <div class="loading-message">
+      <p>Cargando carrito...</p>
+    </div>
+  }
+
+  @if(errorMessage && !isLoading) {
+    <div class="error-message">
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="btn-retry" (click)="loadCart()">Reintentar</button>
+    </div>
+  }
+
+  @if(!isLoading && !errorMessage && orders && orders.length > 0) {
+    <div class="cart-items">
+      @for (item of orders; track item.id) {
+        <div class="cart-item">
+          <div class="item-details">
+            <div class="item-header">
+              <h3 class="item-name">{{ item.fileName }}</h3>
+              <span class="item-price">${{ item.amount | number:'1.2-2' }}</span>
+            </div>
+            
+            <div class="item-options">
+              <div class="option-row">
+                <span class="option-label">Páginas:</span>
+                <span class="option-value">{{ item.pages }}</span>
+              </div>
+              <div class="option-row">
+                <span class="option-label">Copias:</span>
+                <span class="option-value">{{ item.copies }}</span>
+              </div>
+              <div class="option-row">
+                <span class="option-label">Color:</span>
+                <span class="option-value">{{ item.color ? 'Sí' : 'No' }}</span>
+              </div>
+              <div class="option-row">
+                <span class="option-label">Doble faz:</span>
+                <span class="option-value">{{ item.doubleSided ? 'Sí' : 'No' }}</span>
+              </div>
+              @if(item.binding) {
+                <div class="option-row">
+                  <span class="option-label">Anillado:</span>
+                  <span class="option-value">{{ getBindingText(item.binding) }}</span>
+                </div>
+              }
+              @if(item.comments) {
+                <div class="option-row">
+                  <span class="option-label">Comentarios:</span>
+                  <span class="option-value">{{ item.comments }}</span>
+                </div>
+              }
+            </div>
+          </div>
+          
+          <div class="item-actions">
+            <button type="button" (click)="editItem(item.id)" class="btn-edit">Editar</button>
+            <button type="button" (click)="confirmAndRemoveItem(item.id)" class="btn-delete">Eliminar</button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="cart-summary">
+      <div class="cart-total">
+        <h3>Total del Carrito: ${{ cartTotal | number:'1.2-2' }}</h3>
       </div>
-      <div class="item-actions">
-        <button type="button" (click)="editItem(item.id)" class="btn-edit">Editar</button>
-        <button type="button" (click)="confirmAndRemoveItem(item.id)" class="btn-delete">Eliminar</button>
+      <div class="cart-actions">
+        <button type="button" class="btn-proceed" (click)="proceedToPayment()">Proceder al pago</button>
       </div>
     </div>
   }
-  <div class="cart-total">
-    <h3>Total del Carrito: ${{ cartTotal | number:'1.2-2' }}</h3>
-  </div>
-  <div class="cart-actions">
-    <button type="button" class="btn-clear" (click)="confirmAndClearCart()">Vaciar carrito</button>
-    <button type="button" class="btn-proceed" (click)="proceedToPayment()">Proceder al pago</button>
-  </div>
- }@else{
-  <p class="empty-cart-message">El carrito está vacío.</p>
-}
+
+  @if(!isLoading && !errorMessage && (!orders || orders.length === 0)) {
+    <div class="empty-cart">
+      <div class="empty-cart-icon">🛒</div>
+      <p class="empty-cart-message">Tu carrito está vacío.</p>
+      <p class="empty-cart-subtitle">Agrega pedidos para comenzar tu compra.</p>
+      <button type="button" class="btn-go-to-order" (click)="goToOrder()">Ir a realizar pedido</button>
+    </div>
+  }
+</div>

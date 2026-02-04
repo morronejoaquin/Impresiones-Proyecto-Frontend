@@ -29,15 +29,15 @@ export class PriceManagerService {
     });
   }
 
-  calculatePrice(pages: number,copies: number,isDoubleSided: boolean, binding: 'ringed' | 'stapled' | null , isColor: boolean): number {
+  calculatePrice(pages: number,copies: number, doubleSided: boolean, binding: 'ringed' | 'stapled' | null , color: boolean): number {
     const priceData = this.Prices[0];
     if (!priceData) return 0;
 
-    let pricePerPage = isColor
+    let pricePerPage = color
       ? priceData.pricePerSheetColor
       : priceData.pricePerSheetBW;
 
-    if (isDoubleSided) pages = Math.ceil(pages / 2);
+    if (doubleSided) pages = Math.ceil(pages / 2);
 
     let bindingCost = 0;
     if (binding === 'ringed') bindingCost = priceData.priceRingedBinding;

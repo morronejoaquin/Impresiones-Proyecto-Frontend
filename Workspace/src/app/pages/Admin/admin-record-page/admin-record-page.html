@@ -1,50 +1,45 @@
-
-
 <div class="admin-record">
 
   <div class="record-header">
-  <a routerLink="/admin" class="back">← Volver</a>
-</div>
+    <a routerLink="/admin" class="back">← Volver</a>
+  </div>
 
   @if (carts.length === 0) {
-    <p>No hay pedidos entregados</p>
+  <p>No hay pedidos entregados</p>
   } @else {
-    <div class="carts">
-      @for (cart of carts; track cart.id) {
-        <div class="cart" (click)="goToDetail(cart)">
+  <div class="carts">
+    @for (cart of carts; track cart.id) {
+    <div class="cart" (click)="goToDetail(cart)">
 
-          <div class="cart-header">
-            <div class="cart-status">
-              <span>Entregado</span>
-            </div>
-
-            <div class="cart-fecha">
-              <span class="fecha-label">Entregado:</span>
-              <span class="fecha-value">
-                {{ cart.deliveredAt ? (cart.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}
-              </span>
-            </div>
-          </div>
-
-          <div class="cart-resumen">
-            <p>Cliente:</p>
-            <p>{{ cart.customer?.name }} {{ cart.customer?.surname }}</p>
-          </div>
-
-          <div class="cart-archivos">
-            <p>Archivos:</p>
-            <p>{{ cart.fileSummary }}</p>
-            <p>{{ cart.orderItems.length }} items en total</p>
-          </div>
-
-          <div class="cart-total">
-            <p>Total:</p>
-            <p>${{ cart.total | number:'1.2-2' }}</p>
-          </div>
-
+      <div class="cart-header">
+        <div class="cart-status">
+          <span>Entregado</span>
         </div>
-      }
+
+        <div class="cart-fecha">
+          <span class="fecha-label">Entregado:</span>
+          <span class="fecha-value">
+            {{ cart.deliveredAt ? (cart.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="cart-resumen">
+        <p>Cliente:</p>
+        <p>{{ cart.customer?.name }} {{ cart.customer?.surname }}</p>
+      </div>
+
+      <div class="cart-archivos">
+        <p>Archivos:</p>
+        <p>{{ cart.fileSummary }}</p>
+        <p>{{ cart.items.length }} items en total</p>
+        <p>Total:</p>
+        <p>${{ cart.total | number:'1.2-2' }}</p>
+      </div>
+
     </div>
+    }
+  </div>
   }
 
 </div>

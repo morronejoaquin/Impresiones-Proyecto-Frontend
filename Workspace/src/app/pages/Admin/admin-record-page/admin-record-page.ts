@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CartService, CartWithItems } from '../../../services/Cart/cart-service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-record-page',
-  imports: [CommonModule , RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './admin-record-page.html',
   styleUrl: './admin-record-page.css'
 })
 
-export class AdminRecordPage {
+export class AdminRecordPage implements OnInit {
   carts: CartWithItems[] = [];
 
   constructor(
@@ -23,7 +24,12 @@ export class AdminRecordPage {
   }
 
   loadCompletedCarts(): void {
-    
+    this.cartService.getDeliveredCartsWithDetails().subscribe({
+      next: (cartsWithItems) => {
+        this.carts = cartsWithItems;
+      },
+      error: (err) => console.error('Error al cargar pedidos:', err)
+    });
   }
 
   goToDetail(cart: CartWithItems){

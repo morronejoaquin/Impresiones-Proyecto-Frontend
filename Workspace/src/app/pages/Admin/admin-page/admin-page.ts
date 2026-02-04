@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import Cart from '../../../models/Cart/cart';
-import { CartService } from '../../../services/Cart/cart-service';
+import { CartService, CartWithItems } from '../../../services/Cart/cart-service';
 import OrderItem from '../../../models/OrderItem/orderItem';
 import { OrderService } from '../../../services/Orders/order-service';
-import { forkJoin, map, of, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-interface CartWithItems extends Cart {
-  orderItems: OrderItem[];
-  fileSummary: string;
-}
 
 @Component({
   standalone: true,
@@ -43,7 +37,13 @@ export class AdminPage implements OnInit {
   }
 
   loadCompletedCarts(): void {
-    
+    this.cartService.getCompletedCartsWithDetails().subscribe({
+      next: (cartsWithItems) => {
+        this.carts = cartsWithItems;
+        this.filteredCarts = [...cartsWithItems];
+      },
+      error: (err) => console.error('Error al cargar pedidos:', err)
+    });
   }
 
   filterByStatus(): void {
@@ -64,8 +64,48 @@ export class AdminPage implements OnInit {
   }
 
   updateStatus(cart: CartWithItems, newStatus: Cart['status']) {
-  
+  if (!newStatus || newStatus === cart.status) return;
+
+  this.savingIds.add(cart.id);
+
+  const becomesCompleted =
+    cart.cartStatus !== 'completed' &&
+    (['ready','delivered','cancelled'] as Cart['status'][]).includes(newStatus);
+
+  const setsDeliveredAt = newStatus === 'delivered' && !cart.deliveredAt;
+
+  const updates: any = { status: newStatus };
+  if (becomesCompleted) {
+    updates.cartStatus  = 'completed';
+    updates.completedAt = cart.completedAt ?? new Date().toISOString();
   }
+  if (setsDeliveredAt) {
+    updates.deliveredAt = new Date().toISOString();
+  }
+
+  this.cartService.updateCartStatus(
+  cart.id,
+  updates.status as Cart['status'],
+  {
+    stampCompletion: becomesCompleted,
+    stampDelivery: setsDeliveredAt
+  }
+).subscribe({
+    next: (updated) => {
+      cart.status = (updated as any).status ?? newStatus;
+      if (becomesCompleted) {
+        cart.cartStatus = 'completed';
+        (cart as any).completedAt = updates.completedAt;
+      }
+      if (setsDeliveredAt) {
+        (cart as any).deliveredAt = updates.deliveredAt;
+      }
+      this.filterByStatus();
+    },
+    error: (e) => console.error('No se pudo actualizar el estado', e),
+    complete: () => this.savingIds.delete(cart.id)
+  });
+}
 
   goToDetail(cart: CartWithItems) {
     this.router.navigate(['/admin/order', cart.id]);

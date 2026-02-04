@@ -3,11 +3,12 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../../services/Users/user-service';
 import User from '../../../models/Users/user';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-login-page',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './user-login-page.html',
   styleUrls: ['./user-login-page.css']
 })

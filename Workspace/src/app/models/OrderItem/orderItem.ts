@@ -1,16 +1,18 @@
 export default interface OrderItem {
   id: string;
   cartId: string;
-  isColor: boolean;
-  isDoubleSided: boolean;
-  binding: 'ringed' | 'stapled' | 'unringed';
+  color: boolean;
+  doubleSided: boolean;
+  binding?: 'ringed' | 'stapled' | 'unringed';
   pages: number;
   comments?: string;
-  file: string;
-  fileType: 'PDF' | 'JPG' | 'PNG'
+  driveFileId?: string;
+  fileName: string;
+  fileType?: string;
   copies: number;
   amount: number;
   imageWidth?: number;
   imageHeight?: number;
-  deleted: boolean;
+  deleted?: boolean;
+  file?: File | string | null;
 }

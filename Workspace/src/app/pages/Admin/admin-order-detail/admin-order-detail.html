@@ -39,8 +39,8 @@
       <td>{{ fileName(it.file) }}</td>
       <td>{{ it.pages }}</td>
       <td>{{ it.copies }}</td>
-      <td><span class="chip" [class.ok]="it.isDoubleSided" [class.muted]="!it.isDoubleSided">{{ yesNo(it.isDoubleSided) }}</span></td>
-      <td><span class="chip" [class.ok]="it.isColor" [class.muted]="!it.isColor">{{ yesNo(it.isColor) }}</span></td>
+      <td><span class="chip" [class.ok]="it.doubleSided" [class.muted]="!it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
+      <td><span class="chip" [class.ok]="it.color" [class.muted]="!it.color">{{ yesNo(it.color) }}</span></td>
       <td><span class="chip chip-binding">{{ bindingLabel(it.binding) }}</span></td>
       <td>${{ it.amount | number:'1.2-2' }}</td>
       <td>${{ sub(it) | number:'1.2-2' }}</td>
