@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import Payment from '../../models/Payment/payment';
+import Payment from '../../models/Payment/paymentHistoryResponse';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

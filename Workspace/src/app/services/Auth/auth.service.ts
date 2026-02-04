@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import User from '../../models/Users/user';
+import User from '../../models/Users/userResponse';
 import { encodeToken, saveToken, readToken, clearToken, decodeToken } from '../../utils/jwt-utils';
 
 type SafeUser = Omit<User, 'password'>;

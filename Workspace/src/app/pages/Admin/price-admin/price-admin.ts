@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PriceManagerService } from '../../../services/Prices/price-manager-service';
-import Prices from '../../../models/Prices/Prices';
+import Prices from '../../../models/Prices/pricesResponse';
 import { CommonModule } from '@angular/common';
 
 @Component({

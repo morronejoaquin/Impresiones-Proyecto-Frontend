@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/Users/user-service';
-import User from '../../../models/Users/user';
+import User from '../../../models/Users/userResponse';
 
 @Component({
   selector: 'app-user-edit-page',

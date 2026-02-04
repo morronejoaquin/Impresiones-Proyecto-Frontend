@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../../services/Cart/cart-service';
 import { PriceManagerService } from '../../../services/Prices/price-manager-service';
 import { UserService } from '../../../services/Users/user-service';
-import Cart from '../../../models/Cart/cart';
+import Cart from '../../../models/Cart/cartResponse';
 import { OrderService } from '../../../services/Orders/order-service';
 import { NotificationService } from '../../../services/Notification/notification-service';
 

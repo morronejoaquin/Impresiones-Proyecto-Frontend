@@ -1,10 +1,8 @@
-export default interface User {
+export default interface UserResponse {
   id: string;
   username: string;
   name: string;
   surname: string;
   email: string;
-  role: 'admin' | 'guest' | 'registered';
   phone: string;
-  password:string;
 }

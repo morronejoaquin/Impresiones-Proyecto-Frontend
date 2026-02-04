@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import Cart from '../../models/Cart/cart';
+import Cart from '../../models/Cart/cartResponse';
 import { OrderService } from '../Orders/order-service';
-import OrderItem from '../../models/OrderItem/orderItem';
+import OrderItem from '../../models/OrderItem/orderItemResponse';
 
 export interface CartWithItems extends Cart {
   items: OrderItem[];

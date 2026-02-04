@@ -1,5 +1,5 @@
 // src/app/utils/jwt-utils.ts
-import User from "../models/Users/user";
+import User from "../models/Users/userResponse";
 
 // ---- Tipos ----
 export type AppRole = 'admin' | 'guest' | 'registered';

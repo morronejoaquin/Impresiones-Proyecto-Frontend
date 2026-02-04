@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import User from '../../models/Users/user';
+import User from '../../models/Users/userResponse';
 import { decodeToken, encodeToken, isTokenValid } from '../../utils/jwt-utils';
 import { CartService } from '../Cart/cart-service';
 import { OrderService } from '../Orders/order-service';
 import { forkJoin, of, switchMap, tap } from 'rxjs';
-import OrderItem from '../../models/OrderItem/orderItem';
+import OrderItem from '../../models/OrderItem/orderItemResponse';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../services/Users/user-service';
-import User from '../../../models/Users/user';
+import User from '../../../models/Users/userResponse';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../../../services/Payment/payment-service';
 import { CartService } from '../../../services/Cart/cart-service';

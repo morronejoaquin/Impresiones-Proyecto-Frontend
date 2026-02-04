@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import Cart from '../../../models/Cart/cart';
+import Cart from '../../../models/Cart/cartResponse';
 import { CartService, CartWithItems } from '../../../services/Cart/cart-service';
-import OrderItem from '../../../models/OrderItem/orderItem';
+import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { OrderService } from '../../../services/Orders/order-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

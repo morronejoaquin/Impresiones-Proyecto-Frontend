@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
-import Cart from '../../../models/Cart/cart';
-import OrderItem from '../../../models/OrderItem/orderItem';
+import Cart from '../../../models/Cart/cartResponse';
+import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
 import { OrderService } from '../../../services/Orders/order-service';
 
