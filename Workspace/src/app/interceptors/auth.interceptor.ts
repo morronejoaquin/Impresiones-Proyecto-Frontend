@@ -1,11 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { readToken } from '../utils/jwt-utils';
+import { environment } from '../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = readToken();
+  const token = localStorage.getItem('token');
   
-  if (token && req.url.includes('localhost:8080')) {
+  if (token && req.url.includes(environment.apiUrl)) {
     const clonedReq = req.clone({
       headers: req.headers.set('Authorization', `Bearer ${token}`)
     });

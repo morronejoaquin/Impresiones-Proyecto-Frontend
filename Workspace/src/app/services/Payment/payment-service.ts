@@ -1,28 +1,34 @@
 import { Injectable } from '@angular/core';
 import Payment from '../../models/Payment/paymentHistoryResponse';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import Page from '../../models/PageModel/page';
+import PaymentHistoryResponse from '../../models/Payment/paymentHistoryResponse';
+import PaymentCreateRequest from '../../models/Payment/paymentCreateRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-  readonly URL = 'http://localhost:3000/payments'
-
-  payments: Payment[]
+  private apiUrl = `${environment.apiUrl}/payments`;
 
   constructor(private http: HttpClient){
-    this.payments = []
   }
 
-  getPayments(){
-    return this.http.get<Payment>(this.URL)
+  getAll(page: number = 0, size: number = 20): Observable<Page<PaymentHistoryResponse>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+      
+    return this.http.get<Page<PaymentHistoryResponse>>(this.apiUrl, { params });
   }
 
-  getPaymentById(id: string){
-    return this.http.get<Payment>(`${this.URL}/${id}`)
+  getById(id: string): Observable<PaymentHistoryResponse> {
+    return this.http.get<PaymentHistoryResponse>(`${this.apiUrl}/${id}`);
   }
 
-  postPayment(payment: Payment){
-    return this.http.post<Payment>(this.URL, payment)
+  checkout(request: PaymentCreateRequest): Observable<PaymentResponse>{
+    return this.http.post<PaymentResponse>(`${this.apiUrl}/checkout`, request)
   }
 }

@@ -1,170 +1,69 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import Cart from '../../models/Cart/cartResponse';
-import { OrderService } from '../Orders/order-service';
-import OrderItem from '../../models/OrderItem/orderItemResponse';
-
-export interface CartWithItems extends Cart {
-  items: OrderItem[];
-  fileSummary?: string;
-}
+import { Observable} from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import CartWithItemsResponse from '../../models/Cart/cartWithItemsResponse';
+import OrderItemResponse from '../../models/OrderItem/orderItemResponse';
+import Page from '../../models/PageModel/page';
+import CartResponse from '../../models/Cart/cartResponse';
+import OrderItemCreateRequest from '../../models/OrderItem/orderItemCreateRequest';
+import CartStatusUpdateRequest from '../../models/Cart/cartStatusUpdateRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  readonly url='http://localhost:8080/carts'
+  private apiUrl = `${environment.apiUrl}/carts`;
 
-  Cart:Cart[]=[]
-  constructor(private http:HttpClient, private orderService: OrderService) { }
-
-  getOpenCart(): Observable<CartWithItems> {
-    return this.http.get<CartWithItems>(`${this.url}/{userId}/open`);
+  constructor(private http: HttpClient){
   }
 
-  deleteCartItem(cartId: string, itemId: string): Observable<any> {
-    return this.http.delete(`${this.url}/${cartId}/items/${itemId}`);
+  createCart(): Observable<CartResponse> {
+    return this.http.post<CartResponse>(this.apiUrl, {});
   }
 
-  closeCartForPayment(cartId: string): Observable<any> {
-    return this.http.patch(`${this.url}/close/${cartId}`, {});
+  getMyCart(): Observable<CartWithItemsResponse> {
+    return this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`);
   }
 
-  getCartItems(){
-    return this.http.get<Cart[]>(this.url);
+  agregarItem(request: OrderItemCreateRequest, file: File): Observable<OrderItemResponse> {
+    const formData = new FormData();
+
+    formData.append('data', JSON.stringify(request));
+    formData.append('file', file);
+
+    return this.http.patch<OrderItemResponse>(`${this.apiUrl}/items/agregar-orden`, formData);
   }
 
-  getCartByUserId(userId: string): Observable<Cart[]> {
-    return this.http.get<Cart[]>(`${this.url}?userId=${userId}&cartStatus=pending`);
-  }
-  
-  updateCart(cartId: string, updates: Partial<Cart>): Observable<Cart> {
-    return this.http.put<Cart>(`${this.url}/${cartId}`, updates);
+  eliminarItem(itemId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/items/${itemId}`);
   }
 
-  postCart(cart: Cart) {
-    return this.http.post<any>(this.url, cart);
-  }
-  
-  deleteCart(cartId: string){
-    return this.http.delete<any>(`${this.url}/${cartId}`);
+  getPendingCarts(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/pending`, { params });
   }
 
-  clearOrdersInCart(cartId: string): Observable<any> {
-    return this.orderService.getOrdersFromCart(cartId).pipe(
-      switchMap(orders => {
-          if (orders.length === 0) {
-            return of(null);
-          }
-          const deleteObservables = orders.map(order => this.orderService.deleteOrderFromCart(order.id));
-          return forkJoin(deleteObservables);
-      })
-    );
+  actualizarEstado(cartId: string, request: CartStatusUpdateRequest): Observable<CartResponse> {
+    return this.http.patch<CartResponse>(`${this.apiUrl}/${cartId}/estado`, { status: request });
   }
 
-  getOrCreateActiveCart(userId: string): Observable<Cart> {
-    return this.getCartByUserId(userId).pipe(
-      map(carts => carts[0]),
-      switchMap(activeCart => {
-        if (activeCart) {
-          return of(activeCart);
-        } else {
-        const newCart: Partial<Cart> = {
-            userId: userId,
-            total: 0,
-            status: 'pending',
-            cartStatus: 'pending'
-          };
-          return this.postCart(newCart as Cart);
-        }
-      })
-    );
+  descargarArchivo(cartId: string, ordenId: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${cartId}/ordenes/${ordenId}/descargar`, {
+      responseType: 'blob' // Importante para manejar archivos binarios
+    });
   }
 
-  getCompletedCartsWithDetails(): Observable<CartWithItems[]> {
-    return this.http.get<Cart[]>(this.url).pipe(
-      map(allCarts => allCarts.filter(cart =>
-        cart.status !== 'delivered' && (
-          cart.cartStatus === 'completed' ||
-          (['ready','cancelled','printing','binding'] as Cart['status'][]).includes(cart.status)
-        )
-      )),
-      switchMap(completedCarts => {
-        if (completedCarts.length === 0) return of([] as CartWithItems[]);
-        const cartObservables = completedCarts.map(cart =>
-          this.orderService.getOrdersFromCart(cart.id).pipe(
-            map(orderItems => {
-              const fileNames = orderItems
-                .map(item => typeof item.file === 'string' ? item.file.split('/').pop() : 'Archivo desconocido')
-                .filter(Boolean) as string[];
+  filterCarts(filters: any, page: number = 0): Observable<Page<CartResponse>> {
+    let params = new HttpParams().set('page', page);
+    
+    // Iteramos los filtros para agregarlos a la URL
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) {
+        params = params.set(key, filters[key]);
+      }
+    });
 
-              const fileSummary =
-                fileNames.length === 0 ? 'Sin archivos.' :
-                fileNames.length === 1 ? fileNames[0] : `${fileNames[0]}... (${fileNames.length} archivos)`;
-
-              const status = (cart as any).status ?? (cart as any).cartStatus ?? '';
-              const fallbackTotal = orderItems.reduce((acc, it) => acc + (it.amount || 0), 0);
-              const total = (cart.total ?? fallbackTotal);
-
-              return { ...cart, items: orderItems, fileSummary, status, total } as CartWithItems;
-            })
-          )
-        );
-        return forkJoin(cartObservables);
-      })
-    );
-  }
-
-  getDeliveredCartsWithDetails(): Observable<CartWithItems[]> {
-    return this.http.get<Cart[]>(this.url).pipe(
-      map(allCarts => allCarts.filter(cart => cart.status === 'delivered')),
-      switchMap(deliveredCarts => {
-        if (deliveredCarts.length === 0) return of([] as CartWithItems[]);
-        const cartObservables = deliveredCarts.map(cart =>
-          this.orderService.getOrdersFromCart(cart.id).pipe(
-            map(orderItems => {
-              const fileNames = orderItems
-                .map(item => typeof item.file === 'string' ? item.file.split('/').pop() : 'Archivo desconocido')
-                .filter(Boolean) as string[];
-
-              const fileSummary =
-                fileNames.length === 0 ? 'Sin archivos.' :
-                fileNames.length === 1 ? fileNames[0] : `${fileNames[0]}... (${fileNames.length} archivos)`;
-
-              const status = (cart as any).status ?? (cart as any).cartStatus ?? '';
-              const fallbackTotal = orderItems.reduce((acc, it) => acc + (it.amount || 0), 0);
-              const total = (cart.total ?? fallbackTotal);
-
-              return { ...cart, items: orderItems, fileSummary, status, total } as CartWithItems;
-            })
-          )
-        );
-        return forkJoin(cartObservables);
-      })
-    );
-  }
-
-  updateCartStatus(
-    id: string,
-    status: Cart['status'],
-    opts?: { stampCompletion?: boolean; stampDelivery?: boolean }
-  ) {
-    const now = new Date().toISOString();
-    const updates: any = { status };
-
-    if (opts?.stampCompletion) {
-      updates.cartStatus = 'completed';
-      updates.completedAt = now;
-    }
-    if (opts?.stampDelivery) {
-      updates.deliveredAt = now;
-    }
-
-    return this.http.patch<Cart>(`${this.url}/${id}`, updates);
-  }
-
-  getCartById(id: string) {
-    return this.http.get<Cart>(`${this.url}/${id}`);
+    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/filter`, { params });
   }
 }

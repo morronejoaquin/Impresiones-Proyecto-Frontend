@@ -1,42 +1,44 @@
-import { Injectable, signal } from '@angular/core';
-import User from '../../models/Users/userResponse';
-import { encodeToken, saveToken, readToken, clearToken, decodeToken } from '../../utils/jwt-utils';
-
-type SafeUser = Omit<User, 'password'>;
+import { HttpClient } from '@angular/common/http';
+import { Injectable} from '@angular/core';
+import LoginRequest from '../../models/Auth/loginRequest';
+import { Observable, tap } from 'rxjs';
+import AuthResponse from '../../models/Auth/authResponse';
+import RegisterRequest from '../../models/Auth/registerRequest';
+import RegisterResponse from '../../models/Auth/registerResponse';
+import UserResponse from '../../models/Users/userResponse';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  currentUser = signal<SafeUser | null>(null);
+  private apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor() { this.restore(); }
-
-  login(user: User) {
-    const token = encodeToken(user); 
-    saveToken(token);                
-    this.restore();                  
+  constructor(private http: HttpClient){
+  }
+  
+  login(request: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
+      tap(res => localStorage.setItem('token', res.token))
+    );
   }
 
-  restore() {
-    const token = readToken();
-    const payload = token ? decodeToken(token) : null;
-    if (!payload) { this.currentUser.set(null); return; }
-
-    this.currentUser.set({
-      id: payload.userId,
-      username: payload.username,
-      name: payload.username,
-      surname: '',
-      email: `${payload.username}@example.com`,
-      role: payload.role,
-      phone: ''
-    } as SafeUser);
+  register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request).pipe(
+      tap(res => localStorage.setItem('token', res.token))
+    );
   }
 
-  logout() {
-    clearToken();
-    this.currentUser.set(null);
+  getCurrentUser(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.apiUrl}/me`);
   }
 
-  get role(): SafeUser['role'] | null { return this.currentUser()?.role ?? null; }
-  get isLoggedIn(): boolean { return !!this.currentUser(); }
+  logout(): void {
+    const token = localStorage.getItem('token');
+    this.http.post(`${this.apiUrl}/logout`, {}).subscribe();
+    localStorage.removeItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
 }

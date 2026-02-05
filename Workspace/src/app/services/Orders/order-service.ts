@@ -1,41 +1,34 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import OrderItem from '../../models/OrderItem/orderItemResponse';
-import OrderItemCreateRequest from '../../models/OrderItem/orderItemCreateRequest';
+import Page from '../../models/PageModel/page';
+import OrderItemResponse from '../../models/OrderItem/orderItemResponse';
+import OrderItemUpdateRequest from '../../models/OrderItem/orderItemUpdateRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class OrderService {
-    readonly url='http://localhost:8080/orderItems'
+  private apiUrl = `${environment.apiUrl}/orderItems`;
 
-OrderItem:OrderItem[]=[]
-constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient){
+  }
 
-getOrderById(id:string): Observable<OrderItem>{
-  return this.http.get<OrderItem>(`${this.url}/${id}`);
-}
+  getAll(page: number = 0, size: number = 20): Observable<Page<OrderItemResponse>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+      
+    return this.http.get<Page<OrderItemResponse>>(this.apiUrl, { params });
+  }
 
-getOrdersFromCart(cartId:string){
-  return this.http.get<OrderItem[]>(`${this.url}?cartId=${cartId}`);
-}
+  getById(id: string): Observable<OrderItemResponse> {
+    return this.http.get<OrderItemResponse>(`${this.apiUrl}/${id}`);
+  }
 
-postOrderToCart(cartId: string, order: OrderItemCreateRequest){
-  return this.http.post<OrderItem>(`${this.url}/carts/${cartId}/agregar-item`,order);
-}
-
-updateOrder(id: string, order: Partial<OrderItem>){
-  return this.http.put<OrderItem>(`${this.url}/${id}`,order);
-}
-
-deleteOrderFromCart(id:string){
-  return this.http.delete<OrderItem>(`${this.url}/${id}`);
-}
-
-calculateTotal(orders: OrderItem[]): number {
-        // Corrección importante: sumar (amount * copies)
-        return orders.reduce((total, order) => total + (order.amount * (order.copies || 1)), 0);
-}
+  update(id: string, request: OrderItemUpdateRequest): Observable<OrderItemResponse> {
+    return this.http.patch<OrderItemResponse>(`${this.apiUrl}/${id}`, request);
+  }
 }

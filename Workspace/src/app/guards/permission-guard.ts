@@ -1,25 +1,37 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
-import { UserService } from '../services/Users/user-service';
-
-type Role = 'admin' | 'guest' | 'registered';
+import { decodeToken } from '../utils/jwt-utils';
 
 const LOGIN_URL = '/user-login';
 
 export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
-  const userService = inject(UserService);
   const router = inject(Router);
+  const token = localStorage.getItem('token'); // O donde guardes tu JWT
 
-  const allowedRoles: ReadonlyArray<Role> = (route.data?.['allowedRoles'] ?? []) as Role[];
+  if (!token) {
+    return router.createUrlTree([LOGIN_URL]);
+  }
 
-  const payload = userService.getDecodedUserPayload(); 
-  const userRole = userService.getUserRole() as Role | null;
+  const payload = decodeToken(token);
 
-  if (!payload || !userRole) return router.createUrlTree([LOGIN_URL]);
+  // Si el token es inválido o expiró
+  if (!payload) {
+    localStorage.removeItem('token');
+    return router.createUrlTree([LOGIN_URL]);
+  }
 
-  if (allowedRoles.length === 0) return true;
+  // Roles requeridos por la ruta (definidos en app-routing.module.ts)
+  const allowedRoles = route.data?.['allowedRoles'] as string[] | undefined;
 
-  return allowedRoles.includes(userRole)
-    ? true
-    : router.createUrlTree([LOGIN_URL]); 
+  // Si la ruta no tiene restricciones de rol, basta con estar autenticado
+  if (!allowedRoles || allowedRoles.length === 0) {
+    return true;
+  }
+
+  // Verificamos si alguno de los roles del token coincide con los permitidos
+  const hasPermission = payload.role.some(role => allowedRoles.includes(role));
+
+  return hasPermission 
+    ? true 
+    : router.createUrlTree([LOGIN_URL]);
 };

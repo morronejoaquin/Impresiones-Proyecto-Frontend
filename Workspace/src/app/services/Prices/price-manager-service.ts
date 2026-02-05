@@ -1,48 +1,33 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Prices from '../../models/Prices/pricesResponse';
+import { environment } from '../../../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import Page from '../../models/PageModel/page';
+import PricesResponse from '../../models/Prices/pricesResponse';
+import pricesUpdateRequest from '../../models/Prices/pricesUpdateRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PriceManagerService {
-  readonly url = 'http://localhost:3000/prices';
-  Prices: Prices[] = [];
+  private apiUrl = `${environment.apiUrl}/prices`;
 
-  constructor(private http: HttpClient) {}
-
-  getPrices() {
-    return this.http.get<Prices[]>(this.url);
+  constructor(private http: HttpClient){
   }
 
-  postPrices(price: Prices) {
-    return this.http.post<Prices>(this.url, price);
+  getAll(page: number = 0, size: number = 20): Observable<Page<PricesResponse>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+      
+    return this.http.get<Page<PricesResponse>>(this.apiUrl, { params });
   }
 
-  updatePrices(price: Prices) {
-    return this.http.put<Prices>(`${this.url}/${price.id}`, price);
+  getById(id: string): Observable<PricesResponse> {
+    return this.http.get<PricesResponse>(`${this.apiUrl}/${id}`);
   }
 
-  loadPrices() {
-    this.getPrices().subscribe(data => {
-      this.Prices = data;
-    });
-  }
-
-  calculatePrice(pages: number,copies: number, doubleSided: boolean, binding: 'ringed' | 'stapled' | null , color: boolean): number {
-    const priceData = this.Prices[0];
-    if (!priceData) return 0;
-
-    let pricePerPage = color
-      ? priceData.pricePerSheetColor
-      : priceData.pricePerSheetBW;
-
-    if (doubleSided) pages = Math.ceil(pages / 2);
-
-    let bindingCost = 0;
-    if (binding === 'ringed') bindingCost = priceData.priceRingedBinding;
-
-    const total = (pricePerPage * pages * copies) + bindingCost;
-    return parseFloat(total.toFixed(2));
+  updatePrices(request: pricesUpdateRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}`, request, { responseType: 'text' });
   }
 }
