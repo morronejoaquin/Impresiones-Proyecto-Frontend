@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { OrderService } from '../../../services/Orders/order-service';
 import { switchMap } from 'rxjs';
 import { NotificationService } from '../../../services/Notification/notification-service';
+import { PaymentMethodEnum } from '../../../models/Enums/paymentMethodEnum';
+import PaymentCreateRequest from '../../../models/Payment/paymentCreateRequest';
 
 @Component({
   selector: 'app-cart-payment-page',
@@ -45,7 +47,33 @@ export class CartPaymentPage implements OnInit{
   }
 
   onSubmit() {
-    
+    if (this.cartForm.invalid) {
+      this.cartForm.markAllAsTouched();
+      return;
+    }
+
+    const selected = this.cartForm.get('paymentMethod')!.value;
+
+    const paymentMethodEnum = selected === 'mercado' ? PaymentMethodEnum.MERCADO_PAGO : PaymentMethodEnum.CASH;
+
+    const request: PaymentCreateRequest = {
+      paymentMethod: paymentMethodEnum
+    };
+
+    this.paymentService.checkout(request).subscribe({
+      next: (resp) => {
+        if (paymentMethodEnum === PaymentMethodEnum.MERCADO_PAGO && resp.checkoutUrl) {
+          window.location.href = resp.checkoutUrl;
+        } else {
+          this.notificationService.success('Pedido recibido correctamente.');
+          this.router.navigate(['/order-received']);
+        }
+      },
+      error: (err) => {
+        console.error('Error en checkout', err);
+        this.notificationService.error('Error al procesar el pago. Intente nuevamente.');
+      }
+    });
   }
 
 

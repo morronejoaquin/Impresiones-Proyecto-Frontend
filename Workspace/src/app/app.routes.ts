@@ -10,6 +10,7 @@ import { AccountPage } from './pages/Users/account-page/account-page';
 import { UserEditPage } from './pages/Users/user-edit-page/user-edit-page';
 import { permissionGuard } from './guards/permission-guard';
 import { CartPaymentPage } from './pages/Cart/cart-payment-page/cart-payment-page';
+import { OrderReceivedPage } from './pages/Cart/order-received-page/order-received-page';
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
 
 export const routes: Routes = [
@@ -53,6 +54,12 @@ export const routes: Routes = [
   {
     path: 'cart-payment',
     component: CartPaymentPage,
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['guest', 'registered', 'admin'] }
+  },
+  {
+    path: 'order-received',
+    component: OrderReceivedPage,
     canActivate: [permissionGuard],
     data: { allowedRoles: ['guest', 'registered', 'admin'] }
   },

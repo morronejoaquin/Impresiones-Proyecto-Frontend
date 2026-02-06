@@ -30,12 +30,16 @@
   
       <legend>Forma de pago</legend>
   
-      <fieldset>
-        <label for="paymentMethod">Método de pago:</label>
-        <select id="paymentMethod" formControlName="paymentMethod">
-          <option value="cash">Efectivo</option>
-          <option value="transfer">Transferencia</option>
-        </select>
+      <fieldset class="payment-methods">
+        <label>Método de pago:</label>
+        <div class="options">
+          <label class="option">
+            <input type="radio" formControlName="paymentMethod" value="cash"> Efectivo
+          </label>
+          <label class="option">
+            <input type="radio" formControlName="paymentMethod" value="mercado"> Mercado Pago
+          </label>
+        </div>
         @if(getPaymentMethod()!.invalid && getPaymentMethod()!.touched){
           <p class="msj-error">El metodo de pago es obligatorio</p>
         }
