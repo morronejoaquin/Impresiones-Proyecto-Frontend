@@ -22,6 +22,8 @@ export class ShowCartPage implements OnInit {
   private currentCartId!: string;
   isLoading: boolean = true;
   errorMessage: string = '';
+  itemToDeleteId: string | null = null;
+  isDeleting: boolean = false;
 
   constructor(
     private router: Router,
@@ -62,19 +64,26 @@ export class ShowCartPage implements OnInit {
   }
 
   removeItem(orderId: string): void {
-    if (!this.currentCartId) {
-      console.error('No cart ID available');
-      return;
-    }
+    if (!this.currentCartId) return;
 
     this.cartService.eliminarItem(orderId).subscribe({
       next: () => {
+        // Actualizamos la lista visualmente
         this.orders = this.orders.filter((order) => order.id !== orderId);
         this.cartTotal = this.orders.reduce((sum, item) => sum + item.amount, 0);
+        
+        // --- ESTO ES LO NUEVO ---
+        this.itemToDeleteId = null; // Cierra el modal
+        this.isDeleting = false;    // Apaga el loading
+        
+        if (this.orders.length === 0) {
+          this.errorMessage = 'Tu carrito quedó vacío.';
+        }
       },
       error: (err) => {
-        console.error('Error removing item from cart:', err);
-        alert('Error al eliminar el ítem. Por favor, intenta nuevamente.');
+        console.error('Error removing item:', err);
+        alert('Error al eliminar. Intente nuevamente.');
+        this.isDeleting = false; // Apaga el loading aunque falle
       },
     });
   }
@@ -108,9 +117,17 @@ export class ShowCartPage implements OnInit {
   }
 
   confirmAndRemoveItem(itemId: string): void {
-    const confirmed = confirm('¿Estás seguro de que deseas eliminar este ítem?');
-    if (confirmed) {
-      this.removeItem(itemId);
+    this.itemToDeleteId = itemId;
+  }
+
+  cancelDelete(): void {
+    this.itemToDeleteId = null;
+  }
+
+  confirmDelete(): void {
+    if (this.itemToDeleteId) {
+      this.isDeleting = true; // Activa estado de carga
+      this.removeItem(this.itemToDeleteId);
     }
   }
 

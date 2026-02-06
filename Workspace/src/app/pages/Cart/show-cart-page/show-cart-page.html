@@ -82,4 +82,22 @@
       <button type="button" class="btn-go-to-order" (click)="goToOrder()">Ir a realizar pedido</button>
     </div>
   }
+
+  @if(itemToDeleteId) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>¿Eliminar producto?</h3>
+        <p>¿Estás seguro de que deseas quitar este ítem del carrito?</p>
+        
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
+            Cancelar
+          </button>
+          <button class="btn-confirm" (click)="confirmDelete()" [disabled]="isDeleting">
+            @if(isDeleting) { Eliminando... } @else { Eliminar }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
