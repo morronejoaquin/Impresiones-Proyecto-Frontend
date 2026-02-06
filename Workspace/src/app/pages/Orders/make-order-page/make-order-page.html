@@ -3,10 +3,8 @@
   <fieldset>
     <div class="file-input-wrapper" (click)="!editingOrderId && fileInput.click()">
       <span>{{ selectedFileName }}</span>
-      <input accept=".pdf,image/*,.txt" type="file" #fileInput 
-             (change)="onFileSelected($event)" 
-             id="fileUpload"
-             [attr.disabled]="editingOrderId ? true : null">
+      <input accept=".pdf,image/*" type="file" #fileInput (change)="onFileSelected($event)" id="fileUpload"
+        [attr.disabled]="editingOrderId ? true : null">
     </div>
     <p>
       <legend>Paginas y anillado</legend>
@@ -15,7 +13,8 @@
         <span *ngIf="isPdf || (editingOrderId && selectedFileName.toLowerCase().endsWith('.pdf'))">
           Páginas: {{ pageCount ?? 'Cargando...' }}
         </span>
-        <span *ngIf="isImage || (editingOrderId && (selectedFileName.toLowerCase().endsWith('.png') || selectedFileName.toLowerCase().endsWith('.jpg') || selectedFileName.toLowerCase().endsWith('.jpeg')))">
+        <span
+          *ngIf="isImage || (editingOrderId && (selectedFileName.toLowerCase().endsWith('.png') || selectedFileName.toLowerCase().endsWith('.jpg') || selectedFileName.toLowerCase().endsWith('.jpeg')))">
           Dimensiones: {{ imageWidth ?? 0 }}x{{ imageHeight ?? 0 }} px
         </span>
       </ng-container>
@@ -50,7 +49,10 @@
     <h3>Precio total: ${{ calculatedPrice }}</h3>
   </section>
   }
-  <button type="submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId)">
+  @if (isLoading) {
+  <div class="spinner">Cargando...</div>
+  }
+  <button type="submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
     {{ editingOrderId ? 'Actualizar Pedido' : 'Agregar al Carrito' }}
   </button>
 </form>

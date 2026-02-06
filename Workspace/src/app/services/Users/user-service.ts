@@ -8,14 +8,13 @@ import UpdateProfileRequest from '../../models/Users/updateProfileRequest';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   private apiUrl = `${environment.apiUrl}/users`;
-  
-  constructor(private http: HttpClient){
-  }
-  
+
+  constructor(private http: HttpClient) {}
+
   getAllUsers(page: number = 0, size: number = 20): Observable<Page<UserResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<Page<UserResponse>>(this.apiUrl, { params });
@@ -28,5 +27,14 @@ export class UserService {
   updateProfile(request: UpdateProfileRequest): Observable<UserResponse> {
     return this.http.put<UserResponse>(this.apiUrl, request);
   }
-  
+
+  getById(id: string): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.apiUrl}/${id}`);
+  }
+
+  updateUser(id: string, updates: Map<string, any>): Observable<string> {
+    return this.http.patch<string>(`${this.apiUrl}/${id}`, Object.fromEntries(updates), {
+      responseType: 'text' as 'json',
+    });
+  }
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import Payment from '../../models/Payment/paymentHistoryResponse';
+import PaymentHistoryResponse from '../../models/Payment/paymentHistoryResponse';
+import PaymentResponse from '../../models/Payment/paymentResponse';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import Page from '../../models/PageModel/page';
-import PaymentHistoryResponse from '../../models/Payment/paymentHistoryResponse';
 import PaymentCreateRequest from '../../models/Payment/paymentCreateRequest';
 
 @Injectable({
