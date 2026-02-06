@@ -54,7 +54,14 @@ export class CartPaymentPage implements OnInit{
 
     const selected = this.cartForm.get('paymentMethod')!.value;
 
-    const paymentMethodEnum = selected === 'mercado' ? PaymentMethodEnum.MERCADO_PAGO : PaymentMethodEnum.CASH;
+    let paymentMethodEnum: PaymentMethodEnum;
+    if (selected === 'mercado') {
+      paymentMethodEnum = PaymentMethodEnum.MERCADO_PAGO;
+    } else if (selected === 'transfer') {
+      paymentMethodEnum = PaymentMethodEnum.TRANSFER;
+    } else {
+      paymentMethodEnum = PaymentMethodEnum.CASH;
+    }
 
     const request: PaymentCreateRequest = {
       paymentMethod: paymentMethodEnum
