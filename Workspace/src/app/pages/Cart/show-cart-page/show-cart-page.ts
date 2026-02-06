@@ -1,17 +1,20 @@
 import { UserService } from './../../../services/Users/user-service';
-import { CartService, CartWithItems } from './../../../services/Cart/cart-service';
+import CartWithItemsResponse from './../../../models/Cart/cartWithItemsResponse';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import OrderItem from '../../../models/OrderItem/orderItemResponse';
+import { CartService } from '../../../services/Cart/cart-service';
+import { CartStatusEnum } from '../../../models/Enums/cartStatusEnum';
+import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 
 @Component({
   selector: 'app-show-cart-page',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './show-cart-page.html',
-  styleUrl: './show-cart-page.css'
+  styleUrl: './show-cart-page.css',
 })
 export class ShowCartPage implements OnInit {
   orders: OrderItem[] = [];
@@ -23,7 +26,7 @@ export class ShowCartPage implements OnInit {
   constructor(
     private router: Router,
     private cartService: CartService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -34,8 +37,8 @@ export class ShowCartPage implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.cartService.getOpenCart().subscribe({
-      next: (cart: CartWithItems) => {
+    this.cartService.getMyCart().subscribe({
+      next: (cart: CartWithItemsResponse) => {
         this.currentCartId = cart.id;
         this.orders = cart.items || [];
         this.cartTotal = cart.total;
@@ -44,7 +47,7 @@ export class ShowCartPage implements OnInit {
       error: (err) => {
         console.error('Error fetching cart:', err);
         this.isLoading = false;
-        
+
         if (err.status === 404) {
           this.errorMessage = 'No tienes un carrito activo.';
           this.orders = [];
@@ -54,7 +57,7 @@ export class ShowCartPage implements OnInit {
         } else {
           this.errorMessage = 'Error al cargar el carrito. Por favor, intenta nuevamente.';
         }
-      }
+      },
     });
   }
 
@@ -64,15 +67,15 @@ export class ShowCartPage implements OnInit {
       return;
     }
 
-    this.cartService.deleteCartItem(this.currentCartId, orderId).subscribe({
+    this.cartService.eliminarItem(orderId).subscribe({
       next: () => {
-        this.orders = this.orders.filter(order => order.id !== orderId);
+        this.orders = this.orders.filter((order) => order.id !== orderId);
         this.cartTotal = this.orders.reduce((sum, item) => sum + item.amount, 0);
       },
       error: (err) => {
         console.error('Error removing item from cart:', err);
         alert('Error al eliminar el ítem. Por favor, intenta nuevamente.');
-      }
+      },
     });
   }
 
@@ -91,15 +94,13 @@ export class ShowCartPage implements OnInit {
       return;
     }
 
-    this.cartService.closeCartForPayment(this.currentCartId).subscribe({
-      next: () => {
-        this.router.navigate(['/cart-payment']);
-      },
-      error: (err) => {
-        console.error('Error closing cart:', err);
-        alert('Error al procesar el carrito. Por favor, intenta nuevamente.');
-      }
-    });
+    this.cartService
+      .actualizarEstado(this.currentCartId, { status: OrderStatusEnum.PENDING })
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/cart-payment']);
+        },
+      });
   }
 
   goToOrder(): void {
@@ -115,13 +116,13 @@ export class ShowCartPage implements OnInit {
 
   getBindingText(binding?: string): string {
     if (!binding) return 'Sin anillado';
-    
-    const bindingMap: {[key: string]: string} = {
-      'ringed': 'Anillado',
-      'stapled': 'Abrochado',
-      'unringed': 'Sin anillar'
+
+    const bindingMap: { [key: string]: string } = {
+      ringed: 'Anillado',
+      stapled: 'Abrochado',
+      unringed: 'Sin anillar',
     };
-    
+
     return bindingMap[binding] || binding;
   }
 }

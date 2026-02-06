@@ -49,7 +49,7 @@ export class CartService {
 
   descargarArchivo(cartId: string, ordenId: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${cartId}/ordenes/${ordenId}/descargar`, {
-      responseType: 'blob', // Importante para manejar archivos binarios
+      responseType: 'blob',
     });
   }
 
