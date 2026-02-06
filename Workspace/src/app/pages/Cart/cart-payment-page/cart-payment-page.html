@@ -1,69 +1,60 @@
-<div class="page-wrapper">
-    <form [formGroup]= "cartForm" (submit) = "onSubmit()">
-      <legend>Completa tus datos</legend>
-  
-      <fieldset>
-        <label for="customerName">Nombre:</label>
-        <input type="text" id="customerName" formControlName="customerName">
-        @if(getCustomerName()!.invalid && getCustomerName()!.touched){
-          <p class="msj-error">El nombre es obligatorio</p>
-        }
-      </fieldset>
-  
-      <fieldset>
-        <label for="surname">Apellido:</label>
-        <input type="text" id="surname" formControlName="surname">
-        @if(getSurname()!.invalid && getSurname()!.touched){
-          <p class="msj-error">El apellido es obligatorio</p>
-        }
-      </fieldset>
-  
-      <fieldset>
-        <label for="phone">Teléfono:</label>
-        <input type="tel" id="phone" formControlName="phone">
-        @if(getPhone()!.hasError('pattern') && getPhone()!.touched){
-          <p class="msj-error">El número de telefono no es valido</p>
-        }@else if(getPhone()!.invalid && getPhone()!.touched){
-          <p class="msj-error">El número de telefono es obligatorio</p>
-        }
-      </fieldset>
-  
-      <legend>Forma de pago</legend>
-  
-      <fieldset class="payment-methods">
-        <label>Método de pago:</label>
-        <div class="options">
-          <label class="option">
-            <input type="radio" formControlName="paymentMethod" value="cash"> Efectivo
-          </label>
-          <label class="option">
-            <input type="radio" formControlName="paymentMethod" value="transfer"> Transferencia
-          </label>
-          <label class="option">
-            <input type="radio" formControlName="paymentMethod" value="mercado"> Mercado Pago
-          </label>
-        </div>
-        @if(getPaymentMethod()!.invalid && getPaymentMethod()!.touched){
-          <p class="msj-error">El metodo de pago es obligatorio</p>
-        }
-      </fieldset>
-  
-      <fieldset class="field-inline">
-        <div>
-          <label for="sign">Seña:</label>
-          <input type="number" id="sign" formControlName="sign" min="0">
-        </div>
-        <div>
-          <label>&nbsp;</label>
-          <button type="button" class="btn btn-ghost">Guardar</button>
-        </div>
-      </fieldset>
-  
-      <div class="cart-summary" aria-live="polite">
-        <div class="label">Total carrito</div>
-        <div class="value">{{ cartTotal | number:'1.2-2' }}</div>
+<div class="checkout-container">
+  <div class="main-content">
+    <h2>¿Cómo querés pagar?</h2>
+
+    <form [formGroup]="cartForm" (ngSubmit)="onSubmit()">
+      <div class="payment-options">
+        
+        <label class="payment-card" [class.selected]="cartForm.get('paymentMethod')?.value === 'MERCADO_PAGO'">
+          <div class="radio-container">
+            <input type="radio" value="MERCADO_PAGO" formControlName="paymentMethod">
+            <span class="custom-radio"></span>
+          </div>
+          <div class="payment-content">
+            <img src="assets/img/mercadopago-logo.png" alt="Mercado Pago" class="payment-logo">
+            <div class="payment-text">
+              <span class="title">Mercado Pago</span>
+              <span class="subtitle">Tarjeta de débito, crédito o dinero en cuenta</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="payment-card" [class.selected]="cartForm.get('paymentMethod')?.value === 'CASH'">
+          <div class="radio-container">
+            <input type="radio" value="CASH" formControlName="paymentMethod">
+            <span class="custom-radio"></span>
+          </div>
+          <div class="payment-content">
+            <div class="cash-icon">💵</div>
+            <div class="payment-text">
+              <span class="title">Efectivo en el local</span>
+              <span class="subtitle">Pagás al retirar tu pedido</span>
+            </div>
+          </div>
+        </label>
+
       </div>
-  
-      <button type="submit" class="btn btn-primary">Realizar compra</button>
+
+      <button type="submit" class="btn-primary" [disabled]="isLoading">
+        @if (isLoading) {
+            <span class="spinner"></span> Procesando...
+        } @else {
+            Confirmar compra
+        }
+      </button>
     </form>
   </div>
+
+  <aside class="summary-card">
+    <h3>Resumen de compra</h3>
+    <hr>
+    <div class="summary-row">
+      <span>Productos</span>
+      <span>${{ cartTotal | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-row total">
+      <span>Total</span>
+      <span>${{ cartTotal | number:'1.2-2' }}</span>
+    </div>
+  </aside>
+</div>

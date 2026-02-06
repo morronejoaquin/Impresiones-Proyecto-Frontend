@@ -1,8 +1,44 @@
-<div class="page-wrapper order-received">
-  <h1>Pedido recibido</h1>
-  <p>Gracias por tu compra. En breve nos pondremos en contacto para coordinar la entrega.</p>
-  <div class="actions">
-    <a routerLink="/home" class="btn btn-primary">Ir al inicio</a>
-    <a routerLink="/make-order" class="btn btn-ghost">Hacer otro pedido</a>
-  </div>
+<div class="page-container">
+  
+  @if (paymentStatus === 'success' || paymentStatus === 'pending') {
+    <div class="result-card success">
+      <div class="icon">✅</div>
+      <h1>¡Pedido Recibido!</h1>
+
+      @if (paymentMethod === 'CASH') {
+        <div class="instructions-box">
+          <p>Tu pedido ha sido registrado correctamente bajo la modalidad de <strong>pago en efectivo</strong>.</p>
+          <p class="highlight">⚠️ Recordá que comenzaremos con la impresión una vez que abones el total en el local.</p>
+        </div>
+      } @else {
+        <p>Tu pago mediante Mercado Pago ha sido procesado con éxito.</p>
+      }
+
+      <div class="details">
+        <p>Número de orden: <strong>#{{ orderId }}</strong></p>
+        @if (mpPaymentId) {
+          <p class="sub-detail">Comprobante MP: {{ mpPaymentId }}</p>
+        }
+      </div>
+
+      <div class="actions">
+        <button routerLink="/my-orders" class="btn-primary">Ver mis pedidos</button>
+        <button routerLink="/home" class="btn-ghost">Volver al inicio</button>
+      </div>
+    </div>
+  }
+
+  @else {
+    <div class="result-card failure">
+      <div class="icon">❌</div>
+      <h1>Pago no procesado</h1>
+      <p>Lo sentimos, no pudimos completar la transacción con Mercado Pago.</p>
+      
+      <div class="actions">
+        <button routerLink="/cart-payment" class="btn-primary">Reintentar Pago</button>
+        <button routerLink="/cart" class="btn-ghost">Volver al carrito</button>
+      </div>
+    </div>
+  }
+
 </div>

@@ -20,83 +20,66 @@ import PaymentCreateRequest from '../../../models/Payment/paymentCreateRequest';
 })
 export class CartPaymentPage implements OnInit{
   
-  cartTotal: number = 0;
   cartForm: FormGroup;
-  user: User | null = null;
-  userId!: string;
+  cartTotal: number = 0;
+  isLoading: boolean = false;
 
-  constructor(private fb: FormBuilder, 
-    private userService: UserService, 
+  constructor(
+    private fb: FormBuilder,
     private paymentService: PaymentService,
     private cartService: CartService,
-    private orderService: OrderService,
     private notificationService: NotificationService,
     private router: Router
-  ){
+  ) {
     this.cartForm = this.fb.group({
-      customerName: ['', Validators.required],
-      surname: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      paymentMethod: ['cash', Validators.required],
-      sign: ['']
+      paymentMethod: ['CASH', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    
+    this.loadCartSummary();
   }
 
-  onSubmit() {
-    if (this.cartForm.invalid) {
-      this.cartForm.markAllAsTouched();
-      return;
-    }
-
-    const selected = this.cartForm.get('paymentMethod')!.value;
-
-    let paymentMethodEnum: PaymentMethodEnum;
-    if (selected === 'mercado') {
-      paymentMethodEnum = PaymentMethodEnum.MERCADO_PAGO;
-    } else if (selected === 'transfer') {
-      paymentMethodEnum = PaymentMethodEnum.TRANSFER;
-    } else {
-      paymentMethodEnum = PaymentMethodEnum.CASH;
-    }
-
-    const request: PaymentCreateRequest = {
-      paymentMethod: paymentMethodEnum
-    };
-
-    this.paymentService.checkout(request).subscribe({
-      next: (resp) => {
-        if (paymentMethodEnum === PaymentMethodEnum.MERCADO_PAGO && resp.checkoutUrl) {
-          window.location.href = resp.checkoutUrl;
-        } else {
-          this.notificationService.success('Pedido recibido correctamente.');
-          this.router.navigate(['/order-received']);
-        }
+  loadCartSummary(): void {
+    this.cartService.getMyCart().subscribe({
+      next: (cart) => {
+        this.cartTotal = cart.total;
       },
-      error: (err) => {
-        console.error('Error en checkout', err);
-        this.notificationService.error('Error al procesar el pago. Intente nuevamente.');
+      error: () => {
+        this.notificationService.error('Error al cargar el resumen del carrito');
+        this.router.navigate(['/cart']);
       }
     });
   }
 
+  onSubmit(): void {
+    if (this.cartForm.invalid) return;
 
-  getCustomerName() {
-    return this.cartForm.get('customerName');
-  }
+    this.isLoading = true;
+    const request: PaymentCreateRequest = {
+      paymentMethod: this.cartForm.value.paymentMethod
+    };
 
-  getSurname() {
-    return this.cartForm.get('surname');
-  }
-
-  getPhone() {
-    return this.cartForm.get('phone');
-  }
-
-  getPaymentMethod() {
-    return this.cartForm.get('paymentMethod');
+    this.paymentService.checkout(request).subscribe({
+      next: (response) => {
+        if (response.action === 'REDIRECT' && response.checkoutUrl) {
+          window.location.href = response.checkoutUrl; // Redirige a Mercado Pago
+        } else {
+          this.isLoading = false;
+          this.router.navigate(['/order-success'], { 
+            queryParams: { orderId: response.cartId } 
+          });
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        
+        const errorMsg = err.status === 0 || err.status === 503 
+        ? "No pudimos conectar con la pasarela, intenta más tarde" 
+        : (err.error?.message || "Hubo un problema al procesar el pago");
+        
+        this.notificationService.error(errorMsg);
+      }
+    });
   }
 }
