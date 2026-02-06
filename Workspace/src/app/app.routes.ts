@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomePage } from './pages/AboutUs/home-page/home-page';
 import { MakeOrderPage } from './pages/Orders/make-order-page/make-order-page';
+import { MyOrdersPage } from './pages/Orders/my-orders-page/my-orders-page';
 import { PriceCalculatorPage } from './pages/AboutUs/price-calculator-page/price-calculator-page';
 import { WherePage } from './pages/AboutUs/where-page/where-page';
 import { ShowCartPage } from './pages/Cart/show-cart-page/show-cart-page';
@@ -40,6 +41,12 @@ export const routes: Routes = [
   {
     path: 'make-order',
     component: MakeOrderPage,
+  },
+  {
+    path: 'my-orders',
+    component: MyOrdersPage,
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['registered', 'admin'] }
   },
   {
     path: 'make-order/:orderId',

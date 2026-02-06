@@ -1,0 +1,72 @@
+<div class="page-wrapper">
+  <h1>Mis Pedidos</h1>
+
+  <div *ngIf="loading" class="loading-container">
+    <p>Cargando tus pedidos...</p>
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="empty-state">
+    <div class="empty-icon">📦</div>
+    <h2>No tienes pedidos aún</h2>
+    <p>¡Comienza a hacer tu primer pedido ahora mismo!</p>
+    <button class="btn btn-primary" (click)="goToStore()">Ir a la Tienda</button>
+  </div>
+
+  <div *ngIf="!loading && orders.length > 0" class="orders-container">
+    <div class="orders-list">
+      <div *ngFor="let order of orders" class="order-card">
+        <div class="order-header">
+          <div class="order-id">
+            <span class="label">Número de Seguimiento:</span>
+            <span class="value">{{ order.id }}</span>
+          </div>
+          <div class="order-status-badge" [ngClass]="'status-' + (order.status || '').toLowerCase()">
+            {{ getOrderStatusLabel(order.status) }}
+          </div>
+        </div>
+
+        <div class="order-details">
+          <div class="detail-row">
+            <span class="label">Fecha de creación:</span>
+            <span class="value">{{ getFormattedDate(order.createdAt) }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Estado del Pago:</span>
+            <span class="value payment-status" [ngClass]="'payment-' + (order.paymentStatus || '').toLowerCase()">
+              {{ getPaymentStatusLabel(order.paymentStatus) }}
+            </span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Estado del Pedido:</span>
+            <span class="value order-status" [ngClass]="'order-' + (order.status || '').toLowerCase()">
+              {{ getOrderStatusLabel(order.status) }}
+            </span>
+          </div>
+
+          <div class="detail-row total">
+            <span class="label">Monto Total:</span>
+            <span class="value amount">${{ order.total | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="order-actions">
+          <button class="btn btn-secondary" (click)="goToOrderDetails(order.id)">Ver Detalles</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button class="btn btn-pagination" (click)="previousPage()" [disabled]="currentPage === 0">
+        Anterior
+      </button>
+      <span class="pagination-info">
+        Página {{ currentPage + 1 }} de {{ totalPages }} ({{ totalElements }} pedidos)
+      </span>
+      <button class="btn btn-pagination" (click)="nextPage()" [disabled]="!hasNextPage">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

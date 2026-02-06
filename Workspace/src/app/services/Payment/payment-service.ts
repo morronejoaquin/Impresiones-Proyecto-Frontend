@@ -31,4 +31,12 @@ export class PaymentService {
   checkout(request: PaymentCreateRequest): Observable<PaymentResponse>{
     return this.http.post<PaymentResponse>(`${this.apiUrl}/checkout`, request)
   }
+
+  getMyPayments(page: number = 0, size: number = 20, sort: string = 'orderDate,desc'){
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort);
+    return this.http.get<Page<PaymentHistoryResponse>>(`${this.apiUrl}/my`, { params });
+  }
 }

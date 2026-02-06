@@ -97,4 +97,9 @@ export class CartService {
     if (dateType) params = params.set('dateType', dateType);
     return this.http.get<Page<CartResponse>>(`${this.apiUrl}/delivered`, { params });
   }
+
+  getMyOrders(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/my-orders`, { params });
+  }
 }
