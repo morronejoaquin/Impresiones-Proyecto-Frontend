@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import CartWithItemsResponse from '../../models/Cart/cartWithItemsResponse';
@@ -14,6 +14,8 @@ import CartStatusUpdateRequest from '../../models/Cart/cartStatusUpdateRequest';
 })
 export class CartService {
   private apiUrl = `${environment.apiUrl}/carts`;
+  private cartUpdatedSubject = new Subject<CartWithItemsResponse | null>();
+  public cartUpdated$ = this.cartUpdatedSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +24,18 @@ export class CartService {
   }
 
   getMyCart(): Observable<CartWithItemsResponse> {
-    return this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`);
+    return new Observable((observer) => {
+      this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`).subscribe({
+        next: (cart) => {
+          this.cartUpdatedSubject.next(cart);
+          observer.next(cart);
+          observer.complete();
+        },
+        error: (err) => {
+          observer.error(err);
+        },
+      });
+    });
   }
 
   agregarItem(request: OrderItemCreateRequest, file: File): Observable<OrderItemResponse> {
@@ -31,11 +44,33 @@ export class CartService {
     formData.append('data', JSON.stringify(request));
     formData.append('file', file);
 
-    return this.http.patch<OrderItemResponse>(`${this.apiUrl}/items/agregar-orden`, formData);
+    return new Observable((observer) => {
+      this.http.patch<OrderItemResponse>(`${this.apiUrl}/items/agregar-orden`, formData).subscribe({
+        next: (response) => {
+          this.refreshCart();
+          observer.next(response);
+          observer.complete();
+        },
+        error: (err) => {
+          observer.error(err);
+        },
+      });
+    });
   }
 
   eliminarItem(itemId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/items/${itemId}`);
+    return new Observable((observer) => {
+      this.http.delete<void>(`${this.apiUrl}/items/${itemId}`).subscribe({
+        next: () => {
+          this.refreshCart();
+          observer.next();
+          observer.complete();
+        },
+        error: (err) => {
+          observer.error(err);
+        },
+      });
+    });
   }
 
   getPendingCarts(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
@@ -44,7 +79,16 @@ export class CartService {
   }
 
   actualizarEstado(cartId: string, request: CartStatusUpdateRequest): Observable<CartResponse> {
-    return this.http.patch<CartResponse>(`${this.apiUrl}/${cartId}/estado`, { status: request });
+    return new Observable((observer) => {
+      this.http.patch<CartResponse>(`${this.apiUrl}/${cartId}/estado`, request).subscribe({
+        next: (resp) => {
+          this.refreshCart();
+          observer.next(resp);
+          observer.complete();
+        },
+        error: (err) => observer.error(err),
+      });
+    });
   }
 
   descargarArchivo(cartId: string, ordenId: string): Observable<Blob> {
@@ -101,5 +145,16 @@ export class CartService {
   getMyOrders(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<Page<CartResponse>>(`${this.apiUrl}/my-orders`, { params });
+  }
+
+  public refreshCart(): void {
+    this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`).subscribe({
+      next: (cart) => {
+        this.cartUpdatedSubject.next(cart);
+      },
+      error: (err) => {
+        console.error('Error refreshing cart:', err);
+      },
+    });
   }
 }

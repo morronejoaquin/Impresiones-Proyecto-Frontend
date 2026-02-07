@@ -65,9 +65,7 @@
     </div>
 
     <div class="cart-summary">
-      <div class="cart-total">
-        <h3>Total del Carrito: ${{ cartTotal | number:'1.2-2' }}</h3>
-      </div>
+      <app-cart-total [total]="cartTotal"></app-cart-total>
       <div class="cart-actions">
         <button type="button" class="btn-proceed" (click)="proceedToPayment()">Proceder al pago</button>
       </div>

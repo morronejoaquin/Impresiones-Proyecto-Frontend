@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import Page from '../../models/PageModel/page';
 import OrderItemResponse from '../../models/OrderItem/orderItemResponse';
 import OrderItemUpdateRequest from '../../models/OrderItem/orderItemUpdateRequest';
+import { CartService } from '../Cart/cart-service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ import OrderItemUpdateRequest from '../../models/OrderItem/orderItemUpdateReques
 export class OrderService {
   private apiUrl = `${environment.apiUrl}/orderItems`;
 
-  constructor(private http: HttpClient){
+  constructor(private http: HttpClient, private cartService: CartService){
   }
 
   getAll(page: number = 0, size: number = 20): Observable<Page<OrderItemResponse>> {
@@ -29,6 +31,7 @@ export class OrderService {
   }
 
   update(id: string, request: OrderItemUpdateRequest): Observable<OrderItemResponse> {
-    return this.http.patch<OrderItemResponse>(`${this.apiUrl}/${id}`, request);
+    return this.http.patch<OrderItemResponse>(`${this.apiUrl}/${id}`, request)
+      .pipe(tap(() => this.cartService.refreshCart()));
   }
 }

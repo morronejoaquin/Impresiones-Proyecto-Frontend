@@ -1,6 +1,6 @@
 import { UserService } from './../../../services/Users/user-service';
 import CartWithItemsResponse from './../../../models/Cart/cartWithItemsResponse';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,15 +8,17 @@ import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
 import { CartStatusEnum } from '../../../models/Enums/cartStatusEnum';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
+import { CartTotalComponent } from '../../../components/cart-total/cart-total';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-show-cart-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CartTotalComponent],
   templateUrl: './show-cart-page.html',
   styleUrl: './show-cart-page.css',
 })
-export class ShowCartPage implements OnInit {
+export class ShowCartPage implements OnInit, OnDestroy {
   orders: OrderItem[] = [];
   cartTotal: number = 0;
   private currentCartId!: string;
@@ -24,6 +26,7 @@ export class ShowCartPage implements OnInit {
   errorMessage: string = '';
   itemToDeleteId: string | null = null;
   isDeleting: boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -33,6 +36,21 @@ export class ShowCartPage implements OnInit {
 
   ngOnInit(): void {
     this.loadCart();
+
+    this.cartService.cartUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((cart) => {
+        if (cart) {
+          this.currentCartId = cart.id;
+          this.orders = cart.items || [];
+          this.cartTotal = cart.total;
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadCart(): void {
