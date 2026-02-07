@@ -1,32 +1,56 @@
-<form [formGroup]="calculatorForm" (ngSubmit)="calcularPrecio()" class="calculator-form">
-  <label for="pages">Páginas:</label>
-  <input type="number" id="pages" formControlName="pages" />
+<div class="calculator-container">
+  <h1 class="calculator-title">Calculadora de Precios</h1>
+  <p class="calculator-subtitle">Conoce el costo de tu impresión sin necesidad de registrarte</p>
 
-  <label for="copies">Copias:</label>
-  <input type="number" id="copies" formControlName="copies" />
+  <form [formGroup]="calculatorForm" class="calculator-form">
+    <div class="form-group">
+      <label for="pages">Cantidad de páginas:</label>
+      <input type="number" id="pages" formControlName="pages" min="1" />
+    </div>
 
-  <label>
-    <input type="checkbox" formControlName="doubleSided" />
-    Doble faz
-  </label>
+    <div class="form-group">
+      <label for="copies">Número de copias:</label>
+      <input type="number" id="copies" formControlName="copies" min="1" />
+    </div>
 
-  <label for="binding">Tipo de encuadernado:</label>
-  <select id="binding" formControlName="binding">
-    <option [value]="null">Ninguno</option>
-    <option value="ringed">Anillado</option>
-    <option value="stapled">Grapado</option>
-  </select>
+    <div class="form-group">
+      <label for="binding">Tipo de encuadernado:</label>
+      <select id="binding" formControlName="binding">
+        @for (option of bindingOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
 
-  <label>
-    <input type="checkbox" formControlName="color" />
-    Impresión a color
-  </label>
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" formControlName="color" />
+        <span>Impresión a color</span>
+      </label>
+    </div>
+  </form>
 
-  <button type="submit">Calcular precio</button>
-
-  @if (calculatedPrice !== null) {
-  <section class="result">
-    <h3>Precio total: ${{ calculatedPrice }}</h3>
-  </section>
+  @if (isLoading) {
+    <div class="loading">
+      <span>Calculando...</span>
+    </div>
   }
-</form>
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (priceResult && !isLoading) {
+    <section class="result">
+      <h3 class="total-price">Precio total: ${{ priceResult.total | number:'1.2-2' }}</h3>
+      <div class="price-breakdown">
+        <p><strong>Precio por hoja:</strong> ${{ priceResult.pricePerSheet | number:'1.2-2' }}</p>
+        @if (priceResult.priceRingedBinding > 0) {
+          <p><strong>Precio encuadernado:</strong> ${{ priceResult.priceRingedBinding | number:'1.2-2' }}</p>
+        }
+      </div>
+    </section>
+  }
+</div>

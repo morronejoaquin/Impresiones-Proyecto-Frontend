@@ -163,6 +163,7 @@ export class MakeOrderPage implements OnInit {
   }
 
   private loadOrderForEditing(orderId: string): void {
+    this.isLoading = true;
     this.orderService.getById(orderId).subscribe({
       next: (order) => {
         this.orderForm.patchValue({
@@ -174,9 +175,15 @@ export class MakeOrderPage implements OnInit {
           pages: order.pages || 1,
         });
         this.pageCount = order.pages;
+        this.selectedFileName = order.fileName || 'Archivo cargado';
+        this.isLoading = false;
         this.calcularPrecio();
       },
-      error: (err) => console.error('Error loading order for editing:', err),
+      error: (err) => {
+        console.error('Error loading order for editing:', err);
+        this.isLoading = false;
+        this.notificationService.error('Error al cargar el pedido para edición.');
+      },
     });
   }
 
@@ -269,6 +276,8 @@ export class MakeOrderPage implements OnInit {
   private updateOrderItem(): void {
     if (!this.editingOrderId) return;
 
+    this.isLoading = true;
+
     const updatedOrderItem: OrderItemUpdateRequest = {
       color: this.orderForm.get('color')?.value,
       doubleSided: this.orderForm.get('doubleSided')?.value,
@@ -279,8 +288,14 @@ export class MakeOrderPage implements OnInit {
 
     this.orderService.update(this.editingOrderId, updatedOrderItem).subscribe({
       next: () => {
+        this.isLoading = false;
         this.notificationService.success('Pedido actualizado correctamente.');
         this.router.navigate(['/cart']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error updating order item:', err);
+        this.notificationService.error('Error al actualizar el pedido. Intenta nuevamente.');
       },
     });
   }

@@ -72,9 +72,8 @@ export const routes: Routes = [
   },
   {
     path: 'price-calculator',
-    component: PriceCalculatorPage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
+    component: PriceCalculatorPage
+    // Ruta pública - no requiere autenticación
   },
   {
     path: 'contact',
