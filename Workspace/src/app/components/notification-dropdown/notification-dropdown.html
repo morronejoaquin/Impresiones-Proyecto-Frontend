@@ -1,0 +1,40 @@
+<div class="notification-container">
+  <button class="bell-btn" (click)="toggleDropdown()">
+    <i class="fas fa-bell"></i>
+    @if ((notificationService.unreadCount$ | async) > 0) {
+      <span class="badge">{{ notificationService.unreadCount$ | async }}</span>
+    }
+  </button>
+
+  @if (isOpen) {
+    <div class="dropdown-menu shadow">
+      <div class="dropdown-header">
+        <span>Notificaciones</span>
+        @if (notifications.length > 0) {
+          <button (click)="markAllAsRead()" class="btn-link">Limpiar</button>
+        }
+      </div>
+
+      <div class="dropdown-body">
+        @for (notif of notifications; track notif.id) {
+          <div class="notification-item" (click)="handleNotificationClick(notif)">
+            <div class="item-content">
+              <p class="message">{{ notif.message }}</p>
+              <span class="time">{{ notif.createdAt | date:'shortTime' }}</span>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <i class="fas fa-bell-slash"></i>
+            <p>No tienes mensajes nuevos</p>
+          </div>
+        }
+      </div>
+
+      <div class="dropdown-footer">
+        <button routerLink="/my-orders">Ver todos mis pedidos</button>
+      </div>
+    </div>
+  }
+</div>

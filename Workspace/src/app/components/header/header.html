@@ -1,37 +1,37 @@
 <header>
   <nav>
     <ul>
-      @if(users.isLoggedIn()){
-        @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){
+      <!-- @if(users.isLoggedIn()){
+        @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){ -->
         <li><a routerLink="/home">Inicio</a></li>
-        } 
+        <!-- }  -->
 
         <li><a routerLink="/account">Cuenta</a></li>
         
-        @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){
+        <!-- @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){ -->
           <li><a routerLink="/make-order">Hace tu pedido</a></li>
-        }
+        <!-- } -->
 
         <li><a routerLink="/price-calculator">Calculador de precios</a></li>
 
         <li><a routerLink="/contact">Contacto</a></li>
 
-        @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){
+        <!-- @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){ -->
           <li><a routerLink="/cart">Carrito</a></li>
-        }
+        <!-- } -->
         
-        @if(users.isLoggedIn() && users.getUserRole() === 'admin'){
+        <!-- @if(users.isLoggedIn() && users.getUserRole() === 'admin'){ -->
           <li><a routerLink="/admin">Pedidos</a></li>
-        }
+        <!-- } -->
 
-        @if(!users.isLoggedIn()){
+        <!-- @if(!users.isLoggedIn()){ -->
           <li><a routerLink="/user-login">Login</a></li>
-        }
-      }@else{
+        <!-- } -->
+      <!-- }@else{ -->
         <li><a>Bienvenidos</a></li>
-      }
+      <!-- } -->
       
-      
+      <app-notification-dropdown></app-notification-dropdown>
     </ul>
   </nav>
 </header>

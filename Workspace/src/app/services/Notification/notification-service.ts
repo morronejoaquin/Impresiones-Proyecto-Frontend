@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, retry, share, Subject, switchMap, tap, timer } from 'rxjs';
+import NotificationResponse from '../../models/NotificationModel/notificationResponse';
 
 export interface ImpresionesNotification {
   message: string;
@@ -11,10 +13,52 @@ export interface ImpresionesNotification {
   providedIn: 'root'
 })
 export class NotificationService {
+  private readonly API_URL = 'http://localhost:8080/api/notifications';
+
   private notificationSubject = new Subject<ImpresionesNotification>();
   notification$ = this.notificationSubject.asObservable();
 
   private pendingNotification: ImpresionesNotification | null = null;
+  
+  // Usamos BehaviorSubject para que la campana siempre tenga un valor inicial (0)
+  private unreadNotificationsSubject = new BehaviorSubject<NotificationResponse[]>([]);
+  public unreadNotifications$ = this.unreadNotificationsSubject.asObservable();
+  
+  // Un observable derivado solo para el conteo (facilita el Badge del HTML)
+  private unreadCountSubject = new BehaviorSubject<number>(0);
+  public unreadCount$ = this.unreadCountSubject.asObservable();
+
+  constructor(private http: HttpClient){
+    this.initPolling();
+  }
+
+  private initPolling() {
+    // timer(retraso inicial, cada cuánto tiempo)
+    // 30000 ms = 30 segundos
+    timer(0, 30000).pipe(
+      switchMap(() => this.getUnreadFromServer()),
+      retry(), // Si hay un error de red, no rompe el polling, intenta en el próximo ciclo
+      share()  // Evita múltiples peticiones si hay varios componentes suscritos
+    ).subscribe(notifications => {
+      this.unreadNotificationsSubject.next(notifications);
+      this.unreadCountSubject.next(notifications.length);
+    });
+  }
+
+  private getUnreadFromServer(): Observable<NotificationResponse[]> {
+    return this.http.get<NotificationResponse[]>(`${this.API_URL}/unread`);
+  }
+
+  markAsRead(id: string): Observable<void> {
+    return this.http.patch<void>(`${this.API_URL}/${id}/read`, {}).pipe(
+      tap(() => {
+        // Actualizamos el estado local inmediatamente para mejorar la UX
+        const updatedList = this.unreadNotificationsSubject.value.filter(n => n.id !== id);
+        this.unreadNotificationsSubject.next(updatedList);
+        this.unreadCountSubject.next(updatedList.length);
+      })
+    );
+  }
 
   show(message: string, type: 'success' | 'error' | 'info' = 'info', redirectUrl?: string) {
     const notification: ImpresionesNotification = { message, type, redirectUrl }; 
