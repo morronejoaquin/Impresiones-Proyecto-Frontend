@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserService } from '../../../services/Users/user-service';
-import User from '../../../models/Users/userResponse';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/Auth/auth.service';
+import UserResponse from '../../../models/Users/userResponse';
 
 @Component({
   selector: 'app-user-login-page',
@@ -12,29 +12,19 @@ import { CommonModule } from '@angular/common';
   templateUrl: './user-login-page.html',
   styleUrls: ['./user-login-page.css']
 })
-export class UserLoginPage implements OnInit {
-
+export class UserLoginPage {
   formUser: FormGroup;
+  errorMessage: string | null = null;
+  user: UserResponse | null = null;
 
   constructor(
-    private userS: UserService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private router: Router
   ) {
     this.formUser = this.fb.group({
-      usernameF: ['', Validators.required],
+      usernameF: ['', Validators.required, Validators.email],
       passwordF: ['', Validators.required]
-    });
-  }
-
-  ngOnInit() {
-    this.cargarUsuarios();
-  }
-
-  private cargarUsuarios() {
-    this.userS.getUsers().subscribe({
-      next: (data) => { this.userS.User = data; },
-      error: (e) => console.error(e)
     });
   }
 
@@ -45,57 +35,38 @@ export class UserLoginPage implements OnInit {
       return;
     }
 
-    const username = this.formUser.get('usernameF')!.value as string;
-    const password = this.formUser.get('passwordF')!.value as string;
+    const credentials = this.formUser.value;
 
-    const usuarioEncontrado = this.userS.User.find(
-      (u: User) => u.username === username && u.password === password
-    );
-
-    if (!usuarioEncontrado) {
-      console.log('Credenciales incorrectas');
-      return;
-    }
-
-    this.handleLogin(usuarioEncontrado);
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        this.handleLogin(response.token);
+      }, 
+      error: (err) =>{
+        this.errorMessage = "Email o contraseña incorrectos";
+        console.error(err);
+      }
+    })
   }
 
-  loginAsGuest() {
-    const guestUser: User = {
-      id: `${Date.now()}`,
-      username: `guest_${Date.now()}`,
-      name: 'Invitado',
-      surname: 'Temporal',
-      email: 'guest@temp.com',
-      phone: '0000000000',
-      password: '',
-      role: 'guest',
-    };
+  
+  private handleLogin(token: string) {
+    localStorage.setItem('token', token); 
 
-    this.userS.postUser(guestUser).subscribe({
-      next: (created: User) => {
-        console.log('Usuario invitado creado:', created);
-        this.userS.setGuestUserForCleanup(created);
-        this.handleLogin(created);
+    this.authService.getCurrentUser().subscribe({
+      next: (data) => {
+        this.user = data;
       },
-      error: (err) => console.error('Error al crear invitado:', err)
-    });
-  }
+      error: (err) => {
+        console.error(err);
+      }
+    })
 
-  private handleLogin(user: User) {
-    this.userS.setAuthToken(user); 
+    console.log(`Login exitoso como ${this.user?.role}`);
 
-    if (!this.userS.isLoggedIn()) {
-      console.warn('No se pudo establecer sesión (token inválido).');
-      return;
-    }
-
-    console.log(`Login exitoso como ${user.role}`);
-
-    if (user.role === 'admin') {
+    if (this.user?.role === 'admin') {
       this.router.navigate(['/admin']);
     } else {
-      this.router.navigate(['/make-order']); 
+      this.router.navigate(['/home']); 
     }
   }
 }

@@ -56,6 +56,33 @@ form {
     color: #999;
     font-size: 0.95rem;
   }
+
+  small {
+  color: #ff4d4f;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  font-weight: 400;
+  }
+
+  .alert-error {
+    background-color: #fff2f0;
+    border: 1px solid #ffccc7;
+    color: #ff4d4f;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  input.ng-invalid.ng-touched {
+    border-color: #ff4d4f;
+  }
+
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
   
   button {
     background: linear-gradient(339deg, rgba(255, 0, 0, 1) 0%, rgba(21, 0, 255, 1) 100%);

@@ -15,34 +15,56 @@ form {
 h1 {
   font-size: 1.8rem;
   color: #333;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-fieldset {
-  border: none;
+.field-container {
   display: flex;
   flex-direction: column;
   text-align: left;
+  gap: 0.4rem;
 }
 
 label {
-  margin-bottom: 0.5rem;
   font-weight: 500;
   color: #555;
+  font-size: 0.9rem;
 }
 
 input {
-  padding: 10px 12px;
+  padding: 12px;
   border: 1.5px solid #ccc;
   border-radius: 10px;
   font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+input.ng-invalid.ng-touched {
+  border-color: #ff4d4f;
+  background-color: #fff2f0;
 }
 
 input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+  border-color: #1500ff; 
+  box-shadow: 0 0 5px rgba(21, 0, 255, 0.2);
   outline: none;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 0.75rem;
+  margin-top: -0.2rem;
+  font-weight: 400;
+}
+
+.alert-error {
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  color: #ff4d4f;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 button[type="submit"] {
@@ -54,59 +76,42 @@ button[type="submit"] {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  margin-top: 0.5rem;
 }
 
-button[type="submit"]:hover {
-  background: linear-gradient(339deg, rgba(255, 0, 0, 1) 0%, rgba(21, 0, 255, 1) 100%);
+button[type="submit"]:hover:not(:disabled) {
   transform: scale(1.03);
+  filter: brightness(1.1);
 }
 
-h4 {
+button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.footer-links {
   margin-top: 1rem;
   font-size: 0.9rem;
-  font-weight: 400;
+  color: #666;
 }
 
-h4 a {
-  color: #007bff;
+.footer-links a {
+  color: #1500ff;
   text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-h4 a:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-
-a {
-  cursor: pointer;
-  color: #007bff;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-a:hover {
-  color: #0056b3;
-}
-
-p {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0;
+.footer-links a:hover {
+  color: #ff0000;
+  text-decoration: underline;
 }
 
 @media (max-width: 500px) {
   form {
     width: 90%;
     padding: 1.5rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  button {
-    font-size: 0.95rem;
   }
 }

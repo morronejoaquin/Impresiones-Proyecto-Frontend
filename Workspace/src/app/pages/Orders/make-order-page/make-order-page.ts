@@ -1,7 +1,6 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import {
   FormGroup,
-  FormControl,
   ReactiveFormsModule,
   Validators,
   FormBuilder,
@@ -10,11 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../../services/Cart/cart-service';
-import { PriceManagerService } from '../../../services/Prices/price-manager-service';
 import { CalculatorService } from '../../../services/Calculator/calculator-service';
-import { UserService } from '../../../services/Users/user-service';
 import { AuthService } from '../../../services/Auth/auth.service';
-import Cart from '../../../models/Cart/cartResponse';
 import { OrderService } from '../../../services/Orders/order-service';
 import { NotificationService } from '../../../services/Notification/notification-service';
 import OrderItemCreateRequest from '../../../models/OrderItem/orderItemCreateRequest';
@@ -46,10 +42,8 @@ export class MakeOrderPage implements OnInit {
   constructor(
     private zone: NgZone,
     private cartService: CartService,
-    private priceS: PriceManagerService,
     private calculatorService: CalculatorService,
     private orderService: OrderService,
-    private userService: UserService,
     private authService: AuthService,
     private notificationService: NotificationService,
     private fb: FormBuilder,

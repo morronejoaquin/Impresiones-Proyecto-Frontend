@@ -1,10 +1,17 @@
 <form (ngSubmit)="onRegisterSubmit()" [formGroup]="registerForm">
-    <h1>Registro</h1>
+    <h1>Crear Cuenta</h1>
   
+    @if (errorMessage) {
+    <div class="alert-error">{{ errorMessage }}</div>
+    }
+
     <fieldset>
-      <input formControlName="username" type="text" placeholder="Nombre de usuario" />
-      @if (registerForm.get('username')?.touched && registerForm.get('username')?.hasError('required')) {
-        <small>El nombre de usuario es obligatorio</small>
+      <input formControlName="email" type="email" placeholder="Correo electrónico" />
+      @if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')) {
+        <small>El correo electrónico es obligatorio</small>
+      }
+      @else if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')) {
+        <small>El correo electrónico no es válido</small>
       }
     </fieldset>
   
@@ -19,16 +26,6 @@
       <input formControlName="surname" type="text" placeholder="Apellido" />
       @if (registerForm.get('surname')?.touched && registerForm.get('surname')?.hasError('required')) {
         <small>El apellido es obligatorio</small>
-      }
-    </fieldset>
-  
-    <fieldset>
-      <input formControlName="email" type="email" placeholder="Correo electrónico" />
-      @if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')) {
-        <small>El correo electrónico es obligatorio</small>
-      }
-      @else if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')) {
-        <small>El correo electrónico no es válido</small>
       }
     </fieldset>
   
@@ -51,6 +48,13 @@
         <small>No puede superar los 18 caracteres</small>
       }@else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')) {
         <small>La contraseña es obligatoria</small>
+      }
+    </fieldset>
+
+    <fieldset>
+      <input formControlName="confirmPassword" type="password" placeholder="Confirmar Contraseña" />
+      @if (registerForm.touched && registerForm.hasError('passwordMismatch')) {
+        <small>Las contraseñas no coinciden</small>
       }
     </fieldset>
   
