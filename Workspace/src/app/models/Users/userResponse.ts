@@ -5,5 +5,4 @@ export default interface UserResponse {
   surname: string;
   email: string;
   phone: string;
-  role: string;
 }
