@@ -3,7 +3,8 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/Auth/auth.service';
-import UserResponse from '../../../models/Users/userResponse';
+import ProfileResponse from '../../../models/Users/profileResponse';
+import { UserService } from '../../../services/Users/user-service';
 
 @Component({
   selector: 'app-user-login-page',
@@ -15,10 +16,11 @@ import UserResponse from '../../../models/Users/userResponse';
 export class UserLoginPage {
   formUser: FormGroup;
   errorMessage: string | null = null;
-  user: UserResponse | null = null;
+  user: ProfileResponse | null = null;
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -52,7 +54,7 @@ export class UserLoginPage {
   private handleLogin(token: string) {
     localStorage.setItem('token', token); 
 
-    this.authService.getCurrentUser().subscribe({
+    this.userService.getProfile().subscribe({
       next: (data) => {
         this.user = data;
       },

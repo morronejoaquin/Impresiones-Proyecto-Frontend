@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, retry, share, Subject, switchMap, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, retry, share, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 import NotificationResponse from '../../models/NotificationModel/notificationResponse';
 
 export interface ImpresionesNotification {
@@ -27,6 +27,8 @@ export class NotificationService {
   // Un observable derivado solo para el conteo (facilita el Badge del HTML)
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
+  
+  private stopPolling$ = new Subject<void>();
 
   constructor(private http: HttpClient){
     this.initPolling();
@@ -36,13 +38,24 @@ export class NotificationService {
     // timer(retraso inicial, cada cuánto tiempo)
     // 30000 ms = 30 segundos
     timer(0, 30000).pipe(
+      takeUntil(this.stopPolling$),
       switchMap(() => this.getUnreadFromServer()),
       retry(), // Si hay un error de red, no rompe el polling, intenta en el próximo ciclo
       share()  // Evita múltiples peticiones si hay varios componentes suscritos
-    ).subscribe(notifications => {
-      this.unreadNotificationsSubject.next(notifications);
-      this.unreadCountSubject.next(notifications.length);
+    ).subscribe({
+        next: notifications => {
+          this.unreadNotificationsSubject.next(notifications);
+          this.unreadCountSubject.next(notifications.length);
+        },
+        error: (e) => console.error("Error en polling", e)
     });
+  }
+
+  public clearAndStop() {
+    this.stopPolling$.next(); // Detiene el timer definitivamente
+    this.unreadNotificationsSubject.next([]); // Limpia la lista (Criterio de aceptación)
+    this.unreadCountSubject.next(0); // Limpia el contador
+    this.pendingNotification = null;
   }
 
   private getUnreadFromServer(): Observable<NotificationResponse[]> {

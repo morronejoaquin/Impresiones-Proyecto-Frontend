@@ -22,8 +22,6 @@ export const routes: Routes = [
   {
     path: 'home',
     component: HomePage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
   },
   {
     path: 'account',
@@ -52,7 +50,7 @@ export const routes: Routes = [
     path: 'make-order/:orderId',
     component: MakeOrderPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
+    data: { allowedRoles: ['registered', 'admin'] }
   },
   {
     path: 'cart',
@@ -62,13 +60,13 @@ export const routes: Routes = [
     path: 'cart-payment',
     component: CartPaymentPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
+    data: { allowedRoles: ['registered', 'admin'] }
   },
   {
     path: 'order-received',
     component: OrderReceivedPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
+    data: { allowedRoles: ['registered', 'admin'] }
   },
   {
     path: 'price-calculator',
@@ -78,8 +76,6 @@ export const routes: Routes = [
   {
     path: 'contact',
     component: WherePage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['guest', 'registered', 'admin'] }
   },
   {
     path: 'admin',
@@ -106,5 +102,5 @@ export const routes: Routes = [
     canActivate: [permissionGuard],
     data: { allowedRoles: ['admin']}
   },
-  { path: '**', redirectTo: 'user-login' }
+  { path: '**', redirectTo: 'home' }
 ];

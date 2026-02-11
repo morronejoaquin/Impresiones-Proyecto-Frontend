@@ -6,7 +6,7 @@ const LOGIN_URL = '/user-login';
 
 export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
   const router = inject(Router);
-  const token = localStorage.getItem('token'); // O donde guardes tu JWT
+  const token = localStorage.getItem('token');
 
   if (!token) {
     return router.createUrlTree([LOGIN_URL]);

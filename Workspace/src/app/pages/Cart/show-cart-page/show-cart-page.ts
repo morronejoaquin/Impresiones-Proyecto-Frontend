@@ -6,15 +6,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
-import { CartStatusEnum } from '../../../models/Enums/cartStatusEnum';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
-import { CartTotalComponent } from '../../../components/cart-total/cart-total';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-show-cart-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CartTotalComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './show-cart-page.html',
   styleUrl: './show-cart-page.css',
 })

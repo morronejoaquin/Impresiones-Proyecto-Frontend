@@ -7,12 +7,14 @@ import RegisterRequest from '../../models/Auth/registerRequest';
 import RegisterResponse from '../../models/Auth/registerResponse';
 import UserResponse from '../../models/Users/userResponse';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { NotificationService } from '../Notification/notification-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient){
+  constructor(private http: HttpClient, private router: Router, private notificationService: NotificationService){
   }
   
   login(request: LoginRequest): Observable<AuthResponse> {
@@ -32,9 +34,22 @@ export class AuthService {
   }
 
   logout(): void {
-    const token = localStorage.getItem('token');
-    this.http.post(`${this.apiUrl}/logout`, {}).subscribe();
+    this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+      next: () => this.cleanStorageAndRedirect(),
+      error: () => this.cleanStorageAndRedirect()
+    });
+  }
+
+  private cleanStorageAndRedirect(): void {
+
+    // se detienen las notificaciones
+    this.notificationService.clearAndStop();
+
     localStorage.removeItem('token');
+
+    this.router.navigate(['/user-login']);
+    
+    window.location.reload();
   }
 
   getToken(): string | null {

@@ -1,37 +1,32 @@
 <header>
   <nav>
     <ul>
-      <!-- @if(users.isLoggedIn()){
-        @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){ -->
-        <li><a routerLink="/home">Inicio</a></li>
-        <!-- }  -->
+      <li><a routerLink="/home">Inicio</a></li>
 
-        <li><a routerLink="/account">Cuenta</a></li>
-        
-        <!-- @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){ -->
-          <li><a routerLink="/make-order">Hace tu pedido</a></li>
-        <!-- } -->
+      <li><a routerLink="/make-order">Hace tu pedido</a></li>
 
-        <li><a routerLink="/price-calculator">Calculador de precios</a></li>
+      <li><a routerLink="/cart">Carrito</a></li>
 
-        <li><a routerLink="/contact">Contacto</a></li>
+      <li><a routerLink="/price-calculator">Calculador de precios</a></li>
 
-        <!-- @if(users.isLoggedIn() && users.getUserRole() !== 'admin'){ -->
-          <li><a routerLink="/cart">Carrito</a></li>
-        <!-- } -->
-        
-        <!-- @if(users.isLoggedIn() && users.getUserRole() === 'admin'){ -->
-          <li><a routerLink="/admin">Pedidos</a></li>
-        <!-- } -->
+      <li><a routerLink="/mi-orders">Mis pedidos</a></li>
 
-        <!-- @if(!users.isLoggedIn()){ -->
-          <li><a routerLink="/user-login">Login</a></li>
-        <!-- } -->
-      <!-- }@else{ -->
-        <li><a>Bienvenidos</a></li>
-      <!-- } -->
-      
+      <li><a routerLink="/account">Cuenta</a></li>
+
+      @if(authService.getToken() && userService.getProfile().role === 'admin'){
+        <li><a routerLink="/admin">Pedidos</a></li>
+      }
+
+      <li><a routerLink="/contact">Contacto</a></li>
+
       <app-notification-dropdown></app-notification-dropdown>
+
+      @if(authService.getToken){
+        <li><a (click)="logout()" class="logout-link">Cerrar Sesión</a></li>
+      }
+
+      <li><a routerLink="/user-login">Login</a></li>
+    
     </ul>
   </nav>
 </header>
