@@ -83,6 +83,32 @@
     font-weight: 500;
 }
 
+.warning-banner {
+    background-color: #fff4e5;
+    border-left: 5px solid #ffa117;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 4px;
+}
+
+.warning-banner p {
+    margin: 0;
+    color: #663c00;
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.error-text {
+    color: #e76f51;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
 @media (max-width: 520px) {
     .price-admin-container {
         padding: 0.9rem;

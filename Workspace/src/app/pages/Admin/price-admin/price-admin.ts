@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PriceManagerService } from '../../../services/Prices/price-manager-service';
-import Prices from '../../../models/Prices/pricesResponse';
 import { CommonModule } from '@angular/common';
+import PricesResponse from '../../../models/Prices/pricesResponse';
+import PricesUpdateRequest from '../../../models/Prices/pricesUpdateRequest';
+import { NotificationService } from '../../../services/Notification/notification-service';
 
 @Component({
   selector: 'app-price-admin',
@@ -12,38 +14,36 @@ import { CommonModule } from '@angular/common';
 })
 export class PriceAdminComponent implements OnInit {
   priceForm!: FormGroup;
-  prices: Prices[] = [];
+  public prices: PricesResponse | null = null;
   loading = false;
-  message = '';
 
   constructor(
     private fb: FormBuilder,
-    private priceService: PriceManagerService
+    private priceService: PriceManagerService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
     this.priceForm = this.fb.group({
-      pricePerSheetBW: [0, [Validators.required, Validators.min(0)]],
-      pricePerSheetColor: [0, [Validators.required, Validators.min(0)]],
-      priceRingedBinding: [0, [Validators.required, Validators.min(0)]]
+      pricePerSheetBW: [0, [Validators.required, Validators.min(0.01)]],
+      pricePerSheetColor: [0, [Validators.required, Validators.min(0.01)]],
+      priceRingedBinding: [0, [Validators.required, Validators.min(0.01)]]
     });
 
     this.loadPrices();
   }
 
   loadPrices() {
-    this.priceService.getPrices().subscribe({
+    this.priceService.getCurrentPrices().subscribe({
       next: (data) => {
         this.prices = data;
 
-        if (this.prices.length > 0) {
-          const price = this.prices[0];
-          this.priceForm.setValue({
-            pricePerSheetBW: price.pricePerSheetBW,
-            pricePerSheetColor: price.pricePerSheetColor,
-            priceRingedBinding: price.priceRingedBinding
-          });
-        }
+        this.priceForm.setValue({
+          pricePerSheetBW: this.prices.pricePerSheetBW,
+          pricePerSheetColor: this.prices.pricePerSheetColor,
+          priceRingedBinding: this.prices.priceRingedBinding
+        });
+        
       },
       error: (err) => console.error('Error loading prices', err)
     });
@@ -52,52 +52,23 @@ export class PriceAdminComponent implements OnInit {
   savePrices() {
     if (this.priceForm.invalid) {
       this.priceForm.markAllAsTouched();
-      this.message = 'Por favor, ingrese valores válidos (números positivos).';
       return;
     }
 
-    const formValues = this.priceForm.value;
+    const updatedPrice: PricesUpdateRequest = this.priceForm.value;
+    this.loading = true;
 
-    if (this.prices.length > 0) {
-      const updatedPrice: Prices = {
-        id: this.prices[0].id,
-        ...formValues
-      };
-      console.log(updatedPrice.id + "Este es el que estamos modificando")
-
-      this.loading = true;
-      this.priceService.updatePrices(updatedPrice).subscribe({
-        next: () => {
-          this.loading = false;
-          this.message = 'Precios actualizados correctamente!';
-          this.loadPrices();
-        },
-        error: (err) => {
-          this.loading = false;
-          this.message = 'Error al actualizar precios';
-          console.error(err);
-        }
-      });
-    } 
-    else {
-      const newPrice: Prices = {
-        id: 0, 
-        ...formValues
-      };
-
-      this.loading = true;
-      this.priceService.postPrices(newPrice).subscribe({
-        next: () => {
-          this.loading = false;
-          this.message = 'Precio creado correctamente!';
-          this.loadPrices();
-        },
-        error: (err) => {
-          this.loading = false;
-          this.message = 'Error al crear el precio';
-          console.error(err);
-        }
-      });
-    }
+    this.priceService.updatePrices(updatedPrice).subscribe({
+      next: () => {
+        this.loading = false;
+        this.notificationService.success('Precios actualizados correctamente!');
+        this.loadPrices();
+      },
+      error: (err) => {
+        this.loading = false;
+        this.notificationService.error('Error al actualizar precios');
+        console.error(err);
+      }
+    }); 
   }
 }

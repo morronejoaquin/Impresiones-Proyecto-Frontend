@@ -5,11 +5,17 @@
     <div>
       <label>Precio por hoja blanco y negro:</label>
       <input type="number" formControlName="pricePerSheetBW" step="0.01" />
+      @if (priceForm.get('pricePerSheetBW')?.touched && priceForm.get('pricePerSheetBW')?.invalid) {
+        <small class="error-text">El precio debe ser mayor a 0.</small>
+      }
     </div>
 
     <div>
       <label>Precio por hoja a Color:</label>
       <input type="number" formControlName="pricePerSheetColor" step="0.01" />
+      @if (priceForm.get('pricePerSheetColor')?.touched && priceForm.get('pricePerSheetColor')?.invalid) {
+        <small class="error-text">El precio debe ser mayor a 0.</small>
+      }
     </div>
 
     <div>
@@ -17,9 +23,14 @@
       <input type="number" formControlName="priceRingedBinding" step="0.01" />
     </div>
 
-    <button type="submit" [disabled]="loading || priceForm.invalid">Guardar</button>
+    <button type="submit" [disabled]="loading || priceForm.invalid">
+      {{ loading ? 'Guardando...' : 'Actualizar Precios Globales' }}
+    </button>
   </form>
-@if(message){
-  <p>{{ message }}</p>
-}
+
+  <div class="warning-banner">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>Los cambios afectarán únicamente a nuevos pedidos, no a los ya recibidos.</p>
+  </div>
+
 </div>

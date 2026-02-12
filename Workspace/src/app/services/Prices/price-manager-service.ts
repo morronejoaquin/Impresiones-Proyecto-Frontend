@@ -23,6 +23,10 @@ export class PriceManagerService {
     return this.http.get<Page<PricesResponse>>(this.apiUrl, { params });
   }
 
+  getCurrentPrices(): Observable<PricesResponse> {
+    return this.http.get<PricesResponse>(`${this.apiUrl}/current-prices`)
+  }
+
   getById(id: string): Observable<PricesResponse> {
     return this.http.get<PricesResponse>(`${this.apiUrl}/${id}`);
   }
