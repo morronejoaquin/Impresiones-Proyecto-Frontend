@@ -7,12 +7,49 @@
     </button>
   </div>
 
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="status-filter">Estado:</label>
+        <select id="status-filter" [(ngModel)]="filters.status" (change)="applyFilters()" class="filter-input">
+          <option [value]="null">Todos</option>
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ statusLabelMap[status] || status }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="start-date">Fecha Inicio:</label>
+        <input type="date" id="start-date" [(ngModel)]="filters.startDate" (change)="applyFilters()" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label for="end-date">Fecha Fin:</label>
+        <input type="date" id="end-date" [(ngModel)]="filters.endDate" (change)="applyFilters()" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label for="email-filter">Cliente (Email):</label>
+        <input type="text" id="email-filter" [(ngModel)]="filters.customerEmail" placeholder="Buscar por email..." (change)="applyFilters()" class="filter-input">
+      </div>
+    </div>
+
+    <div class="filter-actions" *ngIf="hasActiveFilters()">
+      <button class="btn-clear-filters" (click)="clearFilters()">Limpiar Filtros</button>
+    </div>
+  </div>
+
   <div class="table-wrapper">
     <div *ngIf="isLoading && carts.length === 0" class="loading">
       <p>Cargando carritos...</p>
     </div>
 
-    <div *ngIf="!isLoading && carts.length === 0" class="no-data">
+    <div *ngIf="!isLoading && noResults" class="no-data">
+      <p>No se encontraron pedidos con los criterios seleccionados</p>
+    </div>
+
+    <div *ngIf="!isLoading && carts.length === 0 && !noResults" class="no-data">
       <p>No hay carritos que requieran atención en este momento.</p>
     </div>
 

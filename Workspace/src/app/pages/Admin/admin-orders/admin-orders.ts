@@ -6,6 +6,13 @@ import CartResponse from '../../../models/Cart/cartResponse';
 import Page from '../../../models/PageModel/page';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 
+interface FilterCriteria {
+  status?: OrderStatusEnum | null;
+  startDate?: string;
+  endDate?: string;
+  customerEmail?: string;
+}
+
 @Component({
   selector: 'app-admin-orders',
   standalone: true,
@@ -20,13 +27,23 @@ export class AdminOrdersComponent implements OnInit {
   totalElements = 0;
   isLoading = false;
   orderStatusEnum = OrderStatusEnum;
+  noResults = false;
+
+  filters: FilterCriteria = {
+    status: null,
+    startDate: '',
+    endDate: '',
+    customerEmail: ''
+  };
+
+  statusOptions = Object.values(OrderStatusEnum);
 
   // Status colors mapping
   statusColorMap: { [key: string]: string } = {
-    'PENDING': '#FFC107',      // Amarillo
-    'PRINTING': '#2196F3',     // Azul
-    'BINDING': '#9C27B0',      // Púrpura
-    'READY': '#4CAF50',        // Verde
+    'PENDING': '#FFC107',
+    'PRINTING': '#2196F3',
+    'BINDING': '#9C27B0',
+    'READY': '#4CAF50',
   };
 
   statusLabelMap: { [key: string]: string } = {
@@ -42,19 +59,82 @@ export class AdminOrdersComponent implements OnInit {
     this.loadOrders();
   }
 
+  applyFilters(): void {
+    this.currentPage = 0;
+    this.loadOrders();
+  }
+
+  clearFilters(): void {
+    this.filters = {
+      status: null,
+      startDate: '',
+      endDate: '',
+      customerEmail: ''
+    };
+    this.currentPage = 0;
+    this.loadOrders();
+  }
+
+  hasActiveFilters(): boolean {
+    return !!(
+      this.filters.status ||
+      this.filters.startDate ||
+      this.filters.endDate ||
+      this.filters.customerEmail
+    );
+  }
+
   loadOrders(): void {
     this.isLoading = true;
-    this.cartService.getActiveCartsForAdmin(this.currentPage, this.pageSize).subscribe({
-      next: (response: Page<CartResponse>) => {
-        this.carts = response.content || [];
-        this.totalElements = response.totalElements || 0;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading orders:', err);
-        this.isLoading = false;
-      }
-    });
+    this.noResults = false;
+
+    if (this.hasActiveFilters()) {
+      const filterParams = this.buildFilterParams();
+      this.cartService.filterCartsForAdmin(filterParams, this.currentPage, this.pageSize).subscribe({
+        next: (response: Page<CartResponse>) => {
+          this.carts = response.content || [];
+          this.totalElements = response.totalElements || 0;
+          this.noResults = this.carts.length === 0;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error loading filtered orders:', err);
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.cartService.getActiveCartsForAdmin(this.currentPage, this.pageSize).subscribe({
+        next: (response: Page<CartResponse>) => {
+          this.carts = response.content || [];
+          this.totalElements = response.totalElements || 0;
+          this.noResults = this.carts.length === 0;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error loading orders:', err);
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  private buildFilterParams(): any {
+    const params: any = {};
+    
+    if (this.filters.status) {
+      params.status = this.filters.status;
+    }
+    if (this.filters.startDate) {
+      params.startDate = this.filters.startDate;
+    }
+    if (this.filters.endDate) {
+      params.endDate = this.filters.endDate;
+    }
+    if (this.filters.customerEmail) {
+      params.customerEmail = this.filters.customerEmail;
+    }
+    
+    return params;
   }
 
   refreshOrders(): void {

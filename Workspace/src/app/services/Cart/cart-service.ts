@@ -162,4 +162,23 @@ export class CartService {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<Page<CartResponse>>(`${this.apiUrl}/admin/orders`, { params });
   }
+
+  filterCartsForAdmin(filters: any, page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+
+    if (filters.status) {
+      params = params.set('status', filters.status);
+    }
+    if (filters.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+    if (filters.endDate) {
+      params = params.set('endDate', filters.endDate);
+    }
+    if (filters.customerEmail) {
+      params = params.set('customerEmail', filters.customerEmail);
+    }
+
+    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/admin/filter`, { params });
+  }
 }
