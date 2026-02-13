@@ -4,7 +4,7 @@ export type AppRole = 'administrador' | 'cliente';
 
 export interface TokenPayload {
   sub: string;      // En JWT estándar 'sub' suele ser el email/username
-  role: string[]; 
+  roles: string[]; 
   iat: number;
   exp: number;
 }

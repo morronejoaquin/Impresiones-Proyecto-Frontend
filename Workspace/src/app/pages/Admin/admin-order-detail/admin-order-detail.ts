@@ -7,6 +7,7 @@ import Cart from '../../../models/Cart/cartResponse';
 import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
 import { OrderService } from '../../../services/Orders/order-service';
+import { BindingTypeEnum } from '../../../models/Enums/bindingTypeEnum';
 
 @Component({
   standalone: true,
@@ -43,11 +44,13 @@ export class AdminOrderDetailPage implements OnInit {
   return v ? 'Sí' : 'No';
 }
 
-bindingLabel(v?: 'ringed' | 'stapled' | 'unringed'): string {
-  switch (v) {
+bindingLabel(v: BindingTypeEnum | string | undefined): string {
+  const value = v?.toString();
+
+  switch (value) {
     case 'ringed':   return 'Anillado';
     case 'stapled':  return 'Abrochado';
-    case 'unringed': return 'Sin anillar';
+    case 'none':     return 'Ninguno'; 
     default:         return '-';
   }
 }

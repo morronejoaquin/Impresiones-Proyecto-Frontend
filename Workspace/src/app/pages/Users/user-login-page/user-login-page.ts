@@ -25,8 +25,8 @@ export class UserLoginPage {
     private router: Router
   ) {
     this.formUser = this.fb.group({
-      usernameF: ['', Validators.required, Validators.email],
-      passwordF: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
 
@@ -57,18 +57,19 @@ export class UserLoginPage {
     this.userService.getProfile().subscribe({
       next: (data) => {
         this.user = data;
+        
+        console.log(`Login exitoso como ${this.user.role}`);
+
+        if (this.user.role === 'ADMIN' || this.user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/home']); 
+        }
       },
       error: (err) => {
-        console.error(err);
+        console.error("No se pudo obtener el perfil tras el login", err);
+        this.router.navigate(['/home']);
       }
-    })
-
-    console.log(`Login exitoso como ${this.user?.role}`);
-
-    if (this.user?.role === 'admin') {
-      this.router.navigate(['/admin']);
-    } else {
-      this.router.navigate(['/home']); 
-    }
+    });
   }
 }

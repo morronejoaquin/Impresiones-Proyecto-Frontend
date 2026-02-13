@@ -9,7 +9,7 @@ import { CartService } from '../../services/Cart/cart-service';
   imports: [CommonModule],
   template: `
     <div class="cart-total-wrapper">
-      <h3>Total del Carrito: ${{ total | number:'1.2-2' }}</h3>
+      <h3>Total del Carrito: $ total | number:'1.2-2' </h3>
     </div>
   `,
   styles: [`

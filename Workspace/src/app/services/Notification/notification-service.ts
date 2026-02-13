@@ -31,16 +31,15 @@ export class NotificationService {
   private stopPolling$ = new Subject<void>();
 
   constructor(private http: HttpClient){
-    this.initPolling();
   }
 
-  private initPolling() {
+  public initPolling() {
     // timer(retraso inicial, cada cuánto tiempo)
     // 30000 ms = 30 segundos
     timer(0, 30000).pipe(
       takeUntil(this.stopPolling$),
       switchMap(() => this.getUnreadFromServer()),
-      retry(), // Si hay un error de red, no rompe el polling, intenta en el próximo ciclo
+      retry({ count: 3, delay: 5000 }), // Si hay un error de red, no rompe el polling, intenta en el próximo ciclo
       share()  // Evita múltiples peticiones si hay varios componentes suscritos
     ).subscribe({
         next: notifications => {

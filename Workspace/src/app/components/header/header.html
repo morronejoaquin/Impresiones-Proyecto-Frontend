@@ -1,32 +1,48 @@
-<header>
-  <nav>
-    <ul>
-      <li><a routerLink="/home">Inicio</a></li>
+<header class="main-header">
+  <nav class="nav-container">
+    <a routerLink="/home" class="brand">
+      <span class="material-icons">print</span>
+      <span>Puerto Colores</span>
+    </a>
 
-      <li><a routerLink="/make-order">Hace tu pedido</a></li>
+    <button class="mobile-toggle" (click)="toggleMobile()">
+      <span class="material-icons">{{ isMobileOpen ? 'close' : 'menu' }}</span>
+    </button>
 
-      <li><a routerLink="/cart">Carrito</a></li>
+    <div class="nav-menu" [class.open]="isMobileOpen">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+      <a routerLink="/price-calculator" routerLinkActive="active">Calculadora</a>
+      <a routerLink="/contact" routerLinkActive="active">Contacto</a>
 
-      <li><a routerLink="/price-calculator">Calculador de precios</a></li>
+      @if(authService.getToken()){
+        <a routerLink="/make-order" routerLinkActive="active">Hacer Pedido</a>
+        <a routerLink="/cart" routerLinkActive="active">Carrito</a>
+        <a routerLink="/mi-orders" routerLinkActive="active">Mis Pedidos</a>
+        
+        @if((userService.getProfile() | async)?.role === 'admin') {
+          <a routerLink="/admin" routerLinkActive="active" class="admin-link">Admin</a>
+        }
 
-      <li><a routerLink="/mi-orders">Mis pedidos</a></li>
+        <div class="user-actions">
+          <app-notification-dropdown></app-notification-dropdown>
+          
+          <div class="user-dropdown-container">
+            <button class="user-btn" (click)="toggleUserMenu()">
+              <span class="material-icons">account_circle</span>
+              <span class="material-icons">expand_more</span>
+            </button>
 
-      <li><a routerLink="/account">Cuenta</a></li>
-
-      @if(authService.getToken() && userService.getProfile().role === 'admin'){
-        <li><a routerLink="/admin">Pedidos</a></li>
+            @if (showUserMenu) {
+              <div class="dropdown-menu">
+                <a routerLink="/account" (click)="showUserMenu = false">Mi Cuenta</a>
+                <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <a routerLink="/user-login" class="login-btn">Iniciar Sesión</a>
       }
-
-      <li><a routerLink="/contact">Contacto</a></li>
-
-      <app-notification-dropdown></app-notification-dropdown>
-
-      @if(authService.getToken){
-        <li><a (click)="logout()" class="logout-link">Cerrar Sesión</a></li>
-      }
-
-      <li><a routerLink="/user-login">Login</a></li>
-    
-    </ul>
+    </div>
   </nav>
 </header>

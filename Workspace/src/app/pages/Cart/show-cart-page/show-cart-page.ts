@@ -8,11 +8,12 @@ import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { Subject, takeUntil } from 'rxjs';
+import { CartTotalComponent } from '../../../components/cart-total/cart-total';
 
 @Component({
   selector: 'app-show-cart-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CartTotalComponent],
   templateUrl: './show-cart-page.html',
   styleUrl: './show-cart-page.css',
 })

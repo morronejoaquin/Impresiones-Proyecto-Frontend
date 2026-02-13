@@ -12,14 +12,22 @@ import { NotificationService } from '../Notification/notification-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = `http://localhost:8080/auth`;
 
   constructor(private http: HttpClient, private router: Router, private notificationService: NotificationService){
+    if(this.getToken()){
+      // por el momento initPolling quedara desactivado
+    }
   }
   
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
-      tap(res => localStorage.setItem('token', res.token))
+      tap(res => {
+        localStorage.setItem('token', res.token);
+        setTimeout(() => {
+        // por el momento initPolling quedara desactivado
+        }, 500);
+      })
     );
   }
 
@@ -27,10 +35,6 @@ export class AuthService {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request).pipe(
       tap(res => localStorage.setItem('token', res.token))
     );
-  }
-
-  getCurrentUser(): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${this.apiUrl}/me`);
   }
 
   logout(): void {

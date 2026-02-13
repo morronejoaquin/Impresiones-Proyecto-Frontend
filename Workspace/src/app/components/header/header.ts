@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';   
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../services/Users/user-service'; 
 import { AuthService } from '../../services/Auth/auth.service';
 import { NotificationDropdown } from '../notification-dropdown/notification-dropdown';
@@ -8,16 +8,28 @@ import { NotificationDropdown } from '../notification-dropdown/notification-drop
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, NotificationDropdown],
+  imports: [CommonModule, RouterLink, RouterLinkActive, NotificationDropdown],
   templateUrl: './header.html',
   styleUrls: ['./header.css'] 
 })
 export class Header {
+  isMobileOpen = false;
+  showUserMenu = false;
   
-  constructor(public auth: AuthService, public userService: UserService){
+  constructor(public authService: AuthService, public userService: UserService){
+  }
+
+  toggleMobile() {
+    this.isMobileOpen = !this.isMobileOpen;
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
   }
 
   logout() {
-    this.auth.logout();
+    this.authService.logout();
+    this.isMobileOpen = false;
+    this.showUserMenu = false;
   }
 }

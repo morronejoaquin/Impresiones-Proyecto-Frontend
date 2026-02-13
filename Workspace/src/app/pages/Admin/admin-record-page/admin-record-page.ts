@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService, CartWithItems } from '../../../services/Cart/cart-service';
+import { CartService } from '../../../services/Cart/cart-service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
 
 @Component({
   selector: 'app-admin-record-page',
@@ -12,7 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 
 export class AdminRecordPage implements OnInit {
-  carts: CartWithItems[] = [];
+  carts: CartWithItemsResponse[] = [];
 
   constructor(
     private cartService: CartService,
@@ -24,15 +25,10 @@ export class AdminRecordPage implements OnInit {
   }
 
   loadCompletedCarts(): void {
-    this.cartService.getDeliveredCartsWithDetails().subscribe({
-      next: (cartsWithItems) => {
-        this.carts = cartsWithItems;
-      },
-      error: (err) => console.error('Error al cargar pedidos:', err)
-    });
+    
   }
 
-  goToDetail(cart: CartWithItems){
+  goToDetail(cart: CartWithItemsResponse){
     this.router.navigate(['/admin/order', cart.id])
   }
 }

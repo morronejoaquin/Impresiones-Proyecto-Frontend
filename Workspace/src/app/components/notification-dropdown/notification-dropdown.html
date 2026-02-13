@@ -1,8 +1,10 @@
 <div class="notification-container">
   <button class="bell-btn" (click)="toggleDropdown()">
     <i class="fas fa-bell"></i>
-    @if ((notificationService.unreadCount$ | async) > 0) {
-      <span class="badge">{{ notificationService.unreadCount$ | async }}</span>
+    @if ((notificationService.unreadCount$ | async); as count) {
+      @if (count > 0) {
+        <span class="badge">{{ count }}</span>
+      }
     }
   </button>
 

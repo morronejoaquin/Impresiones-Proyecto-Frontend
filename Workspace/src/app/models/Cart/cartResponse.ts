@@ -6,7 +6,7 @@ export default interface CartResponse {
   id: string;
   userId?: string | null; // foreign key -> User.userId (nullable for guest carts)
   total: number;
-  customerData: CustomerDataRequest;
+  customer: CustomerDataRequest;
   status: OrderStatusEnum;
   cartStatus: CartStatusEnum;
   createdAt?: string,

@@ -40,7 +40,7 @@
         </div>
 
         <div class="cart-situacion">
-          @if(cart.status === 'ready'){
+          @if(cart.status === orderStatus.READY){
           <span>Listo para entregar</span>
           }
         </div>
@@ -55,12 +55,11 @@
 
       <div class="cart-resumen">
         <p>Cliente:</p>
-        <p>{{ cart.customer?.name }} {{ cart.customer?.surname }}</p>
+        <p>{{ cart.customer.name }} {{ cart.customer.surname }}</p>
       </div>
 
       <div class="cart-archivos">
         <p>Archivos:</p>
-        <p>{{ cart.fileSummary }}</p>
         <p>{{ cart.items.length }} items en total</p>
       </div>
 

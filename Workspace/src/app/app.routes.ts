@@ -15,7 +15,7 @@ import { OrderReceivedPage } from './pages/Cart/order-received-page/order-receiv
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'user-login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'user-login', component: UserLoginPage },
   { path: 'user-register', component: UserRegisterPage },
 
@@ -27,13 +27,13 @@ export const routes: Routes = [
     path: 'account',
     component: AccountPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
+    data: { allowedRoles: ['cliente', 'admin'] }
   },
   {
     path: 'user-edit',
     component: UserEditPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
+    data: { allowedRoles: ['cliente', 'admin'] }
   },
 
   {
@@ -44,13 +44,13 @@ export const routes: Routes = [
     path: 'my-orders',
     component: MyOrdersPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
+    data: { allowedRoles: ['cliente', 'admin'] }
   },
   {
     path: 'make-order/:orderId',
     component: MakeOrderPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
+    data: { allowedRoles: ['cliente', 'admin'] }
   },
   {
     path: 'cart',
@@ -60,13 +60,13 @@ export const routes: Routes = [
     path: 'cart-payment',
     component: CartPaymentPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
+    data: { allowedRoles: ['cliente', 'admin'] }
   },
   {
     path: 'order-received',
     component: OrderReceivedPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['registered', 'admin'] }
+    data: { allowedRoles: ['cliente', 'admin'] }
   },
   {
     path: 'price-calculator',

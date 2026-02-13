@@ -7,7 +7,7 @@ export default interface CartWithItemsResponse{
     id: string;
     userId?: string | null;
     total: number;
-    customerData: CustomerDataRequest;
+    customer: CustomerDataRequest;
     status: OrderStatusEnum;
     cartStatus: CartStatusEnum;
     createdAt?: string,

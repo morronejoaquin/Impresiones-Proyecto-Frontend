@@ -36,7 +36,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let it of items(); trackBy: track">
-      <td>{{ fileName(it.file) }}</td>
+      <td>{{ fileName(it.fileName) }}</td>
       <td>{{ it.pages }}</td>
       <td>{{ it.copies }}</td>
       <td><span class="chip" [class.ok]="it.doubleSided" [class.muted]="!it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>

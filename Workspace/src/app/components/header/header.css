@@ -1,58 +1,168 @@
-header {background: #ff0000;
+.main-header {
   background: linear-gradient(339deg, rgba(255, 0, 0, 1) 0%, rgba(21, 0, 255, 1) 100%);
-  padding: 15px 0;
+  padding: 0 20px;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-nav ul {
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: 25px;
+  height: 70px;
 }
 
-nav a {
-  text-decoration: none;
-  color: white;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
   font-weight: bold;
-  font-size: 16px;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo especial Admin */
+.admin-link {
+  border: 1px dashed #fcc100;
+}
+
+/* Botón de Login */
+.login-btn {
+  background: rgba(255, 255, 255, 0.15); /* Semi-transparente para que pegue con el fondo */
+  color: white !important;
+  border: 1px solid white;
+  padding: 8px 20px;
+  border-radius: 20px;
   transition: all 0.3s ease;
 }
 
-nav a:hover {
-  color: #fcc100; 
-  text-shadow: 0 0 8px rgb(250, 2, 2);
+.login-btn:hover {
+  background: white; /* Se vuelve blanco sólido */
+  color: #ffffff !important; /* El texto toma el color azul del degradado */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.logout-link {
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 5px 12px;
-  border-radius: 8px;
-  transition: background 0.3s;
-}
-
-.logout-link:hover {
-  background: rgba(255, 255, 255, 0.4);
-  color: #fff !important;
-}
-
-app-notification-dropdown {
+/* Menú Desplegable de Usuario */
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
   margin-left: 10px;
 }
 
-@media (max-width: 768px) {
-  nav ul {
-    flex-direction: column;
-    gap: 15px;
+.user-dropdown-container {
+  position: relative;
+}
+
+.user-btn {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 50px; /* Un poco más de espacio */
+  /* Mismo degradado que el header */
+  background: linear-gradient(339deg, rgba(255, 0, 0, 1) 0%, rgba(21, 0, 255, 1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: -5px 5px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  overflow: hidden;
+  
+  /* Animación de izquierda a derecha */
+  animation: slideInRight 0.3s ease-out forwards;
+  z-index: 1100;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px); /* Viene desde la izquierda */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-img{
-  width: 70px;
-  height: 70px;
+/* Ajuste de los items dentro del menú desplegable */
+.dropdown-menu a, .logout-btn {
+  padding: 12px 20px;
+  color: white !important; /* Texto blanco sobre el degradado */
+  text-align: left;
+  border: none;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.dropdown-menu a:hover, .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.2); /* Brillo blanco al pasar el mouse */
+  color: #fcc100 !important; /* O el color que prefieras para resaltar */
+}
+
+/* Responsive */
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .mobile-toggle { display: block; }
+
+  .nav-menu {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(21, 0, 255, 1) 0%, rgba(255, 0, 0, 1) 100%);; /* Fondo para el menú móvil */
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+    display: none;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
 }

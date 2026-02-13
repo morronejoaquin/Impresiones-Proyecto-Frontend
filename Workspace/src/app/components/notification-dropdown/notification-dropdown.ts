@@ -2,10 +2,11 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import NotificationResponse from '../../models/NotificationModel/notificationResponse';
 import { NotificationService } from '../../services/Notification/notification-service';
 import { Router } from '@angular/router';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-notification-dropdown',
-  imports: [],
+  imports: [CommonModule, AsyncPipe],
   templateUrl: './notification-dropdown.html',
   styleUrl: './notification-dropdown.css'
 })
@@ -42,6 +43,10 @@ export class NotificationDropdown implements OnInit{
     if (!(event.target as HTMLElement).closest('.notification-container')) {
       this.isOpen = false;
     }
+  }
+
+  markAllAsRead(){
+
   }
 
 }

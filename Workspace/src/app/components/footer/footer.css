@@ -18,6 +18,4 @@ footer p {
   margin: 0;
 }
 
-footer p::before {
-  content: "🖨️ ";
-}
+

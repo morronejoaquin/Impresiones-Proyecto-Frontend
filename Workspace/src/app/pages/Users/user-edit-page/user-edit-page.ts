@@ -39,38 +39,11 @@ export class UserEditPage implements OnInit {
   }
 
   ngOnInit(): void {
-    const payload = this.userService.getDecodedUserPayload();
-    if (payload) {
-      this.userService.getUserById(payload.userId).subscribe({
-        next: (user) => {
-          this.currentUser = user;
-          this.userForm.patchValue(user);
-        },
-        error: (err) => {
-          console.error('Error fetching user data:', err);
-          this.router.navigate(['/user-login']);
-        }
-      });
-    } else {
-      this.router.navigate(['/user-login']);
-    }
+    
   }
 
   onSubmit(): void {
-    if (this.userForm.valid && this.currentUser) {
-      const formValue = this.userForm.getRawValue();
-
-      if (!formValue.password) {
-        delete formValue.password;
-      }
-
-      const updatedUser = { ...this.currentUser, ...formValue };
-
-      this.userService.updateUser(updatedUser).subscribe({
-        next: () => this.router.navigate(['/account']),
-        error: (err) => console.error('Error updating user:', err)
-      });
-    }
+    
   }
 
   onCancel(): void {

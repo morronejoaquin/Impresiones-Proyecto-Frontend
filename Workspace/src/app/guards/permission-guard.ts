@@ -8,30 +8,33 @@ export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
   const router = inject(Router);
   const token = localStorage.getItem('token');
 
-  if (!token) {
-    return router.createUrlTree([LOGIN_URL]);
-  }
+  if (!token) return router.createUrlTree(['/user-login']);
 
   const payload = decodeToken(token);
-
-  // Si el token es inválido o expiró
-  if (!payload) {
-    localStorage.removeItem('token');
-    return router.createUrlTree([LOGIN_URL]);
+  if (!payload || !payload.roles) {
+    return router.createUrlTree(['/user-login']);
   }
 
-  // Roles requeridos por la ruta (definidos en app-routing.module.ts)
+  // 1. Obtener roles permitidos de la ruta
   const allowedRoles = route.data?.['allowedRoles'] as string[] | undefined;
+  if (!allowedRoles || allowedRoles.length === 0) return true;
 
-  // Si la ruta no tiene restricciones de rol, basta con estar autenticado
-  if (!allowedRoles || allowedRoles.length === 0) {
+  // 2. Limpiar los roles que vienen del Token (quitar 'ROLE_' si existe)
+  const userRoles = payload.roles.map(role => role.replace('ROLE_', '').toLowerCase());
+  
+  // 3. Normalizar los roles permitidos de la ruta a minúsculas
+  const requiredRoles = allowedRoles.map(r => r.toLowerCase());
+
+  console.log('Roles del usuario:', userRoles);
+  console.log('Roles requeridos:', requiredRoles);
+
+  const hasPermission = userRoles.some(role => requiredRoles.includes(role));
+
+  if (hasPermission) {
     return true;
+  } else {
+    console.warn('Acceso denegado: el usuario no tiene los roles necesarios.');
+    // Si el usuario está logueado pero no tiene permiso, mándalo a HOME, no al LOGIN
+    return router.createUrlTree(['/home']);
   }
-
-  // Verificamos si alguno de los roles del token coincide con los permitidos
-  const hasPermission = payload.role.some(role => allowedRoles.includes(role));
-
-  return hasPermission 
-    ? true 
-    : router.createUrlTree([LOGIN_URL]);
 };
