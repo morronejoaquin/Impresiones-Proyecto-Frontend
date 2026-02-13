@@ -1,3 +1,125 @@
-<main>
-    <li><a routerLink="/make-order">Hace tu pedido</a></li>
-</main>
+<div class="home">
+    <section class="hero">
+        <div class="container">
+          <div class="hero-content">
+            <h1>Bienvenido a Puerto Colores</h1>
+            <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
+            <div class="hero-actions">
+                @if(authService.getToken()) {
+                <a routerLink="/cart" class="btn btn-primary btn-lg">
+                  <span class="material-icons">add</span>
+                  Nuevo Pedido
+                </a>
+                <a routerLink="/my-orders" class="btn btn-outline btn-lg">
+                  Ver Mis Pedidos
+                </a>
+                } @else {
+                <a routerLink="/user-register" class="btn btn-primary btn-lg">
+                  Empezar Ahora
+                </a>
+                <a routerLink="/calculator" class="btn btn-outline btn-lg">
+                  Calcular Precio
+                </a>
+                }
+            </div>
+          </div>
+          <div class="hero-image">
+            <div class="hero-illustration">
+              <span class="material-icons">print</span>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+          <h2 class="section-title">Nuestros Servicios</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">description</span>
+              </div>
+              <h3>Impresión de Documentos</h3>
+              <p>Impresiones en blanco y negro o a color con la mejor calidad de papel.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">menu_book</span>
+              </div>
+              <h3>Anillados</h3>
+              <p>Encuadernación profesional con anillado plástico para tus trabajos y proyectos.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">push_pin</span>
+              </div>
+              <h3>Abrochados</h3>
+              <p>Terminación simple y económica con abrochado metálico.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">cloud_upload</span>
+              </div>
+              <h3>Carga Online</h3>
+              <p>Sube tus archivos desde cualquier dispositivo y realiza tu pedido online.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">payment</span>
+              </div>
+              <h3>Múltiples Pagos</h3>
+              <p>Paga con efectivo al retirar o con Mercado Pago de forma segura.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">notifications_active</span>
+              </div>
+              <h3>Notificaciones</h3>
+              <p>Recibe avisos cuando tu pedido esté listo para retirar.</p>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+          <h2 class="section-title">¿Cómo Funciona?</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <h3>Sube tu Archivo</h3>
+              <p>Carga tu documento PDF o imagen desde el carrito de compras.</p>
+            </div>
+            <div class="step-arrow">
+              <span class="material-icons">arrow_forward</span>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <h3>Personaliza</h3>
+              <p>Elige color, copias, anillado y otras opciones de impresión.</p>
+            </div>
+            <div class="step-arrow">
+              <span class="material-icons">arrow_forward</span>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <h3>Paga y Retira</h3>
+              <p>Elige tu método de pago y retira cuando esté listo.</p>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+          <div class="cta-content">
+            <h2>¿Listo para imprimir?</h2>
+            <p>Calcula el precio de tu impresión antes de hacer tu pedido.</p>
+            <a routerLink="/calculator" class="btn btn-primary btn-lg">
+              <span class="material-icons">calculate</span>
+              Ir a la Calculadora
+            </a>
+          </div>
+        </div>
+    </section>
+</div>

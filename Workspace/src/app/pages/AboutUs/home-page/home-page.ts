@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/Auth/auth.service';
 
 @Component({
   selector: 'app-home-page',
@@ -9,4 +10,6 @@ import { RouterLink } from '@angular/router';
 })
 export class HomePage {
 
+  constructor(public authService: AuthService) {
+  }
 }

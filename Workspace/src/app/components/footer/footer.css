@@ -1,18 +1,11 @@
-footer {background: #ff0000;
-  background: linear-gradient(339deg, rgba(255, 0, 0, 1) 0%, rgba(21, 0, 255, 1) 100%);
+footer {
+  background: linear-gradient(180deg, #C55DFF 0%, #FF935D 100% );
   color: #fff;
   text-align: center;
   padding: 15px 0;
   font-size: 14px;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  margin: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  position: fixed;
+  margin-top: auto;
 }
-
 
 footer p {
   margin: 0;
