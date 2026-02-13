@@ -6,7 +6,7 @@
   <h1>Pedido #{{ cart()?.id }}</h1>
 
   <div class="meta" *ngIf="cart() as c">
-  <div><b>Cliente:</b> {{ c.customer?.name }} {{ c.customer?.surname }}</div>
+  <div><b>Cliente:</b> {{ c.customer.name }} {{ c.customer.surname }}</div>
   <div><b>Estado:</b> <span class="badge">{{ c.status || c.cartStatus }}</span></div>
   <div><b>Total (cart):</b> ${{ c.total | number:'1.2-2' }}</div>
 

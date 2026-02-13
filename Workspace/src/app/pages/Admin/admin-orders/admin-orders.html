@@ -28,9 +28,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let cart of carts" class="table-row">
-          <td class="cart-id">{{ cart.id?.substring(0, 8) }}...</td>
+          <td class="cart-id">{{ cart.id.substring(0, 8) }}...</td>
           <td class="client-email">
-            <span class="email">{{ cart.customer?.email || cart.customer?.name || 'N/A' }}</span>
+            <span class="email">{{ cart.customer.email || cart.customer.name || 'N/A' }}</span>
           </td>
           <td class="closing-date">
             {{ formatDate(cart.admReceivedAt) }}
@@ -41,7 +41,7 @@
             </span>
           </td>
           <td class="total">
-            <strong>${{ cart.total?.toFixed(2) || '0.00' }}</strong>
+            <strong>${{ cart.total.toFixed(2) || '0.00' }}</strong>
           </td>
         </tr>
       </tbody>

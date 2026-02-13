@@ -11,7 +11,7 @@ import PaymentCreateRequest from '../../models/Payment/paymentCreateRequest';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = `${environment.apiUrl}/payments`;
+  private apiUrl = `http://localhost:8080/payments`;
 
   constructor(private http: HttpClient){
   }

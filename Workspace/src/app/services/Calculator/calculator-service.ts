@@ -9,7 +9,7 @@ import PriceCalculationRequest from '../../models/Prices/priceCalculationRequest
   providedIn: 'root',
 })
 export class CalculatorService {
-  private apiUrl = `${environment.apiUrl}/calculator`;
+  private apiUrl = `http://localhost:8080/calculator`;
 
   constructor(private http: HttpClient) {}
 
