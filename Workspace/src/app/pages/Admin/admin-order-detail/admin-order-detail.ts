@@ -30,7 +30,6 @@ export class AdminOrderDetailPage implements OnInit {
   isUpdating = false;
   notFound = false;
 
-  // confirmation modal
   statusToConfirm: OrderStatusEnum | null = null;
   showConfirm = false;
 
@@ -99,7 +98,6 @@ export class AdminOrderDetailPage implements OnInit {
     const cartId = this.cart()?.id;
     if (!cartId) return;
 
-    // If the new status requires confirmation
     if (newStatus === OrderStatusEnum.READY || newStatus === OrderStatusEnum.DELIVERED || newStatus === OrderStatusEnum.CANCELED) {
       this.statusToConfirm = newStatus as OrderStatusEnum;
       this.showConfirm = true;
@@ -121,7 +119,6 @@ export class AdminOrderDetailPage implements OnInit {
   cancelChangeStatus(): void {
     this.showConfirm = false;
     this.statusToConfirm = null;
-    // reload to revert UI select to actual status
     this.loadDetail();
   }
 

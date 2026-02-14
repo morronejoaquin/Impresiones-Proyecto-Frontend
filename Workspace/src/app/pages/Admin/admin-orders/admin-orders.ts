@@ -60,9 +60,7 @@ export class AdminOrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-  // Navegación a detalle
   openDetail(cartId: string): void {
-    // ruta definida en app.routes.ts -> /admin/order/:id
     (window as any).location.href = `/admin/order/${cartId}`;
   }
 
