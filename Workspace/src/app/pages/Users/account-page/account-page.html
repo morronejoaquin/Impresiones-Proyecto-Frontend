@@ -1,17 +1,26 @@
 <div class="account-container">
-  <div *ngIf="currentUser; else notLoggedIn">
+  <div *ngIf="isLoading" class="loading">
+    <p>Cargando datos de tu perfil...</p>
+  </div>
+
+  <div *ngIf="accessDenied && !isLoading" class="alert-error">
+    <p>Acceso denegado. Tu sesión ha expirado o no tienes permiso. Serás redirigido al login en breve...</p>
+  </div>
+
+  <div *ngIf="currentUser && !isLoading; else notLoggedIn">
     <h2>Bienvenido, {{ currentUser.name }}</h2>
 
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Información de la Cuenta:</h5>
         <p class="card-text"><strong>Nombre completo:</strong> {{ currentUser.name }} {{ currentUser.surname }}</p>
-        <p class="card-text"><strong>Email:</strong> {{ currentUser.email }}</p>
+        <p class="card-text"><strong>Email:</strong> {{ currentUser.email }} <span class="badge-info">(no editable)</span></p>
         <p class="card-text"><strong>Teléfono:</strong> {{ currentUser.phone }}</p>
         <p class="card-text"><strong>Rol actual:</strong>
-          <span *ngIf="currentUser.role === 'registered'">Registrado</span>
-          <span *ngIf="currentUser.role === 'admin'">Administrador</span>
-          <span *ngIf="currentUser.role === 'guest'">Invitado</span>
+          <span *ngIf="currentUser.role === 'registered'" class="badge-role">Registrado</span>
+          <span *ngIf="currentUser.role === 'admin'" class="badge-role">Administrador</span>
+          <span *ngIf="currentUser.role === 'cliente'" class="badge-role">Cliente</span>
+          <span *ngIf="currentUser.role === 'guest'" class="badge-role">Invitado</span>
         </p>
       </div>
       <div class="card-footer">
