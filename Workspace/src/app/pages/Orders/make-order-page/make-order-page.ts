@@ -54,7 +54,7 @@ export class MakeOrderPage implements OnInit {
       pages: [1, [Validators.required, Validators.min(1)]],
       copies: [1, [Validators.required, Validators.min(1)]],
       doubleSided: [false],
-      binding: ['unringed', [Validators.required]],
+      binding: ['NONE', [Validators.required]],
       color: [false],
       comments: [''],
       file: [null],
@@ -253,7 +253,7 @@ export class MakeOrderPage implements OnInit {
             pages: 1,
             copies: 1,
             doubleSided: false,
-            binding: 'unringed',
+            binding: 'NONE',
             color: false,
             comments: '',
           });

@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/Auth/auth.service';
+import { UserService } from '../../../services/Users/user-service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink],
+  imports: [RouterLink, AsyncPipe],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })
-export class HomePage {
+export class HomePage implements OnInit{
 
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService, public userService: UserService) {
+  }
+
+  ngOnInit(): void {
+    this.userService.loadProfile();
   }
 }

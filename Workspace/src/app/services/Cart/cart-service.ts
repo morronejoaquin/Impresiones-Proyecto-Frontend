@@ -13,7 +13,7 @@ import CartStatusUpdateRequest from '../../models/Cart/cartStatusUpdateRequest';
   providedIn: 'root',
 })
 export class CartService {
-  private apiUrl = `${environment.apiUrl}/carts`;
+  private apiUrl = `http://localhost:8080/carts`;
   private cartUpdatedSubject = new Subject<CartWithItemsResponse | null>();
   public cartUpdated$ = this.cartUpdatedSubject.asObservable();
 

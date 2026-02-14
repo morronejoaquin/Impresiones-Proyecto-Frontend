@@ -6,13 +6,28 @@
             <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
             <div class="hero-actions">
                 @if(authService.getToken()) {
-                <a routerLink="/cart" class="btn btn-primary btn-lg">
-                  <span class="material-icons">add</span>
-                  Nuevo Pedido
-                </a>
-                <a routerLink="/my-orders" class="btn btn-outline btn-lg">
-                  Ver Mis Pedidos
-                </a>
+                  @if(userService.profile$ | async; as profile) {
+                    
+                    @if(profile.role !== 'administrador') {
+                    <a routerLink="/cart" class="btn btn-primary btn-lg">
+                      <span class="material-icons">add</span>
+                      Nuevo Pedido
+                    </a>
+                    <a routerLink="/my-orders" class="btn btn-outline btn-lg">
+                      Ver Mis Pedidos
+                    </a>
+                    }
+
+                    @if(profile.role === 'administrador') {
+                    <a routerLink="/admin" class="btn btn-primary btn-lg">
+                      Gestionar pedidos
+                    </a>
+                    <a routerLink="/price-calculator" class="btn btn-outline btn-lg">
+                      Calculadora
+                    </a>
+                    }
+                  }
+                
                 } @else {
                 <a routerLink="/user-register" class="btn btn-primary btn-lg">
                   Empezar Ahora

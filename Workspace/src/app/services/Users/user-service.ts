@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import Page from '../../models/PageModel/page';
 import UserResponse from '../../models/Users/userResponse';
 import ProfileResponse from '../../models/Users/profileResponse';
@@ -13,6 +13,9 @@ import { environment } from '../../../environments/environment';
 export class UserService {
   private apiUrl = `http://localhost:8080/users`;
 
+  private profileSubject = new BehaviorSubject<ProfileResponse | null>(null);
+  public profile$ = this.profileSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   getAllUsers(page: number = 0, size: number = 20): Observable<Page<UserResponse>> {
@@ -22,6 +25,13 @@ export class UserService {
 
   getProfile(): Observable<ProfileResponse> {
     return this.http.get<ProfileResponse>(`${this.apiUrl}/profile`);
+  }
+
+  loadProfile() {
+    this.getProfile().subscribe({
+      next: (profile) => this.profileSubject.next(profile),
+      error: () => this.profileSubject.next(null)
+    });
   }
 
   updateProfile(request: UpdateProfileRequest): Observable<UserResponse> {

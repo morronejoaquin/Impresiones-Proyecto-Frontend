@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';   
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../services/Users/user-service'; 
@@ -12,11 +12,15 @@ import { NotificationDropdown } from '../notification-dropdown/notification-drop
   templateUrl: './header.html',
   styleUrls: ['./header.css'] 
 })
-export class Header {
+export class Header implements OnInit{
   isMobileOpen = false;
   showUserMenu = false;
   
   constructor(public authService: AuthService, public userService: UserService){
+  }
+
+  ngOnInit(): void {
+    this.userService.loadProfile();
   }
 
   toggleMobile() {

@@ -13,33 +13,39 @@
       <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
       <a routerLink="/price-calculator" routerLinkActive="active">Calculadora</a>
       <a routerLink="/contact" routerLinkActive="active">Contacto</a>
-
       @if(authService.getToken()){
-        <a routerLink="/make-order" routerLinkActive="active">Hacer Pedido</a>
-        <a routerLink="/cart" routerLinkActive="active">Carrito</a>
-        <a routerLink="/mi-orders" routerLinkActive="active">Mis Pedidos</a>
-        
-        @if((userService.getProfile() | async)?.role === 'admin') {
-          <a routerLink="/admin" routerLinkActive="active" class="admin-link">Admin</a>
-        }
+        @if(userService.profile$ | async; as profile) {
 
-        <div class="user-actions">
-          <app-notification-dropdown></app-notification-dropdown>
-          
-          <div class="user-dropdown-container">
-            <button class="user-btn" (click)="toggleUserMenu()">
-              <span class="material-icons">account_circle</span>
-              <span class="material-icons">expand_more</span>
-            </button>
+          @if(profile.role !== 'administrador') {
+            <a routerLink="/make-order">Hacer Pedido</a>
+            <a routerLink="/cart">Carrito</a>
+            <a routerLink="/mi-orders">Mis Pedidos</a>
+          }
+      
+          @if(profile.role === 'administrador') {
+            <a routerLink="/admin" class="admin-link">Admin</a>
+          }
+          <div class="user-actions">
+            <app-notification-dropdown></app-notification-dropdown>
+            
+            <div class="user-dropdown-container">
+              <button class="user-btn" (click)="toggleUserMenu()">
+                <span class="material-icons">account_circle</span>
+                <span class="material-icons">expand_more</span>
+              </button>
 
-            @if (showUserMenu) {
-              <div class="dropdown-menu">
-                <a routerLink="/account" (click)="showUserMenu = false">Mi Cuenta</a>
-                <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
-              </div>
-            }
+              @if (showUserMenu) {
+                <div class="dropdown-menu">
+                  <a routerLink="/account" (click)="showUserMenu = false">Mi Cuenta</a>
+                  <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
+                </div>
+              }
+            </div>
           </div>
-        </div>
+        }
+        
+
+        
       } @else {
         <a routerLink="/user-login" class="login-btn">Iniciar Sesión</a>
       }

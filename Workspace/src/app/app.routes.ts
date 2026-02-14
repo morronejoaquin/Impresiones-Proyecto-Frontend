@@ -27,13 +27,13 @@ export const routes: Routes = [
     path: 'account',
     component: AccountPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'admin'] }
+    data: { allowedRoles: ['cliente', 'administrador'] }
   },
   {
     path: 'user-edit',
     component: UserEditPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'admin'] }
+    data: { allowedRoles: ['cliente', 'administrador'] }
   },
 
   {
@@ -44,13 +44,13 @@ export const routes: Routes = [
     path: 'my-orders',
     component: MyOrdersPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'admin'] }
+    data: { allowedRoles: ['cliente', 'administrador'] }
   },
   {
     path: 'make-order/:orderId',
     component: MakeOrderPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'admin'] }
+    data: { allowedRoles: ['cliente', 'administrador'] }
   },
   {
     path: 'cart',
@@ -60,13 +60,13 @@ export const routes: Routes = [
     path: 'cart-payment',
     component: CartPaymentPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'admin'] }
+    data: { allowedRoles: ['cliente', 'administrador'] }
   },
   {
     path: 'order-received',
     component: OrderReceivedPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'admin'] }
+    data: { allowedRoles: ['cliente', 'administrador'] }
   },
   {
     path: 'price-calculator',
@@ -82,39 +82,39 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/Admin/admin-page/admin-page').then(m => m.AdminPage),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['admin'] }
+    data: { allowedRoles: ['administrador'] }
   }, {
     path: 'admin/order/:id',
     loadComponent: () =>
       import('./pages/Admin/admin-order-detail/admin-order-detail').then(m => m.AdminOrderDetailPage),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['admin'] }
+    data: { allowedRoles: ['administrador'] }
   },{
     path: 'admin/prices',
     loadComponent: () =>
       import('./pages/Admin/price-admin/price-admin').then(m => m.PriceAdminComponent),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['admin'] }
+    data: { allowedRoles: ['administrador'] }
   },
   {
     path: 'admin/record',
     component: AdminRecordPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['admin']}
+    data: { allowedRoles: ['administrador']}
   },
   {
     path: 'admin/orders',
     loadComponent: () =>
       import('./pages/Admin/admin-orders/admin-orders').then(m => m.AdminOrdersComponent),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['admin']}
+    data: { allowedRoles: ['administrador']}
   },
   {
     path: 'admin/history',
     loadComponent: () =>
       import('./pages/Admin/admin-history/admin-history').then(m => m.AdminHistoryComponent),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['admin']}
+    data: { allowedRoles: ['administrador']}
   },
   { path: '**', redirectTo: 'home' }
 ];
