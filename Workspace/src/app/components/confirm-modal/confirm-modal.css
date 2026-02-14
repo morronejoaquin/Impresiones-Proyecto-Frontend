@@ -1,0 +1,46 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Oscurece el fondo */
+  backdrop-filter: blur(4px);    /* Desenfoca el fondo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Por encima de todo */
+}
+
+.modal-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-icon {
+  color: #ff4757;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Estilos de botones similares a tu app */
+.btn-secondary { flex: 1; padding: 0.8rem; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; }
+.btn-danger { 
+  flex: 1; padding: 0.8rem; border-radius: 8px; border: none;
+  background: #ff4757; color: white; font-weight: bold; cursor: pointer;
+}

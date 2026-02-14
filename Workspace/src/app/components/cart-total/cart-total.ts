@@ -9,41 +9,33 @@ import { CartService } from '../../services/Cart/cart-service';
   imports: [CommonModule],
   template: `
     <div class="cart-total-wrapper">
-      <h3>Total del Carrito: $ {{total | number:'1.2-2'}} </h3>
+      <div class="total-row">
+        <span class="label">Total a pagar:</span>
+        <span class="amount">$ {{total | number:'1.2-2'}}</span>
+      </div>
     </div>
   `,
   styles: [`
     .cart-total-wrapper {
-      text-align: right;
-      padding: 1rem 0;
-      border-top: 2px solid #e0e0e0;
+      padding: 1rem 0 1.5rem 0;
     }
-
-    h3 {
-      font-size: 1.5rem;
-      color: #333;
-      margin: 0;
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .label {
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 500;
+    }
+    .amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #1976d2;
     }
   `]
 })
-export class CartTotalComponent implements OnInit, OnDestroy {
+export class CartTotalComponent {
   @Input() total: number = 0;
-  private destroy$ = new Subject<void>();
-
-  constructor(private cartService: CartService) {}
-
-  ngOnInit(): void {
-    this.cartService.cartUpdated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((cart) => {
-        if (cart) {
-          this.total = cart.total;
-        }
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 }

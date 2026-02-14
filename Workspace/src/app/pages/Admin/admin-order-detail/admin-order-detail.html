@@ -15,10 +15,16 @@
 
   <div>
     <b>Estado:</b>
-    <select [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELED" 
-            (change)="onStatusChange($event.target.value)">
-      <option *ngFor="let s of Object.values(orderStatusEnum)" [value]="s" [selected]="s === c.status">{{ s }}</option>
-    </select>
+      <select #statusSelect
+        [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELED" 
+        (change)="onStatusChange(statusSelect.value)">
+  
+        <option *ngFor="let s of object.values(orderStatusEnum)" 
+                [value]="s" 
+                [selected]="s === c.status">
+          {{ s }}
+        </option>
+      </select>
     <span *ngIf="isUpdating" class="spinner">Cargando...</span>
   </div>
 

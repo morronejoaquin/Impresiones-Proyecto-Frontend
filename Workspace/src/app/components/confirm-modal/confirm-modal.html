@@ -1,0 +1,22 @@
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon">
+      <span class="material-icons">delete_sweep</span>
+    </div>
+    <h2>{{ title }}</h2>
+    <p>{{ message }}</p>
+    
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button class="btn-danger" (click)="onConfirm()" [disabled]="isLoading">
+        @if (isLoading) {
+          <span class="spinner-small"></span> Eliminando...
+        } @else {
+          Confirmar
+        }
+      </button>
+    </div>
+  </div>
+</div>

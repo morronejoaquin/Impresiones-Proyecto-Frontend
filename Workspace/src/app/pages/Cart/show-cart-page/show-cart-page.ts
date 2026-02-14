@@ -9,11 +9,13 @@ import { CartService } from '../../../services/Cart/cart-service';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { Subject, takeUntil } from 'rxjs';
 import { CartTotalComponent } from '../../../components/cart-total/cart-total';
+import { NotificationService } from '../../../services/Notification/notification-service';
+import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-show-cart-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CartTotalComponent],
+  imports: [CommonModule, ReactiveFormsModule, CartTotalComponent, ConfirmModal],
   templateUrl: './show-cart-page.html',
   styleUrl: './show-cart-page.css',
 })
@@ -30,8 +32,12 @@ export class ShowCartPage implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private cartService: CartService,
-    private userService: UserService,
+    private notificationService: NotificationService
   ) {}
+
+  get calculatedCartTotal(): number {
+    return this.orders.reduce((acc, item) => acc + (item.amount || 0), 0);
+  }
 
   ngOnInit(): void {
     this.loadCart();
@@ -80,31 +86,6 @@ export class ShowCartPage implements OnInit, OnDestroy {
     });
   }
 
-  removeItem(orderId: string): void {
-    if (!this.currentCartId) return;
-
-    this.cartService.eliminarItem(orderId).subscribe({
-      next: () => {
-        // Actualizamos la lista visualmente
-        this.orders = this.orders.filter((order) => order.id !== orderId);
-        this.cartTotal = this.orders.reduce((sum, item) => sum + item.amount, 0);
-        
-        // --- ESTO ES LO NUEVO ---
-        this.itemToDeleteId = null; // Cierra el modal
-        this.isDeleting = false;    // Apaga el loading
-        
-        if (this.orders.length === 0) {
-          this.errorMessage = 'Tu carrito quedó vacío.';
-        }
-      },
-      error: (err) => {
-        console.error('Error removing item:', err);
-        alert('Error al eliminar. Intente nuevamente.');
-        this.isDeleting = false; // Apaga el loading aunque falle
-      },
-    });
-  }
-
   editItem(orderId: string): void {
     this.router.navigate(['/make-order', orderId]);
   }
@@ -138,23 +119,63 @@ export class ShowCartPage implements OnInit, OnDestroy {
   }
 
   cancelDelete(): void {
+    if (this.isDeleting) return;
     this.itemToDeleteId = null;
   }
 
   confirmDelete(): void {
     if (this.itemToDeleteId) {
       this.isDeleting = true; // Activa estado de carga
-      this.removeItem(this.itemToDeleteId);
+      this.executeDelete();
     }
   }
 
+  executeDelete(): void {
+  if (!this.itemToDeleteId) return;
+  
+  const idABorrar = this.itemToDeleteId; 
+  this.isDeleting = true;
+
+  this.cartService.eliminarItem(idABorrar).subscribe({
+    next: () => {
+      // Éxito: Filtramos y cerramos
+      this.finalizarEliminacionLocal(idABorrar);
+    },
+    error: (err) => {
+      // Manejo del error de parsing (Status 200 pero texto plano)
+      if (err.status === 200 || err.ok) {
+        this.finalizarEliminacionLocal(idABorrar);
+      } else {
+        this.notificationService.error('No se pudo eliminar el archivo');
+        this.isDeleting = false;
+        console.error('Error real:', err);
+      }
+    }
+  });
+}
+
+private finalizarEliminacionLocal(id: string): void {
+  // 1. Quitamos el item del array local INMEDIATAMENTE
+  this.orders = [...this.orders.filter(o => o.id !== id)];
+  
+  // 2. Limpiamos estados
+  this.itemToDeleteId = null;
+  this.isDeleting = false;
+  
+  // 3. Feedback visual
+  this.notificationService.success('Archivo eliminado correctamente');
+  
+  // 4. Forzamos al servicio a refrescar (opcional pero recomendado)
+  this.cartService.refreshCart();
+}
+  
   getBindingText(binding?: string): string {
     if (!binding) return 'Sin anillado';
 
     const bindingMap: { [key: string]: string } = {
-      ringed: 'Anillado',
-      stapled: 'Abrochado',
-      unringed: 'Sin anillar',
+      RINGED: 'Anillado',
+      STAPLED: 'Abrochado',
+      NONE: 'Sin anillar',
     };
 
     return bindingMap[binding] || binding;

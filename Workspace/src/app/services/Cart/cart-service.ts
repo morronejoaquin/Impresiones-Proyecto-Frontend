@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import CartWithItemsResponse from '../../models/Cart/cartWithItemsResponse';
@@ -58,20 +58,13 @@ export class CartService {
     });
   }
 
-  eliminarItem(itemId: string): Observable<void> {
-    return new Observable((observer) => {
-      this.http.delete<void>(`${this.apiUrl}/items/${itemId}`).subscribe({
-        next: () => {
-          this.refreshCart();
-          observer.next();
-          observer.complete();
-        },
-        error: (err) => {
-          observer.error(err);
-        },
-      });
-    });
-  }
+  eliminarItem(itemId: string): Observable<string> {
+  return this.http.delete(`${this.apiUrl}/items/${itemId}`, {
+    responseType: 'text' 
+  }).pipe(
+    tap(() => this.refreshCart())
+  );
+}
 
   getPendingCarts(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);

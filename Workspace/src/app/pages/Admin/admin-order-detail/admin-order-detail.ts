@@ -34,6 +34,7 @@ export class AdminOrderDetailPage implements OnInit {
   showConfirm = false;
 
   orderStatusEnum = OrderStatusEnum;
+  protected readonly object = Object;
 
   ngOnInit(): void {
     this.loadDetail();

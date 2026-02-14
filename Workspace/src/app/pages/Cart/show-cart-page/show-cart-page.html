@@ -1,101 +1,71 @@
 <div class="cart-container">
-  <h2>Mi Carrito</h2>
+  <header class="cart-header">
+    <h1><span class="material-icons">shopping_cart</span> Mi Carrito</h1>
+    <p class="item-count">{{ orders.length }} archivos en total</p>
+  </header>
 
   @if(isLoading) {
-    <div class="loading-message">
-      <p>Cargando carrito...</p>
+    <div class="loader-container">
+      <div class="spinner"></div>
+      <p>Sincronizando tus pedidos...</p>
     </div>
   }
 
-  @if(errorMessage && !isLoading) {
-    <div class="error-message">
-      <p>{{ errorMessage }}</p>
-      <button type="button" class="btn-retry" (click)="loadCart()">Reintentar</button>
-    </div>
-  }
-
-  @if(!isLoading && !errorMessage && orders && orders.length > 0) {
-    <div class="cart-items">
-      @for (item of orders; track item.id) {
-        <div class="cart-item">
-          <div class="item-details">
-            <div class="item-header">
-              <h3 class="item-name">{{ item.fileName }}</h3>
-              <span class="item-price">${{ item.amount | number:'1.2-2' }}</span>
-            </div>
-            
-            <div class="item-options">
-              <div class="option-row">
-                <span class="option-label">Páginas:</span>
-                <span class="option-value">{{ item.pages }}</span>
-              </div>
-              <div class="option-row">
-                <span class="option-label">Copias:</span>
-                <span class="option-value">{{ item.copies }}</span>
-              </div>
-              <div class="option-row">
-                <span class="option-label">Color:</span>
-                <span class="option-value">{{ item.color ? 'Sí' : 'No' }}</span>
-              </div>
-              <div class="option-row">
-                <span class="option-label">Doble faz:</span>
-                <span class="option-value">{{ item.doubleSided ? 'Sí' : 'No' }}</span>
-              </div>
-              @if(item.binding) {
-                <div class="option-row">
-                  <span class="option-label">Anillado:</span>
-                  <span class="option-value">{{ getBindingText(item.binding) }}</span>
+  @if(!isLoading && orders.length > 0) {
+    <div class="cart-grid">
+      <section class="items-list">
+        @for (item of orders; track item.id) {
+          <article class="cart-card">
+            <div class="card-main">
+              <div class="file-info">
+                <span class="material-icons file-icon">description</span>
+                <div>
+                  <h3>{{ item.fileName }}</h3>
+                  <div class="chips-group">
+                    <span class="chip"><b>{{ item.pages }}</b> pág.</span>
+                    <span class="chip"><b>{{ item.copies }}</b> copias</span>
+                    <span class="chip" [class.active]="item.color">{{ item.color ? 'Color' : 'B&N' }}</span>
+                    <span class="chip">{{ getBindingText(item.binding) }}</span>
+                  </div>
                 </div>
-              }
-              @if(item.comments) {
-                <div class="option-row">
-                  <span class="option-label">Comentarios:</span>
-                  <span class="option-value">{{ item.comments }}</span>
-                </div>
-              }
+              </div>
+              <div class="price-zone">
+                <span class="price-tag">${{ item.amount | number:'1.2-2' }}</span>
+              </div>
             </div>
-          </div>
-          
-          <div class="item-actions">
-            <button type="button" (click)="editItem(item.id)" class="btn-edit">Editar</button>
-            <button type="button" (click)="confirmAndRemoveItem(item.id)" class="btn-delete">Eliminar</button>
-          </div>
-        </div>
-      }
-    </div>
 
-    <div class="cart-summary">
-      <app-cart-total [total]="cartTotal"></app-cart-total>
-      <div class="cart-actions">
-        <button type="button" class="btn-proceed" (click)="proceedToPayment()">Proceder al pago</button>
-      </div>
-    </div>
-  }
+            <footer class="card-actions">
+              <button class="btn-text" (click)="editItem(item.id)">
+                <span class="material-icons">edit</span> Editar
+              </button>
+              <button class="btn-text delete" (click)="confirmAndRemoveItem(item.id)">
+                <span class="material-icons">delete_outline</span> Quitar
+              </button>
+            </footer>
+          </article>
+        }
+      </section>
 
-  @if(!isLoading && !errorMessage && (!orders || orders.length === 0)) {
-    <div class="empty-cart">
-      <div class="empty-cart-icon">🛒</div>
-      <p class="empty-cart-message">Tu carrito está vacío.</p>
-      <p class="empty-cart-subtitle">Agrega pedidos para comenzar tu compra.</p>
-      <button type="button" class="btn-go-to-order" (click)="goToOrder()">Ir a realizar pedido</button>
-    </div>
-  }
+      <aside class="summary-sidebar">
+        <div class="summary-card">
+          <h3>Resumen</h3>
 
-  @if(itemToDeleteId) {
-    <div class="modal-overlay" (click)="cancelDelete()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>¿Eliminar producto?</h3>
-        <p>¿Estás seguro de que deseas quitar este ítem del carrito?</p>
-        
-        <div class="modal-actions">
-          <button class="btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
-            Cancelar
-          </button>
-          <button class="btn-confirm" (click)="confirmDelete()" [disabled]="isDeleting">
-            @if(isDeleting) { Eliminando... } @else { Eliminar }
+            <app-cart-total [total]="calculatedCartTotal"></app-cart-total>
+                      
+          <button class="btn-primary full-width" (click)="proceedToPayment()">
+            Proceder al Pago <span class="material-icons">arrow_forward</span>
           </button>
         </div>
-      </div>
+      </aside>
     </div>
   }
-</div>
+  @if (itemToDeleteId) {
+  <app-confirm-modal
+    [title]="'¿Eliminar archivo?'"
+    [message]="'Esta acción quitará el pedido de tu carrito permanentemente.'"
+    [isLoading]="isDeleting"
+    (confirmed)="executeDelete()"
+    (cancelled)="cancelDelete()"
+  ></app-confirm-modal>
+}
+  </div>
