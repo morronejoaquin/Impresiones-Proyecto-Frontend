@@ -181,4 +181,17 @@ export class CartService {
 
     return this.http.get<Page<CartResponse>>(`${this.apiUrl}/admin/filter`, { params });
   }
+
+  getDeliveredHistory(filters: any, page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+
+    if (filters.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+    if (filters.endDate) {
+      params = params.set('endDate', filters.endDate);
+    }
+
+    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/admin/history`, { params });
+  }
 }
