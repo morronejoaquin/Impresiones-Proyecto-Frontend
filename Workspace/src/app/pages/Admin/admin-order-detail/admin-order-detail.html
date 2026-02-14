@@ -3,11 +3,25 @@
   <a routerLink="/admin" class="back">← Volver</a>
 </div>
 
-  <h1>Pedido #{{ cart()?.id }}</h1>
+  <h1 *ngIf="!notFound">Pedido #{{ cart()?.id }}</h1>
+
+  <div *ngIf="notFound">
+    <h2>404 - Carrito no encontrado</h2>
+    <p>El ID del carrito no es válido o el pedido no existe.</p>
+  </div>
 
   <div class="meta" *ngIf="cart() as c">
   <div><b>Cliente:</b> {{ c.customer.name }} {{ c.customer.surname }}</div>
-  <div><b>Estado:</b> <span class="badge">{{ c.status || c.cartStatus }}</span></div>
+
+  <div>
+    <b>Estado:</b>
+    <select [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELED" 
+            (change)="onStatusChange($event.target.value)">
+      <option *ngFor="let s of Object.values(orderStatusEnum)" [value]="s" [selected]="s === c.status">{{ s }}</option>
+    </select>
+    <span *ngIf="isUpdating" class="spinner">Cargando...</span>
+  </div>
+
   <div><b>Total (cart):</b> ${{ c.total | number:'1.2-2' }}</div>
 
   <div><b>Fecha de pedido:</b>
@@ -25,6 +39,7 @@
   <thead>
     <tr>
       <th>Archivo</th>
+      <th>Tipo</th>
       <th>Pág.</th>
       <th>Copias</th>
       <th>Doble cara</th>
@@ -32,11 +47,13 @@
       <th>Anillado</th>
       <th>Precio</th>
       <th>Subtotal</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let it of items(); trackBy: track">
       <td>{{ fileName(it.fileName) }}</td>
+      <td>{{ it.fileType || '—' }}</td>
       <td>{{ it.pages }}</td>
       <td>{{ it.copies }}</td>
       <td><span class="chip" [class.ok]="it.doubleSided" [class.muted]="!it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
@@ -44,6 +61,9 @@
       <td><span class="chip chip-binding">{{ bindingLabel(it.binding) }}</span></td>
       <td>${{ it.amount | number:'1.2-2' }}</td>
       <td>${{ sub(it) | number:'1.2-2' }}</td>
+      <td>
+        <button type="button" (click)="downloadFile(cart()?.id, it.id, it.fileName)">Abrir/Descargar</button>
+      </td>
     </tr>
   </tbody>
   <tfoot>
@@ -58,4 +78,25 @@
   <ng-template #noItems>
     <p class="muted">Este pedido no tiene items.</p>
   </ng-template>
+
+  <section *ngIf="items().length">
+    <h3>Comentarios del Cliente</h3>
+    <ul>
+      <li *ngFor="let it of items()">
+        <b>{{ fileName(it.fileName) }}:</b>
+        <span>{{ it.comments || '—' }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <div class="modal" *ngIf="showConfirm">
+    <div class="modal-content">
+      <h3>Confirmar cambio de estado</h3>
+      <p>¿Seguro que deseas cambiar el estado a <b>{{ statusToConfirm }}</b>?</p>
+      <div class="modal-actions">
+        <button (click)="confirmChangeStatus()">Confirmar</button>
+        <button (click)="cancelChangeStatus()">Cancelar</button>
+      </div>
+    </div>
+  </div>
 </section>

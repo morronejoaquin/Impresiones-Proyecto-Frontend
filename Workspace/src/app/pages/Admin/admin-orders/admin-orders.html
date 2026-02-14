@@ -64,7 +64,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cart of carts" class="table-row">
+        <tr *ngFor="let cart of carts" class="table-row" (click)="openDetail(cart.id)">
           <td class="cart-id">{{ cart.id.substring(0, 8) }}...</td>
           <td class="client-email">
             <span class="email">{{ cart.customer.email || cart.customer.name || 'N/A' }}</span>

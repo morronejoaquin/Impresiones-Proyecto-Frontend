@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../services/Cart/cart-service';
+import { Router } from '@angular/router';
 import CartResponse from '../../../models/Cart/cartResponse';
 import Page from '../../../models/PageModel/page';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
@@ -57,6 +58,12 @@ export class AdminOrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
+  }
+
+  // Navegación a detalle
+  openDetail(cartId: string): void {
+    // ruta definida en app.routes.ts -> /admin/order/:id
+    (window as any).location.href = `/admin/order/${cartId}`;
   }
 
   applyFilters(): void {
