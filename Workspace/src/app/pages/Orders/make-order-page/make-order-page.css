@@ -180,6 +180,10 @@ select:focus, input:focus {
   cursor: not-allowed;
 }
 
+.comments-section {
+  margin-top: 1.5rem;
+}
+
 @media (max-width: 480px) {
   .form-grid, .options-grid { 
     grid-template-columns: 1fr; 
@@ -192,5 +196,8 @@ select:focus, input:focus {
   .btn-submit { 
     width: 100%; 
     justify-content: center; 
+  }
+  .options-grid {
+    margin-bottom: 1.5rem;
   }
 }
