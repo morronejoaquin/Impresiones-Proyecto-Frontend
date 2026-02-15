@@ -24,6 +24,7 @@
   grid-template-columns: 1fr 320px;
   gap: 2rem;
   align-items: start;
+  min-height: 50vh; 
 }
 
 /* Tarjetas de items */
@@ -99,8 +100,13 @@
   font-weight: 500;
 }
 
-.btn-text:hover { color: var(--primary); }
-.btn-text.delete:hover { color: var(--danger); }
+.btn-text:hover { 
+  color: var(--primary); 
+}
+
+.btn-text.delete:hover { 
+  color: var(--danger); 
+}
 
 /* Sidebar de Resumen */
 .summary-card {
@@ -128,7 +134,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(90deg, #5D6DFF 0%, #C55DFF 50%,  #FF935D 100%);
+  background: var(--btn-primary);
   color: white;
   border: none;
   padding: 1rem;
@@ -142,8 +148,74 @@
   gap: 10px;
 }
 
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  min-height: 40vh; 
+  text-align: center;
+  padding: 2rem;
+  color: #adb5bd;
+}
+
+.empty-cart .material-icons {
+  font-size: 8rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+  color: #6c757d;
+}
+
+.empty-cart-message {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #495057;
+  margin: 0;
+}
+
+.empty-cart-subtitle {
+  font-size: 1.1rem;
+  color: #868e96;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.btn-go-to-order {
+  background: var(--btn-primary);
+  color: white;
+  border: 2px solid var(--primary);
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn-go-to-order:hover {
+  background: var(--btn-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(93, 109, 255, 0.2);
+}
+
+/* Ajuste responsivo */
+@media (max-width: 600px) {
+  .empty-cart .material-icons {
+    font-size: 6rem;
+  }
+  .empty-cart-message {
+    font-size: 1.5rem;
+  }
+}
+
 /* Responsive */
 @media (max-width: 850px) {
-  .cart-grid { grid-template-columns: 1fr; }
-  .summary-sidebar { order: -1; } /* El total arriba en móvil */
+  .cart-grid { 
+    grid-template-columns: 1fr; 
+  }
+  .summary-sidebar { 
+    order: -1; 
+  } /* El total arriba en móvil */
 }

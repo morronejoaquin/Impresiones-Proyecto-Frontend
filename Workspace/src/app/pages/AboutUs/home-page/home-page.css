@@ -56,7 +56,7 @@
 }
 
 .btn {
-  background: linear-gradient(90deg, #5D6DFF 0%, #C55DFF 50%,  #FF935D 100%);
+  background: var(--btn-primary);
   color: white !important;
   border: 1px solid white;
   padding: 18px 20px;
@@ -66,7 +66,7 @@
 }
 
 .btn:hover {
-  background: linear-gradient(90deg, #5D6DFF 0%, #C55DFF 50%,  #FF935D 100%);
+  background: var(--btn-primary);
   color: #ffffff !important;
   transform: translateY(-2px); /* Pequeño salto hacia arriba */
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -217,12 +217,12 @@
 }
 
 .cta .btn {
-  background: linear-gradient(180deg, #5D6DFF 0%, #C55DFF 100%);
+  background: var(--btn-secondary);
   color: var(--primary-color);
 }
 
 .cta .btn:hover {
-  background: linear-gradient(180deg, #5D6DFF 0%, #C55DFF 100%);
+  background: var(--btn-secondary);
   border-color: var(--primary-light);
 }
 

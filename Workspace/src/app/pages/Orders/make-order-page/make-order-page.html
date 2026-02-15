@@ -1,58 +1,89 @@
-<form [formGroup]="orderForm" (ngSubmit)="addToCart()">
-  <legend>{{ editingOrderId ? 'Editar Pedido' : 'Sube tu archivo' }}</legend>
-  <fieldset>
-    <div class="file-input-wrapper" (click)="!editingOrderId && fileInput.click()">
-      <span>{{ selectedFileName }}</span>
-      <input accept=".pdf,image/*" type="file" #fileInput (change)="onFileSelected($event)" id="fileUpload"
-        [attr.disabled]="editingOrderId ? true : null">
-    </div>
-    <p>
-      <legend>Paginas y anillado</legend>
-      <strong>Información del archivo:</strong>
-      <ng-container *ngIf="selectedFile || editingOrderId; else noFile">
-        <span *ngIf="isPdf || (editingOrderId && selectedFileName.toLowerCase().endsWith('.pdf'))">
-          Páginas: {{ pageCount ?? 'Cargando...' }}
-        </span>
-        <span
-          *ngIf="isImage || (editingOrderId && (selectedFileName.toLowerCase().endsWith('.png') || selectedFileName.toLowerCase().endsWith('.jpg') || selectedFileName.toLowerCase().endsWith('.jpeg')))">
-          Dimensiones: {{ imageWidth ?? 0 }}x{{ imageHeight ?? 0 }} px
-        </span>
-      </ng-container>
-      <ng-template #noFile>-</ng-template>
-    </p>
-  </fieldset>
-  <fieldset>
-    <label for="copies">Número de copias:</label>
-    <input type="number" id="copies" formControlName="copies" min="1">
-  </fieldset>
-  <fieldset>
-    <label for="doubleSided">Doble cara</label>
-    <input type="checkbox" id="doubleSided" formControlName="doubleSided">
-    <label for="color">Color</label>
-    <input type="checkbox" id="color" formControlName="color">
-  </fieldset>
-  <fieldset>
-    <label for="binding">Anillado:</label>
-    <select id="binding" formControlName="binding">
-      <option value="NONE">Sin anillado</option>
-      <option value="RINGED">Anillado</option>
-      <option value="STAPLED">Abrochado</option>
-    </select>
-  </fieldset>
-  <fieldset>
-    <label for="comments">Comentarios:</label>
-    <textarea id="comments" formControlName="comments"></textarea>
-  </fieldset>
+<form [formGroup]="orderForm" (ngSubmit)="addToCart()" class="order-form">
+  <h2 class="form-title">{{ editingOrderId ? 'Editar Pedido' : 'Sube tu archivo' }}</h2>
 
-  @if (calculatedPrice !== null) {
-  <section class="result">
-    <h3>Precio total: ${{ calculatedPrice }}</h3>
-  </section>
-  }
-  @if (isLoading) {
-  <div class="spinner">Cargando...</div>
-  }
-  <button type="submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
-    {{ editingOrderId ? 'Actualizar Pedido' : 'Agregar al Carrito' }}
-  </button>
+  <div class="file-section">
+    <div class="file-input-wrapper" [class.has-file]="selectedFile || editingOrderId" 
+         (click)="(!selectedFile && !editingOrderId) && fileInput.click()">
+      
+      <span class="material-icons upload-icon" *ngIf="!selectedFile && !editingOrderId">cloud_upload</span>
+      
+      <div class="file-info-display">
+        <span class="file-name">{{ selectedFileName || 'Haz clic para subir un archivo' }}</span>
+        <small class="file-meta" *ngIf="selectedFile || editingOrderId">
+          <ng-container *ngIf="isPdf || (editingOrderId && selectedFileName.toLowerCase().endsWith('.pdf'))">
+            {{ pageCount ?? '...' }} páginas
+          </ng-container>
+          <ng-container *ngIf="isImage">
+            {{ imageWidth }}x{{ imageHeight }} px
+          </ng-container>
+        </small>
+      </div>
+
+      <button type="button" class="remove-file" *ngIf="selectedFile && !editingOrderId && !isLoading" 
+        (click)="removeFile($event)">
+        <span class="material-icons">close</span>
+      </button>
+
+      <input accept=".pdf,image/*" type="file" #fileInput (change)="onFileSelected($event)" id="fileUpload" hidden>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label class="form-label">Tipo de Impresión</label>
+      <div class="toggle-group">
+        <button type="button" class="toggle-btn" [class.active]="!orderForm.get('color')?.value"
+          (click)="orderForm.patchValue({color: false})">
+          B/N
+        </button>
+        <button type="button" class="toggle-btn" [class.active]="orderForm.get('color')?.value"
+          (click)="orderForm.patchValue({color: true})">
+          Color
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label label-with-icon" for="copies">
+        Copias <span class="material-icons sm-icon">content_copy</span>
+      </label>
+        <input type="number" id="copies" formControlName="copies" min="1">
+    </div>
+  </div>
+
+  <div class="options-grid">
+    <div class="checkbox-card">
+      <label class="form-label" for="doubleSided">
+        Doble cara <span class="material-icons">import_export</span>
+      </label>
+      <input type="checkbox" id="doubleSided" formControlName="doubleSided">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="binding">Anillado / Terminación</label>
+      <select id="binding" formControlName="binding">
+        <option value="NONE">Sin anillado</option>
+        <option value="RINGED">Anillado</option>
+        <option value="STAPLED">Abrochado</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="comments">Instrucciones especiales</label>
+    <textarea id="comments" formControlName="comments" placeholder="Ej: Anillar por el margen izquierdo..."></textarea>
+  </div>
+
+  <div class="form-footer">
+    <div class="price-display" *ngIf="calculatedPrice !== null">
+      <span class="price-label">Total estimado</span>
+      <span class="price-amount">${{ calculatedPrice | number:'1.2-2' }}</span>
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
+      <span class="material-icons" *ngIf="!isLoading">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
+      <span class="spinner-sm" *ngIf="isLoading"></span>
+      {{ editingOrderId ? 'Actualizar Pedido' : 'Agregar al Carrito' }}
+    </button>
+  </div>
 </form>

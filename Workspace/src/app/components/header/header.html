@@ -17,9 +17,9 @@
         @if(userService.profile$ | async; as profile) {
 
           @if(profile.role !== 'administrador') {
-            <a routerLink="/make-order">Hacer Pedido</a>
-            <a routerLink="/cart">Carrito</a>
-            <a routerLink="/mi-orders">Mis Pedidos</a>
+            <a routerLink="/make-order" routerLinkActive="active">Hacer Pedido</a>
+            <a routerLink="/cart" routerLinkActive="active">Carrito</a>
+            <a routerLink="/my-orders" routerLinkActive="active">Mis Pedidos</a>
           }
       
           @if(profile.role === 'administrador') {

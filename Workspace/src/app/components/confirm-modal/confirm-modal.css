@@ -27,9 +27,10 @@
 }
 
 .modal-icon {
-  color: #ff4757;
+  color: var(--primary-color);
   font-size: 3rem;
   margin-bottom: 1rem;
+  
 }
 
 .modal-actions {
@@ -39,8 +40,21 @@
 }
 
 /* Estilos de botones similares a tu app */
-.btn-secondary { flex: 1; padding: 0.8rem; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; }
+.btn-secondary { 
+  flex: 1; 
+  padding: 0.8rem; 
+  border-radius: 8px; 
+  border: 1px solid #ddd; 
+  cursor: pointer; 
+}
+
 .btn-danger { 
-  flex: 1; padding: 0.8rem; border-radius: 8px; border: none;
-  background: #ff4757; color: white; font-weight: bold; cursor: pointer;
+  flex: 1; 
+  padding: 0.8rem; 
+  border-radius: 8px; 
+  border: none;
+  background: var(--btn-primary);
+  color: white; 
+  font-weight: bold; 
+  cursor: pointer;
 }

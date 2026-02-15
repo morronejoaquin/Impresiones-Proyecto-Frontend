@@ -6,6 +6,10 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+select, input[type="number"], textarea {
+    font-family: 'Inter', sans-serif;
+}
+
 :root {
   --primary-color: #C55DFF;
   --primary-dark: #2563eb;
@@ -17,6 +21,8 @@ body {
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
+  --btn-primary: linear-gradient(90deg, #5D6DFF 0%, #C55DFF 50%,  #FF935D 100%);
+  --btn-secondary: linear-gradient(180deg, #5D6DFF 0%, #C55DFF 100%);
   --bg-primary: linear-gradient(180deg, #5D6DFF 0%, #C55DFF 45%, #FF935D 100% );
   --bg-secondary: #f3f4f6;
   --bg-tertiary: #e5e7eb;

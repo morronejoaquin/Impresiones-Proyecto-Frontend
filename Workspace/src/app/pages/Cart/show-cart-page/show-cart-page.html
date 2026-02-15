@@ -45,7 +45,7 @@
           </article>
         }
       </section>
-
+      
       <aside class="summary-sidebar">
         <div class="summary-card">
           <h3>Resumen</h3>
@@ -59,13 +59,24 @@
       </aside>
     </div>
   }
+
+  @if(orders.length === 0) {
+    <div class="empty-cart">
+      <span class="material-icons">shopping_cart</span>      
+      <p class="empty-cart-message">Tu carrito está vacío.</p>
+      <p class="empty-cart-subtitle">Agrega pedidos para comenzar tu compra.</p>
+      <button type="button" class="btn-go-to-order" (click)="goToOrder()">Ir a realizar pedido</button>
+    </div>
+  }
+
   @if (itemToDeleteId) {
-  <app-confirm-modal
-    [title]="'¿Eliminar archivo?'"
-    [message]="'Esta acción quitará el pedido de tu carrito permanentemente.'"
-    [isLoading]="isDeleting"
-    (confirmed)="executeDelete()"
-    (cancelled)="cancelDelete()"
-  ></app-confirm-modal>
-}
-  </div>
+    <app-confirm-modal
+      [title]="'¿Eliminar archivo?'"
+      [message]="'Esta acción quitará el pedido de tu carrito permanentemente.'"
+      [isLoading]="isDeleting"
+      (confirmed)="executeDelete()"
+      (cancelled)="cancelDelete()"
+    ></app-confirm-modal>
+  }
+
+</div>

@@ -1,155 +1,196 @@
-form {
-  width: 100%;
-  max-width: 48rem;
+.order-form {
+  max-width: 600px;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   margin: 2rem auto;
-  padding: 1.25rem;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(20,20,20,0.06);
-  box-sizing: border-box;
 }
 
-fieldset {
-  border: none;
-  margin-bottom: 1.25rem;
-  padding: 0;
-  display: block;
+.form-title {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  text-align: center;
 }
 
-legend {
-  font-weight: 700;
-  color: #111;
-  background: #efefef;
-  padding: 0.45em 0.8em;
-  display: inline-block;
-  border-radius: 6px;
-  margin-bottom: 0.8rem;
-}
-
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.35rem;
-  color: #222;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="tel"],
-select,
-textarea {
-  width: 100%;
-  padding: 0.55em 0;
-  border: none;
-  border-bottom: 1px solid #d8d8d8;
-  background: transparent;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #333;
-  box-sizing: border-box;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-bottom: 2px solid #2a9d8f;
-}
-
-textarea {
-  min-height: 5rem;
-  resize: vertical;
-}
-
-input[type="checkbox"] {
-  margin-right: 0.5rem;
-}
-
-input[type="file"] {
-  display: none;
-}
-
+/* Sección de Archivo con Botón X */
 .file-input-wrapper {
-  position: relative;
-  width: 100%;
-  min-height: 3.4rem;
+  border: 2px dashed #6c757d;
+  border-radius: 12px;
+  padding: 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
   gap: 1rem;
-  border-radius: 8px;
-  border: 2px dashed #d0d0d0;
-  background: linear-gradient(180deg, #fff, #fbfbfb);
   cursor: pointer;
-  color: #606060;
-  font-weight: 700;
-  box-sizing: border-box;
+  transition: all 0.2s;
+  position: relative;
+  background: #fcfcfc;
 }
 
-.file-input-wrapper span {
+.file-input-wrapper.has-file {
+  border-style: solid;
+  border-color: var(--primary);
+  background: rgba(42, 157, 143, 0.03);
+}
+
+.file-input-wrapper:hover { 
+  border-color: #6c757d; 
+}
+
+.file-info-display {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.file-name {
+  font-weight: 600;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1 1 auto;
-  pointer-events: none;
 }
 
-.file-input-wrapper::after {
-  content: "Seleccionar";
-  display: inline-block;
-  background: #2a9d8f;
-  color: #fff;
-  padding: 0.45rem 0.7rem;
-  border-radius: 6px;
-  font-weight: 700;
-  margin-left: 1rem;
-  pointer-events: none;
-  box-shadow: 0 6px 14px rgba(42,157,143,0.12);
-}
-
-.file-input-wrapper:hover {
-  border-color: #2a9d8f;
-  color: #2a9d8f;
-}
-.file-input-wrapper:focus-within,
-.file-input-wrapper:active {
-  outline: 3px solid rgba(42,157,143,0.08);
-  border-color: #1f7a66;
-}
-
-.file-meta {
-  font-size: 0.9rem;
-  color: #7a7a7a;
-  margin-top: 0.4rem;
-}
-
-button {
-  width: 100%;
-  padding: 0.85rem;
-  background: #2a9d8f;
-  color: #fff;
+.remove-file {
+  background: #ff4d4d20;
+  color: #ff4d4d;
   border: none;
-  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-weight: 800;
-  font-size: 1rem;
-  transition: transform 0.12s ease, background 0.12s ease;
-}
-button:hover {
-  transform: translateY(-2px);
-  background: #1f7a66;
+  transition: 0.2s;
 }
 
-@media (max-width: 520px) {
-  form {
-    padding: 0.9rem;
-    margin: 1rem;
+.remove-file:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+/* Toggles de Color */
+.toggle-group {
+  display: flex;
+  background: #f0f0f0;
+  padding: 4px;
+  border-radius: 8px;
+  gap: 4px;
+}
+
+.toggle-btn {
+  flex: 1;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.toggle-btn.active {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Grillas de Formulario */
+.form-grid, .options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre texto e icono */
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+/* Inputs y Selects */
+select, input[type="number"], textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+select:focus, input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Footer y Precio */
+.form-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-label { 
+  font-size: 0.8rem; 
+  color: var(--text-muted); 
+}
+
+.price-amount { 
+  font-size: 1.5rem; 
+  font-weight: 800; 
+  color: var(--text-main); }
+
+.btn-submit {
+  background: var(--btn-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--btn-primary);
+  transform: translateY(-2px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .form-grid, .options-grid { 
+    grid-template-columns: 1fr; 
   }
-  .file-input-wrapper {
-    min-height: 3.6rem;
-    padding: 0 0.9rem;
+  .form-footer { 
+    flex-direction: column; 
+    gap: 1.5rem; 
+    text-align: center; 
   }
-  .file-input-wrapper::after { padding: 0.35rem 0.6rem; font-size: 0.95rem; }
+  .btn-submit { 
+    width: 100%; 
+    justify-content: center; 
+  }
 }

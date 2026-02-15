@@ -105,6 +105,15 @@ export class MakeOrderPage implements OnInit {
     }
   }
 
+  removeFile(event: Event) {
+    event.stopPropagation(); // Evita que se abra el selector de archivos al hacer clic en X
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.pageCount = null;
+    this.imageHeight = null;
+    this.imageWidth = null;
+  }
+
   async countPdfPages(file: File) {
     try {
       const arrayBuffer = await file.arrayBuffer();
