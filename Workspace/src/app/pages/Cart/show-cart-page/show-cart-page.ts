@@ -101,13 +101,7 @@ export class ShowCartPage implements OnInit, OnDestroy {
       return;
     }
 
-    this.cartService
-      .actualizarEstado(this.currentCartId, { status: OrderStatusEnum.PENDING })
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/cart-payment']);
-        },
-      });
+    this.router.navigate(['cart-payment'])
   }
 
   goToOrder(): void {

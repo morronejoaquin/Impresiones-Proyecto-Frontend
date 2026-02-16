@@ -9,7 +9,7 @@
                   @if(userService.profile$ | async; as profile) {
                     
                     @if(profile.role !== 'administrador') {
-                    <a routerLink="/cart" class="btn btn-primary btn-lg">
+                    <a routerLink="/make-order" class="btn btn-primary btn-lg">
                       <span class="material-icons">add</span>
                       Nuevo Pedido
                     </a>
@@ -32,7 +32,7 @@
                 <a routerLink="/user-register" class="btn btn-primary btn-lg">
                   Empezar Ahora
                 </a>
-                <a routerLink="/calculator" class="btn btn-outline btn-lg">
+                <a routerLink="/price-calculator" class="btn btn-outline btn-lg">
                   Calcular Precio
                 </a>
                 }
@@ -130,7 +130,7 @@
           <div class="cta-content">
             <h2>¿Listo para imprimir?</h2>
             <p>Calcula el precio de tu impresión antes de hacer tu pedido.</p>
-            <a routerLink="/calculator" class="btn btn-primary btn-lg">
+            <a routerLink="/price-calculator" class="btn btn-primary btn-lg">
               <span class="material-icons">calculate</span>
               Ir a la Calculadora
             </a>

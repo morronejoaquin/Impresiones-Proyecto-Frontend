@@ -1,60 +1,98 @@
-<div class="checkout-container">
-  <div class="main-content">
-    <h2>¿Cómo querés pagar?</h2>
-
-    <form [formGroup]="cartForm" (ngSubmit)="onSubmit()">
-      <div class="payment-options">
-        
-        <label class="payment-card" [class.selected]="cartForm.get('paymentMethod')?.value === 'MERCADO_PAGO'">
-          <div class="radio-container">
-            <input type="radio" value="MERCADO_PAGO" formControlName="paymentMethod">
-            <span class="custom-radio"></span>
-          </div>
-          <div class="payment-content">
-            <img src="assets/img/mercadopago-logo.png" alt="Mercado Pago" class="payment-logo">
-            <div class="payment-text">
-              <span class="title">Mercado Pago</span>
-              <span class="subtitle">Tarjeta de débito, crédito o dinero en cuenta</span>
-            </div>
-          </div>
-        </label>
-
-        <label class="payment-card" [class.selected]="cartForm.get('paymentMethod')?.value === 'CASH'">
-          <div class="radio-container">
-            <input type="radio" value="CASH" formControlName="paymentMethod">
-            <span class="custom-radio"></span>
-          </div>
-          <div class="payment-content">
-            <div class="cash-icon">💵</div>
-            <div class="payment-text">
-              <span class="title">Efectivo en el local</span>
-              <span class="subtitle">Pagás al retirar tu pedido</span>
-            </div>
-          </div>
-        </label>
-
+<div class="checkout-page">
+  <div class="container">
+    @if (isLoading && orders.length === 0) {
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <p>Preparando tu pedido...</p>
       </div>
+    } @else {
+      <a routerLink="/cart" class="back-link">
+        <span class="material-icons">arrow_back</span> Volver al Carrito
+      </a>
+      
+      <h1 class="page-title">Finalizar Pedido</h1>
 
-      <button type="submit" class="btn-primary" [disabled]="isLoading">
-        @if (isLoading) {
-            <span class="spinner"></span> Procesando...
-        } @else {
-            Confirmar compra
-        }
-      </button>
-    </form>
+      <div class="checkout-grid">
+        <section class="summary-section card">
+          <h2 class="section-title">Resumen del Pedido</h2>
+          
+          <div class="checkout-items-list">
+            @for (item of orders; track item.id) {
+              <div class="checkout-item-card">
+                <div class="item-main">
+                  <span class="material-icons file-icon">description</span>
+                  <div class="item-info">
+                    <span class="file-name">{{ item.fileName }}</span>
+                    <div class="chips-group">
+                      <span class="mini-chip"><b>{{ item.pages }}</b> pág.</span>
+                      <span class="mini-chip"><b>{{ item.copies }}</b> cop.</span>
+                      <span class="mini-chip" [class.is-color]="item.color">{{ item.color ? 'Color' : 'B&N' }}</span>
+                      <span class="mini-chip">{{ getBindingText(item.binding) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="item-price-tag">
+                  ${{ item.amount | number:'1.2-2' }}
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="total-container">
+            <span class="total-label">Total Final</span>
+            <span class="total-amount">${{ cartTotal | number:'1.2-2' }}</span>
+          </div>
+        </section>
+
+        <section class="payment-section card">
+          <h2 class="section-title">Método de Pago</h2>
+          
+          <form [formGroup]="cartForm" (ngSubmit)="onSubmit()">
+            <div class="payment-options">
+              <label class="payment-option-card" [class.active]="cartForm.get('paymentMethod')?.value === 'CASH'">
+                <input type="radio" value="CASH" formControlName="paymentMethod">
+                <div class="option-content">
+                  <span class="material-icons">payments</span>
+                  <div class="option-text">
+                    <span class="title">Efectivo</span>
+                    <span class="desc">Pagá al retirar en el local</span>
+                  </div>
+                </div>
+              </label>
+
+              <label class="payment-option-card" [class.active]="cartForm.get('paymentMethod')?.value === 'MERCADO_PAGO'">
+                <input type="radio" value="MERCADO_PAGO" formControlName="paymentMethod">
+                <div class="option-content">
+                  <span class="material-icons">account_balance_wallet</span>
+                  <div class="option-text">
+                    <span class="title">Mercado Pago</span>
+                    <span class="desc">Tarjetas o dinero en cuenta</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-confirm" [disabled]="isLoading">
+              @if (isLoading) {
+                <span class="spinner-sm"></span>
+              } @else {
+                <span class="material-icons">verified</span> Confirmar Pedido
+              }
+            </button>
+            
+            <p class="security-info">
+              <span class="material-icons">lock</span> Pago 100% seguro
+            </p>
+          </form>
+        </section>
+      </div>
+    }
+    @if (showConfirmModal) {
+      <app-confirm-modal
+        [title]="'¿Confirmar Pedido?'"
+        (confirmed)="executePayment()"
+        (cancelled)="cancelPayment()"
+      ></app-confirm-modal>
+    }
   </div>
-
-  <aside class="summary-card">
-    <h3>Resumen de compra</h3>
-    <hr>
-    <div class="summary-row">
-      <span>Productos</span>
-      <span>${{ cartTotal | number:'1.2-2' }}</span>
-    </div>
-    <div class="summary-row total">
-      <span>Total</span>
-      <span>${{ cartTotal | number:'1.2-2' }}</span>
-    </div>
-  </aside>
 </div>
