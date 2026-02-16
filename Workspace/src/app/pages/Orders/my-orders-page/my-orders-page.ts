@@ -4,6 +4,8 @@ import { CartService } from '../../../services/Cart/cart-service';
 import CartResponse from '../../../models/Cart/cartResponse';
 import { Router, RouterModule } from '@angular/router';
 import Page from '../../../models/PageModel/page';
+import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
+import CartHistoryResponse from '../../../models/Cart/cartHistoryResponse';
 
 @Component({
   selector: 'app-my-orders',
@@ -13,7 +15,7 @@ import Page from '../../../models/PageModel/page';
   styleUrls: ['./my-orders-page.css']
 })
 export class MyOrdersPage implements OnInit {
-  orders: CartResponse[] = [];
+  orders: CartHistoryResponse[] = [];
   loading = false;
   currentPage = 0;
   pageSize = 20;
@@ -23,7 +25,7 @@ export class MyOrdersPage implements OnInit {
 
   // Estados para traducir los valores de la API
   private orderStatusMap: { [key: string]: string } = {
-    'PENDING': 'Pendiente',
+    'PENDING': 'Recibido',
     'PRINTING': 'Imprimiendo',
     'BINDING': 'Encuadernando',
     'READY': 'Listo',
@@ -32,10 +34,10 @@ export class MyOrdersPage implements OnInit {
   };
 
   private paymentStatusMap: { [key: string]: string } = {
-    'PENDING': 'Pendiente',
-    'COMPLETED': 'Completado',
-    'FAILED': 'Fallido',
-    'REFUNDED': 'Reembolsado'
+    'PENDING': 'Pago Pendiente',
+    'APPROVED': 'Pago Aprobado',
+    'REJECTED': 'Pago Rechazado',
+    'UNKNOWN': 'Pendiente de Pago',
   };
 
   constructor(private cartService: CartService, private router: Router) {}
@@ -47,7 +49,7 @@ export class MyOrdersPage implements OnInit {
   loadOrders(): void {
     this.loading = true;
     this.cartService.getMyOrders(this.currentPage, this.pageSize).subscribe({
-      next: (page: Page<CartResponse>) => {
+      next: (page: Page<CartHistoryResponse>) => {
         this.orders = page.content || [];
         this.totalPages = page.totalPages || 0;
         this.totalElements = page.totalElements || 0;
@@ -77,7 +79,7 @@ export class MyOrdersPage implements OnInit {
   }
 
   goToOrderDetails(cartId: string): void {
-    this.router.navigate(['/admin/orders', cartId]);
+    this.router.navigate(['/order-detail', cartId]);
   }
 
   previousPage(): void {
@@ -103,6 +105,18 @@ export class MyOrdersPage implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  getBindingText(binding?: string): string {
+    if (!binding) return 'Sin anillado';
+
+    const bindingMap: { [key: string]: string } = {
+      RINGED: 'Anillado',
+      STAPLED: 'Abrochado',
+      NONE: 'Sin anillar',
+    };
+
+    return bindingMap[binding] || binding;
   }
 }
 

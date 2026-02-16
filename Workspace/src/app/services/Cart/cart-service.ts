@@ -8,6 +8,7 @@ import Page from '../../models/PageModel/page';
 import CartResponse from '../../models/Cart/cartResponse';
 import OrderItemCreateRequest from '../../models/OrderItem/orderItemCreateRequest';
 import CartStatusUpdateRequest from '../../models/Cart/cartStatusUpdateRequest';
+import CartHistoryResponse from '../../models/Cart/cartHistoryResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -135,9 +136,9 @@ export class CartService {
     return this.http.get<Page<CartResponse>>(`${this.apiUrl}/delivered`, { params });
   }
 
-  getMyOrders(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
+  getMyOrders(page: number = 0, size: number = 20): Observable<Page<CartHistoryResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);
-    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/my-orders`, { params });
+    return this.http.get<Page<CartHistoryResponse>>(`${this.apiUrl}/my-orders`, { params });
   }
 
   public refreshCart(): void {
