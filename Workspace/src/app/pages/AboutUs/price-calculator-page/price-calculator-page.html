@@ -1,56 +1,89 @@
 <div class="calculator-container">
-  <h1 class="calculator-title">Calculadora de Precios</h1>
-  <p class="calculator-subtitle">Conoce el costo de tu impresión sin necesidad de registrarte</p>
+  <header class="calculator-header">
+    <h1 class="calculator-title">Calculadora de Precios</h1>
+    <p class="calculator-subtitle">Calcula el costo de tu impresión sin la necesidad de registrarte</p>
+  </header>
 
-  <form [formGroup]="calculatorForm" class="calculator-form">
-    <div class="form-group">
-      <label for="pages">Cantidad de páginas:</label>
-      <input type="number" id="pages" formControlName="pages" min="1" />
-    </div>
+  <div class="calculator-grid">
+    <section class="config-card">
+      <h2 class="section-title">Configuración</h2>
+      
+      <form [formGroup]="calculatorForm" class="calculator-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Cantidad de Páginas</label>
+            <input type="number" formControlName="pages" class="form-control" placeholder="1">
+          </div>
 
-    <div class="form-group">
-      <label for="copies">Número de copias:</label>
-      <input type="number" id="copies" formControlName="copies" min="1" />
-    </div>
+          <div class="form-group">
+            <label class="form-label">Cantidad de Copias</label>
+            <input type="number" formControlName="copies" class="form-control" placeholder="1">
+          </div>
+        </div>
 
-    <div class="form-group">
-      <label for="binding">Tipo de encuadernado:</label>
-      <select id="binding" formControlName="binding">
-        @for (option of bindingOptions; track option.value) {
-          <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select>
-    </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de Impresión</label>
+          <div class="toggle-group">
+            <button type="button" class="toggle-btn" [class.active]="!calculatorForm.get('color')?.value"
+              (click)="calculatorForm.patchValue({color: false})">
+              <span class="material-icons">brightness_medium</span> <span>B/N</span>
+            </button>
+            <button type="button" class="toggle-btn" [class.active]="calculatorForm.get('color')?.value"
+              (click)="calculatorForm.patchValue({color: true})">
+              <span class="material-icons">palette</span> <span>Color</span>
+            </button>
+          </div>
+        </div>
 
-    <div class="form-group checkbox-group">
-      <label>
-        <input type="checkbox" formControlName="color" />
-        <span>Impresión a color</span>
-      </label>
-    </div>
-  </form>
+        <div class="form-group">
+          <label class="form-label">Encuadernación</label>
+          <div class="binding-cards">
+            @for (option of bindingOptions; track option.value) {
+              <div class="binding-card" 
+                   [class.selected]="calculatorForm.get('binding')?.value === option.value"
+                   (click)="calculatorForm.patchValue({binding: option.value})">
+                <span class="material-icons card-icon">
+                  {{ option.value === 'NONE' ? 'description' : option.value === 'RINGED' ? 'menu_book' : 'push_pin' }}
+                </span>
+                <span class="card-label">{{ option.label }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </form>
+    </section>
 
-  @if (isLoading) {
-    <div class="loading">
-      <span>Calculando...</span>
-    </div>
-  }
-
-  @if (errorMessage) {
-    <div class="error-message">
-      {{ errorMessage }}
-    </div>
-  }
-
-  @if (priceResult && !isLoading) {
-    <section class="result">
-      <h3 class="total-price">Precio total: ${{ priceResult.total | number:'1.2-2' }}</h3>
-      <div class="price-breakdown">
-        <p><strong>Precio por hoja:</strong> ${{ priceResult.pricePerSheet | number:'1.2-2' }}</p>
-        @if (priceResult.priceRingedBinding > 0) {
-          <p><strong>Precio encuadernado:</strong> ${{ priceResult.priceRingedBinding | number:'1.2-2' }}</p>
+    <section class="result-card">
+      <h2 class="section-title">Resultado</h2>
+      <div class="result-content">
+        @if (calculatorForm.get('pages')?.value > 0 && calculatorForm.get('copies')?.value > 0 && priceResult) {
+          <div class="price-display">
+            <div class="main-total">
+              <span class="currency">$</span>
+              <span class="amount">{{ priceResult.total | number:'1.2-2' }}</span>
+            </div>
+            <p class="price-info">Precio Final estimado</p>
+            
+            <div class="breakdown">
+              <div class="breakdown-item">
+                <span>Precio por hoja:</span>
+                <span class="value">${{ priceResult.pricePerSheet | number:'1.2-2' }}</span>
+              </div>
+              @if (priceResult.priceRingedBinding > 0) {
+                <div class="breakdown-item">
+                  <span>Encuadernación:</span>
+                  <span class="value">${{ priceResult.priceRingedBinding | number:'1.2-2' }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <span class="material-icons large-icon">calculate</span>
+            <p>Ingresa los datos para calcular</p>
+          </div>
         }
       </div>
     </section>
-  }
+  </div>
 </div>
