@@ -93,7 +93,7 @@ export class CartPaymentPage implements OnInit{
           window.location.href = response.checkoutUrl; // Redirige a Mercado Pago
         } else {
           this.isLoading = false;
-          this.router.navigate(['/order-success'], { 
+          this.router.navigate(['/order-received'], { 
             queryParams: { orderId: response.cartId } 
           });
         }

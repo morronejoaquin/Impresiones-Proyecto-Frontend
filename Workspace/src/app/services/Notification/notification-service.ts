@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, retry, share, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, retry, share, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 import NotificationResponse from '../../models/NotificationModel/notificationResponse';
 
 export interface ImpresionesNotification {
@@ -16,45 +16,45 @@ export class NotificationService {
   private readonly API_URL = 'http://localhost:8080/api/notifications';
 
   private notificationSubject = new Subject<ImpresionesNotification>();
-  notification$ = this.notificationSubject.asObservable();
+  public notification$ = this.notificationSubject.asObservable();
 
   private pendingNotification: ImpresionesNotification | null = null;
   
-  // Usamos BehaviorSubject para que la campana siempre tenga un valor inicial (0)
+  // 2. Notificaciones persistentes (Dropdown/Campana)
+  // IMPORTANTE: Aquí debe ser NotificationResponse[]
   private unreadNotificationsSubject = new BehaviorSubject<NotificationResponse[]>([]);
   public unreadNotifications$ = this.unreadNotificationsSubject.asObservable();
   
-  // Un observable derivado solo para el conteo (facilita el Badge del HTML)
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
   
   private stopPolling$ = new Subject<void>();
+  private isPollingActive = false;
 
-  constructor(private http: HttpClient){
-  }
+  constructor(private http: HttpClient) {}
 
   public initPolling() {
-    // timer(retraso inicial, cada cuánto tiempo)
-    // 30000 ms = 30 segundos
+    if (this.isPollingActive) return;
+    this.isPollingActive = true;
+
     timer(0, 30000).pipe(
       takeUntil(this.stopPolling$),
-      switchMap(() => this.getUnreadFromServer()),
-      retry({ count: 3, delay: 5000 }), // Si hay un error de red, no rompe el polling, intenta en el próximo ciclo
-      share()  // Evita múltiples peticiones si hay varios componentes suscritos
-    ).subscribe({
-        next: notifications => {
-          this.unreadNotificationsSubject.next(notifications);
-          this.unreadCountSubject.next(notifications.length);
-        },
-        error: (e) => console.error("Error en polling", e)
+      switchMap(() => this.getUnreadFromServer().pipe(
+        catchError(() => of([])) 
+      )),
+      retry({ count: 3, delay: 5000 }),
+      share()
+    ).subscribe(notifications => {
+      this.unreadNotificationsSubject.next(notifications);
+      this.unreadCountSubject.next(notifications.length);
     });
   }
 
   public clearAndStop() {
-    this.stopPolling$.next(); // Detiene el timer definitivamente
-    this.unreadNotificationsSubject.next([]); // Limpia la lista (Criterio de aceptación)
-    this.unreadCountSubject.next(0); // Limpia el contador
-    this.pendingNotification = null;
+    this.stopPolling$.next();
+    this.isPollingActive = false;
+    this.unreadNotificationsSubject.next([]);
+    this.unreadCountSubject.next(0);
   }
 
   private getUnreadFromServer(): Observable<NotificationResponse[]> {
@@ -64,21 +64,36 @@ export class NotificationService {
   markAsRead(id: string): Observable<void> {
     return this.http.patch<void>(`${this.API_URL}/${id}/read`, {}).pipe(
       tap(() => {
-        // Actualizamos el estado local inmediatamente para mejorar la UX
+        // Usamos .value porque ahora sí es un BehaviorSubject de la lista
         const updatedList = this.unreadNotificationsSubject.value.filter(n => n.id !== id);
-        this.unreadNotificationsSubject.next(updatedList);
-        this.unreadCountSubject.next(updatedList.length);
+        this.updateLocalState(updatedList);
+      })
+    );
+  }
+  
+  markAllAsReadServer(): Observable<void> {
+    // Realiza la petición PATCH al endpoint correspondiente
+    return this.http.patch<void>(`${this.API_URL}/mark-all-read`, {}).pipe(
+      tap(() => {
+        // Limpiamos el estado local inmediatamente para actualizar la UI
+        this.unreadNotificationsSubject.next([]);
+        this.unreadCountSubject.next(0);
+      }),
+      catchError(err => {
+        console.error("Error al marcar todas como leídas en el servidor", err);
+        throw err;
       })
     );
   }
 
+  private updateLocalState(newList: NotificationResponse[]) {
+    this.unreadNotificationsSubject.next(newList);
+    this.unreadCountSubject.next(newList.length);
+  }
+
+  // Métodos para Toasts manuales
   show(message: string, type: 'success' | 'error' | 'info' = 'info', redirectUrl?: string) {
-    const notification: ImpresionesNotification = { message, type, redirectUrl }; 
-
-    // Almacena el mensaje 
-    this.pendingNotification = notification;
-
-    this.notificationSubject.next(notification);
+    this.notificationSubject.next({ message, type, redirectUrl });
   }
 
   getPendingNotification(): ImpresionesNotification | null {

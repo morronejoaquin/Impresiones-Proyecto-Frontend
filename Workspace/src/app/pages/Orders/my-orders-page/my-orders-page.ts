@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../../services/Cart/cart-service';
-import CartResponse from '../../../models/Cart/cartResponse';
 import { Router, RouterModule } from '@angular/router';
 import Page from '../../../models/PageModel/page';
-import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
 import CartHistoryResponse from '../../../models/Cart/cartHistoryResponse';
 
 @Component({

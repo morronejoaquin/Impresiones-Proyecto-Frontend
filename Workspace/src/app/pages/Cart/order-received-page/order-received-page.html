@@ -1,44 +1,52 @@
 <div class="page-container">
   
   @if (paymentStatus === 'success' || paymentStatus === 'pending') {
-    <div class="result-card success">
-      <div class="icon">✅</div>
-      <h1>¡Pedido Recibido!</h1>
+    <div class="result-card scale-in">
+      <div class="icon-circle" [class.pending-icon]="paymentStatus === 'pending'">
+        {{ paymentStatus === 'success' ? '✓' : '⌛' }}
+      </div>
+      
+      <h1>{{ paymentStatus === 'success' ? '¡Pedido Confirmado!' : 'Pago en Proceso' }}</h1>
 
       @if (paymentMethod === 'CASH') {
         <div class="instructions-box">
-          <p>Tu pedido ha sido registrado correctamente bajo la modalidad de <strong>pago en efectivo</strong>.</p>
-          <p class="highlight">⚠️ Recordá que comenzaremos con la impresión una vez que abones el total en el local.</p>
+          <p>Tu pedido ha sido registrado correctamente para <strong>pago en efectivo</strong>.</p>
+          <p class="highlight">⚠️ Recordá que la impresión comenzará una vez que abones el total en el local.</p>
         </div>
+      } @else if (paymentStatus === 'pending') {
+        <p class="description">Mercado Pago está procesando tu transacción. Te notificaremos cuando se apruebe.</p>
       } @else {
-        <p>Tu pago mediante Mercado Pago ha sido procesado con éxito.</p>
+        <p class="description">Tu pago ha sido procesado con éxito. ¡Ya estamos trabajando en tu pedido!</p>
       }
 
-      <div class="details">
-        <p>Número de orden: <strong>#{{ orderId }}</strong></p>
+      <div class="order-info">
+        <div class="info-row">
+          <span>Número de seguimiento:</span>
+          <strong>#{{ orderId?.substring(0, 16) }}</strong>
+        </div>
         @if (mpPaymentId) {
-          <p class="sub-detail">Comprobante MP: {{ mpPaymentId }}</p>
+          <div class="info-row">
+            <span>Comprobante MP:</span>
+            <small>{{ mpPaymentId }}</small>
+          </div>
         }
       </div>
 
       <div class="actions">
         <button routerLink="/my-orders" class="btn-primary">Ver mis pedidos</button>
-        <button routerLink="/home" class="btn-ghost">Volver al inicio</button>
+        <button routerLink="/" class="btn-outline">Volver al inicio</button>
       </div>
     </div>
-  }
-
-  @else {
-    <div class="result-card failure">
-      <div class="icon">❌</div>
+  } @else {
+    <div class="result-card failure scale-in">
+      <div class="icon-circle error-icon">✕</div>
       <h1>Pago no procesado</h1>
-      <p>Lo sentimos, no pudimos completar la transacción con Mercado Pago.</p>
+      <p class="description">No pudimos completar la transacción. Tu pedido permanece en el carrito.</p>
       
       <div class="actions">
         <button routerLink="/cart-payment" class="btn-primary">Reintentar Pago</button>
-        <button routerLink="/cart" class="btn-ghost">Volver al carrito</button>
+        <button routerLink="/cart" class="btn-outline">Revisar Carrito</button>
       </div>
     </div>
   }
-
 </div>

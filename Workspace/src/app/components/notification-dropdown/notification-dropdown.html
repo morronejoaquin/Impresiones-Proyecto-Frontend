@@ -1,5 +1,7 @@
 <div class="notification-container">
+
   <button class="bell-btn" (click)="toggleDropdown()">
+    <span class="material-icons">notifications</span>
     <i class="fas fa-bell"></i>
     @if ((notificationService.unreadCount$ | async); as count) {
       @if (count > 0) {
@@ -32,10 +34,6 @@
             <p>No tienes mensajes nuevos</p>
           </div>
         }
-      </div>
-
-      <div class="dropdown-footer">
-        <button routerLink="/my-orders">Ver todos mis pedidos</button>
       </div>
     </div>
   }

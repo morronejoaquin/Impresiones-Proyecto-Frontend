@@ -30,23 +30,29 @@ export class NotificationDropdown implements OnInit{
     this.isOpen = !this.isOpen;
   }
 
-  handleNotificationClick(notif: any) {
-    this.notificationService.markAsRead(notif.id).subscribe(() => {
-      this.isOpen = false;
-      this.router.navigate(['/my-orders']);
+  handleNotificationClick(notif: NotificationResponse) {
+    this.notificationService.markAsRead(notif.id).subscribe({
+      next: () => {
+        this.isOpen = false;
+        // Navegamos a mis pedidos (puedes pasar el ID del pedido si el backend lo envía)
+        this.router.navigate(['/my-orders']);
+      }
+    });
+  }
+
+  markAllAsRead() {
+    this.notificationService.markAllAsReadServer().subscribe({
+      next: () => (this.isOpen = false),
+      error: (err) => console.error("No se pudo limpiar", err)
     });
   }
 
   @HostListener('document:click', ['$event'])
   closeDropdown(event: Event) {
-    // Cerrar si se hace clic fuera del componente
-    if (!(event.target as HTMLElement).closest('.notification-container')) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.notification-container')) {
       this.isOpen = false;
     }
-  }
-
-  markAllAsRead(){
-
   }
 
 }

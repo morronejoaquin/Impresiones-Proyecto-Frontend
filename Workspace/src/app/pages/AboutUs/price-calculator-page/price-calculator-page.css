@@ -1,7 +1,6 @@
-/* Layout Base */
 .calculator-container {
   max-width: 1100px;
-  margin: 20px auto 100px auto; /* Espacio superior e inferior (footer) */
+  margin: 20px auto 100px auto; 
   padding: 0 20px;
   box-sizing: border-box;
 }
@@ -13,7 +12,7 @@
 
 .calculator-title {
   color: #1e293b;
-  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Tamaño fluido */
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 800;
   margin-bottom: 0.5rem;
 }
@@ -72,7 +71,7 @@
 }
 
 .form-control {
-  box-sizing: border-box; /* Crucial para que no se salga del cuadrado */
+  box-sizing: border-box; 
   width: 100%;
   padding: 0.8rem 1rem;
   border: 2px solid #e2e8f0;
@@ -155,7 +154,6 @@
   font-weight: 700; 
 }
 
-/* Resultado Visual */
 .price-display {
   padding: 1rem 0;
 }

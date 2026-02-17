@@ -62,7 +62,7 @@
 
           <div class="order-footer">
             <div class="footer-details">
-              <span class="label">Método: <span class="value">{{ order.paymentMethod || 'Efectivo' }}</span></span>
+              <span class="label">Método de pago: <span class="value">{{ order.paymentMethod === 'MERCADO_PAGO' ? 'Mercado Pago' : (order.paymentMethod === 'CASH' || order.paymentMethod === 'N/A' ? 'Efectivo' : order.paymentMethod) }}</span></span>
             </div>
             <div class="total-section">
               <span class="total-label">Total del Pedido</span>

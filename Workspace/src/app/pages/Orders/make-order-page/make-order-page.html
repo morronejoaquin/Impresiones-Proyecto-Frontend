@@ -34,11 +34,11 @@
       <div class="toggle-group">
         <button type="button" class="toggle-btn" [class.active]="!orderForm.get('color')?.value"
           (click)="orderForm.patchValue({color: false})">
-          B/N
+          <span class="material-icons">brightness_medium</span> <span>B/N</span>
         </button>
         <button type="button" class="toggle-btn" [class.active]="orderForm.get('color')?.value"
           (click)="orderForm.patchValue({color: true})">
-          Color
+          <span class="material-icons">palette</span> <span>Color</span>
         </button>
       </div>
     </div>

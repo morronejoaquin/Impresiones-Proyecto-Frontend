@@ -75,22 +75,27 @@
 /* Toggles de Color */
 .toggle-group {
   display: flex;
-  background: #f0f0f0;
-  padding: 4px;
-  border-radius: 8px;
-  gap: 4px;
+  background: #f1f5f9;
+  padding: 0.3rem;
+  border-radius: 14px;
+  gap: 0.3rem;
 }
 
 .toggle-btn {
   flex: 1;
   border: none;
-  padding: 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
+  padding: 0.8rem 0.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: transparent;
-  color: var(--text-muted);
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .toggle-btn.active {

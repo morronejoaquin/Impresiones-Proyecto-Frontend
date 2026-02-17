@@ -1,36 +1,138 @@
 .page-container {
   display: flex;
+  align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background-color: #f8f9fa;
-  min-height: 80vh;
+  background-color: #f0f2f5;
+  min-height: 85vh;
 }
 
 .result-card {
   background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Sombra suave */
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
   text-align: center;
-  max-width: 500px;
+  max-width: 480px;
   width: 100%;
 }
 
+/* Círculo del Icono */
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  background: #e6f7ed;
+  color: #2ecc71;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 1.5rem;
+}
+
+.pending-icon { 
+  background: #fff4e6; 
+  color: #f76707; 
+}
+
+.error-icon { 
+  background: #fff5f5; 
+  color: #fa5252; 
+}
+
+h1 {
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.description {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Caja de Instrucciones Cash */
 .instructions-box {
-  background-color: #fff9db; /* Amarillo suave para llamar la atención sin asustar */
-  border-left: 4px solid #fcc419;
-  padding: 15px;
-  margin: 20px 0;
+  background: #fff9db;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin: 1.5rem 0;
+  border-left: 5px solid #fab005;
   text-align: left;
 }
 
 .highlight {
-  color: #e67e22;
-  font-weight: 600;
-  margin-top: 10px;
+  color: #d9480f;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 8px;
 }
 
-.icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
+/* Información de Orden */
+.order-info {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-row:last-child { 
+  margin-bottom: 0; 
+}
+
+/* Botones */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: var(--btn-primary);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover { 
+  background: var(--btn-primary); 
+  transform: translateY(-2px); 
+}
+
+.btn-outline {
+  background: transparent;
+  color: #495057;
+  border: 2px solid #dee2e6;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Animación de entrada */
+.scale-in {
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0; transform: scale(0.9); 
+  }
+  to { 
+    opacity: 1; transform: scale(1); 
+  }
 }

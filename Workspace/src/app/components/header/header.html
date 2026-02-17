@@ -31,7 +31,7 @@
             <div class="user-dropdown-container">
               <button class="user-btn" (click)="toggleUserMenu()">
                 <span class="material-icons">account_circle</span>
-                <span class="material-icons">expand_more</span>
+                <span class="material-icons arrow-icon" [class.rotated]="showUserMenu">expand_more</span>
               </button>
 
               @if (showUserMenu) {

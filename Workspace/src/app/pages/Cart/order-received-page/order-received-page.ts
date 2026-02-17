@@ -23,16 +23,28 @@ export class OrderReceivedPage {
       this.orderId = params['orderId'] || params['external_reference'];
       this.mpPaymentId = params['payment_id'];
       
-      // Si existe payment_id, asumimos que viene de Mercado Pago
-      if (this.mpPaymentId || params['collection_status']) {
+      const status = params['collection_status'] || params['status'];
+
+      if (this.mpPaymentId || status) {
         this.paymentMethod = 'MERCADO_PAGO';
-        const status = params['collection_status'] || params['status'];
         
-        if (status === 'rejected') this.paymentStatus = 'failure';
-        else if (status === 'pending' || status === 'in_process') this.paymentStatus = 'pending';
-        else this.paymentStatus = 'success';
+        // Mapeo preciso de estados de Mercado Pago
+        switch (status) {
+          case 'approved':
+            this.paymentStatus = 'success';
+            break;
+          case 'rejected':
+          case 'cancelled':
+            this.paymentStatus = 'failure';
+            break;
+          case 'in_process':
+          case 'pending':
+            this.paymentStatus = 'pending';
+            break;
+          default:
+            this.paymentStatus = 'success';
+        }
       } else {
-        // Si no hay datos de MP, es nuestro flujo de Efectivo
         this.paymentMethod = 'CASH';
         this.paymentStatus = 'success';
       }

@@ -49,14 +49,12 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Estilo especial Admin */
 .admin-link {
   border: 1px solid white;
 }
 
-/* Botón de Login */
 .login-btn {
-  background: rgba(255, 255, 255, 0.15); /* Semi-transparente para que pegue con el fondo */
+  background: rgba(255, 255, 255, 0.15); 
   color: white !important;
   border: 1px solid white;
   padding: 8px 20px;
@@ -65,13 +63,12 @@
 }
 
 .login-btn:hover {
-  background: white; /* Se vuelve blanco sólido */
+  background: white; 
   color: #ffffff !important;
-  transform: translateY(-2px); /* Pequeño salto hacia arriba */
+  transform: translateY(-2px); 
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Menú Desplegable de Usuario */
 .user-actions {
   display: flex;
   align-items: center;
@@ -81,6 +78,16 @@
 
 .user-dropdown-container {
   position: relative;
+}
+
+.arrow-icon {
+  display: inline-block;
+  transition: transform 0.3s ease; /* Duración y suavidad de la animación */
+}
+
+/* Clase que se activa cuando el menú está abierto */
+.rotated {
+  transform: rotate(180deg); /* Gira 180 grados */
 }
 
 .user-btn {
@@ -95,8 +102,7 @@
 .dropdown-menu {
   position: absolute;
   right: 0;
-  top: 50px; /* Un poco más de espacio */
-  /* Mismo degradado que el header */
+  top: 50px; 
   background: linear-gradient(90deg, #5D6DFF 0%, #C55DFF 50%,  #FF935D 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -122,10 +128,9 @@
   }
 }
 
-/* Ajuste de los items dentro del menú desplegable */
 .dropdown-menu a, .logout-btn {
   padding: 12px 20px;
-  color: white !important; /* Texto blanco sobre el degradado */
+  color: white !important; 
   text-align: left;
   border: none;
   background: transparent;
@@ -136,8 +141,7 @@
 }
 
 .dropdown-menu a:hover, .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.2); /* Brillo blanco al pasar el mouse */
-  color: #fcc100 !important; /* O el color que prefieras para resaltar */
+  background: rgba(255, 255, 255, 0.2); 
 }
 
 /* Responsive */

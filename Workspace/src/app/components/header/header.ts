@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';   
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../services/Users/user-service'; 
 import { AuthService } from '../../services/Auth/auth.service';
 import { NotificationDropdown } from '../notification-dropdown/notification-dropdown';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -16,11 +17,18 @@ export class Header implements OnInit{
   isMobileOpen = false;
   showUserMenu = false;
   
-  constructor(public authService: AuthService, public userService: UserService){
+  constructor(public authService: AuthService, public userService: UserService, private router: Router){
   }
 
   ngOnInit(): void {
     this.userService.loadProfile();
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.isMobileOpen = false;
+      this.showUserMenu = false;
+    });
   }
 
   toggleMobile() {
