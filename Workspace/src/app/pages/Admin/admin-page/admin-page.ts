@@ -73,6 +73,10 @@ export class AdminPage implements OnInit {
     this.router.navigate(['/admin/record'])
   }
 
+  goToDashboard() {
+    this.router.navigate(['/admin/dashboard']);
+  }
+
   onStatusChange(cart: CartWithItemsResponse, value: string) {
   this.updateStatus(cart, value as unknown as Cart['status']);
 }

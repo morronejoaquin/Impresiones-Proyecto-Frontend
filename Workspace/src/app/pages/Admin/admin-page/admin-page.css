@@ -227,6 +227,24 @@
   transform: translateY(-1px);
 }
 
+.dashboard-button {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.dashboard-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
 .record-admin-button {
   padding: 8px 16px;
   background-color: #10b981;
@@ -240,7 +258,7 @@
   margin-bottom: 20px;
 }
 
-.price-admin-button:hover {
+.record-admin-button:hover {
   background-color: #0f9f6e;
   transform: translateY(-1px);
 }

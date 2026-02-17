@@ -13,6 +13,7 @@ import { permissionGuard } from './guards/permission-guard';
 import { CartPaymentPage } from './pages/Cart/cart-payment-page/cart-payment-page';
 import { OrderReceivedPage } from './pages/Cart/order-received-page/order-received-page';
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
+import { AdminDashboardComponent } from './pages/Admin/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -113,6 +114,12 @@ export const routes: Routes = [
     path: 'admin/history',
     loadComponent: () =>
       import('./pages/Admin/admin-history/admin-history').then(m => m.AdminHistoryComponent),
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['administrador']}
+  },
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboardComponent,
     canActivate: [permissionGuard],
     data: { allowedRoles: ['administrador']}
   },

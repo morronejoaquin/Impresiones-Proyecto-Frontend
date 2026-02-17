@@ -1,0 +1,91 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Dashboard Administrativo</h1>
+    <button (click)="loadDashboardData()" class="refresh-btn">Actualizar</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Cargando datos...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="content">
+    <!-- Resumen de Pedidos por Estado -->
+    <section class="orders-summary">
+      <h2>Resumen de Pedidos por Estado</h2>
+      <div class="cards-grid">
+        <div *ngFor="let order of orderSummary" class="card" [style.border-left]="'4px solid ' + getStatusColor(order.status)">
+          <div class="card-header">
+            <h3>{{ getStatusLabel(order.status) }}</h3>
+          </div>
+          <div class="card-body">
+            <div class="stat">
+              <span class="label">Cantidad:</span>
+              <span class="value">{{ order.count }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Monto Total:</span>
+              <span class="value">${{ order.totalAmount.toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estadísticas de Impresión -->
+    <section class="printing-stats" *ngIf="printingStats">
+      <h2>Estadísticas de Impresión</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-box">
+          <h3>Hojas por Color</h3>
+          <div class="stat-row">
+            <span>Color:</span>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="printingStats.colorPercentage" style="background: #e91e63;"></div>
+            </div>
+            <span class="percentage">{{ printingStats.colorPercentage.toFixed(1) }}%</span>
+          </div>
+          <div class="stat-row">
+            <span>B/N:</span>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="printingStats.bwPercentage" style="background: #212121;"></div>
+            </div>
+            <span class="percentage">{{ printingStats.bwPercentage.toFixed(1) }}%</span>
+          </div>
+          <div class="total">Total hojas: {{ printingStats.totalSheets }}</div>
+        </div>
+
+        <div class="stat-box">
+          <h3>Tipo de Encuadernación</h3>
+          <div class="stat-row">
+            <span>Anilladas:</span>
+            <span class="value">{{ printingStats.ringedPercentage.toFixed(1) }}%</span>
+          </div>
+          <div class="stat-row">
+            <span>Engrapadas:</span>
+            <span class="value">{{ printingStats.stapledPercentage.toFixed(1) }}%</span>
+          </div>
+          <div class="stat-row">
+            <span>Sin Encuadernación:</span>
+            <span class="value">{{ printingStats.noBindingPercentage.toFixed(1) }}%</span>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <h3>Resumen</h3>
+          <div class="summary-item">
+            <span>Total hojas:</span>
+            <strong>{{ printingStats.totalSheets }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Hojas a color:</span>
+            <strong>{{ printingStats.colorSheets }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Hojas B/N:</span>
+            <strong>{{ printingStats.bwSheets }}</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
