@@ -4,5 +4,5 @@ export enum OrderStatusEnum{
     BINDING = 'BINDING',
     READY = 'READY',
     DELIVERED = 'DELIVERED',
-    CANCELED = 'CANCELED'
+    CANCELLED = 'CANCELLED'
 }

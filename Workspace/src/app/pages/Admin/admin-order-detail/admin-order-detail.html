@@ -16,7 +16,7 @@
   <div>
     <b>Estado:</b>
       <select #statusSelect
-        [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELED" 
+        [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED" 
         (change)="onStatusChange(statusSelect.value)">
   
         <option *ngFor="let s of object.values(orderStatusEnum)" 

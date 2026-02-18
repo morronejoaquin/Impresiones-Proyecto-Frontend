@@ -222,6 +222,10 @@
 .cta .btn {
   background: var(--btn-secondary);
   color: var(--primary-color);
+  display: inline-flex;
+  width: auto;
+  min-width: 200px;
+  justify-content: center;
 }
 
 .cta .btn:hover {

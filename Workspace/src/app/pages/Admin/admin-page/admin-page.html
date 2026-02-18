@@ -87,13 +87,13 @@
       </div>
 
       <div class="pagination">
-        <button [disabled]="currentPage === 0" (click)="currentPage = currentPage - 1; loadOrders()">
+        <button class="pagination-btn" [disabled]="currentPage === 0" (click)="currentPage = currentPage - 1; loadOrders()">
           Anterior
         </button>
         
         <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
         
-        <button [disabled]="(currentPage + 1) >= totalPages" (click)="currentPage = currentPage + 1; loadOrders()">
+        <button class="pagination-btn" [disabled]="(currentPage + 1) >= totalPages" (click)="currentPage = currentPage + 1; loadOrders()">
           Siguiente
         </button>
       </div>

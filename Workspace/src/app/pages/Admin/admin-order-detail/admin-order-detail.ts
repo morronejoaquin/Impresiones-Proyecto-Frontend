@@ -99,7 +99,7 @@ export class AdminOrderDetailPage implements OnInit {
     const cartId = this.cart()?.id;
     if (!cartId) return;
 
-    if (newStatus === OrderStatusEnum.READY || newStatus === OrderStatusEnum.DELIVERED || newStatus === OrderStatusEnum.CANCELED) {
+    if (newStatus === OrderStatusEnum.READY || newStatus === OrderStatusEnum.DELIVERED || newStatus === OrderStatusEnum.CANCELLED) {
       this.statusToConfirm = newStatus as OrderStatusEnum;
       this.showConfirm = true;
       return;
