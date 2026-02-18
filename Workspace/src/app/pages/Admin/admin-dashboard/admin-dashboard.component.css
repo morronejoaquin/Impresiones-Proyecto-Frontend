@@ -30,7 +30,8 @@
   background: #1976d2;
 }
 
-.loading, .error {
+.loading,
+.error {
   padding: 20px;
   text-align: center;
   font-size: 16px;
@@ -64,13 +65,13 @@ section h2 {
 .card {
   background: white;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 15px;
   transition: box-shadow 0.3s;
 }
 
 .card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .card-header h3 {
@@ -108,7 +109,7 @@ section h2 {
   background: white;
   padding: 20px;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .stat-box h3 {
@@ -180,11 +181,81 @@ section h2 {
   color: #333;
 }
 
+.payment-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.payment-card {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: box-shadow 0.3s;
+  border-left: 4px solid #4caf50;
+}
+
+.payment-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.payment-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  text-transform: capitalize;
+  color: #333;
+}
+
+.payment-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payment-stat:last-child {
+  border-bottom: none;
+}
+
+.payment-stat .label {
+  font-size: 13px;
+  color: #666;
+}
+
+.payment-stat .value {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.progress-bar-payment {
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-fill-payment {
+  height: 100%;
+  transition: width 0.3s;
+  border-radius: 2px;
+}
+
 @media (max-width: 768px) {
-  .cards-grid, .stats-grid {
+  .cards-grid,
+  .stats-grid,
+  .payment-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .header {
     flex-direction: column;
     gap: 10px;

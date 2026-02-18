@@ -453,5 +453,40 @@
       "depositAmount": 0,
       "orderDate": "2025-11-14T01:14:37.888Z"
     }
+  ],
+  "ordersByStatus": [
+    {
+      "status": "pending",
+      "count": 3
+    },
+    {
+      "status": "delivered",
+      "count": 7
+    },
+    {
+      "status": "processing",
+      "count": 0
+    }
+  ],
+  "printingStatistics": {
+    "totalPages": 44,
+    "totalCopies": 13,
+    "bwPages": 32,
+    "colorPages": 12,
+    "doubleSidedCount": 2,
+    "ringedBindingCount": 3,
+    "unringedBindingCount": 10
+  },
+  "paymentSummary": [
+    {
+      "paymentMethod": "cash",
+      "count": 8,
+      "totalAmount": 1.5
+    },
+    {
+      "paymentMethod": "credit_card",
+      "count": 1,
+      "totalAmount": 12.5
+    }
   ]
 }

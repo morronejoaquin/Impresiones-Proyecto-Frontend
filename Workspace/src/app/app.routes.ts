@@ -14,6 +14,7 @@ import { CartPaymentPage } from './pages/Cart/cart-payment-page/cart-payment-pag
 import { OrderReceivedPage } from './pages/Cart/order-received-page/order-received-page';
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
 import { AdminDashboardComponent } from './pages/Admin/admin-dashboard/admin-dashboard.component';
+import { PaymentReconciliationComponent } from './pages/Admin/payment-reconciliation/payment-reconciliation';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -28,13 +29,13 @@ export const routes: Routes = [
     path: 'account',
     component: AccountPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] }
+    data: { allowedRoles: ['cliente', 'administrador'] },
   },
   {
     path: 'user-edit',
     component: UserEditPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] }
+    data: { allowedRoles: ['cliente', 'administrador'] },
   },
 
   {
@@ -45,13 +46,13 @@ export const routes: Routes = [
     path: 'my-orders',
     component: MyOrdersPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] }
+    data: { allowedRoles: ['cliente', 'administrador'] },
   },
   {
     path: 'make-order/:orderId',
     component: MakeOrderPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] }
+    data: { allowedRoles: ['cliente', 'administrador'] },
   },
   {
     path: 'cart',
@@ -61,17 +62,17 @@ export const routes: Routes = [
     path: 'cart-payment',
     component: CartPaymentPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] }
+    data: { allowedRoles: ['cliente', 'administrador'] },
   },
   {
     path: 'order-received',
     component: OrderReceivedPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] }
+    data: { allowedRoles: ['cliente', 'administrador'] },
   },
   {
     path: 'price-calculator',
-    component: PriceCalculatorPage
+    component: PriceCalculatorPage,
     // Ruta pública - no requiere autenticación
   },
   {
@@ -80,48 +81,57 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () =>
-      import('./pages/Admin/admin-page/admin-page').then(m => m.AdminPage),
+    loadComponent: () => import('./pages/Admin/admin-page/admin-page').then((m) => m.AdminPage),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador'] }
-  }, {
+    data: { allowedRoles: ['administrador'] },
+  },
+  {
     path: 'admin/order/:id',
     loadComponent: () =>
-      import('./pages/Admin/admin-order-detail/admin-order-detail').then(m => m.AdminOrderDetailPage),
+      import('./pages/Admin/admin-order-detail/admin-order-detail').then(
+        (m) => m.AdminOrderDetailPage,
+      ),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador'] }
-  },{
+    data: { allowedRoles: ['administrador'] },
+  },
+  {
     path: 'admin/prices',
     loadComponent: () =>
-      import('./pages/Admin/price-admin/price-admin').then(m => m.PriceAdminComponent),
+      import('./pages/Admin/price-admin/price-admin').then((m) => m.PriceAdminComponent),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador'] }
+    data: { allowedRoles: ['administrador'] },
   },
   {
     path: 'admin/record',
     component: AdminRecordPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador']}
+    data: { allowedRoles: ['administrador'] },
   },
   {
     path: 'admin/orders',
     loadComponent: () =>
-      import('./pages/Admin/admin-orders/admin-orders').then(m => m.AdminOrdersComponent),
+      import('./pages/Admin/admin-orders/admin-orders').then((m) => m.AdminOrdersComponent),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador']}
+    data: { allowedRoles: ['administrador'] },
   },
   {
     path: 'admin/history',
     loadComponent: () =>
-      import('./pages/Admin/admin-history/admin-history').then(m => m.AdminHistoryComponent),
+      import('./pages/Admin/admin-history/admin-history').then((m) => m.AdminHistoryComponent),
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador']}
+    data: { allowedRoles: ['administrador'] },
   },
   {
     path: 'admin/dashboard',
     component: AdminDashboardComponent,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador']}
+    data: { allowedRoles: ['administrador'] },
   },
-  { path: '**', redirectTo: 'home' }
+  {
+    path: 'admin/reconciliation',
+    component: PaymentReconciliationComponent,
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['administrador'] },
+  },
+  { path: '**', redirectTo: 'home' },
 ];

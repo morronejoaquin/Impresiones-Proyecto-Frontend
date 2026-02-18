@@ -12,7 +12,8 @@
     <section class="orders-summary">
       <h2>Resumen de Pedidos por Estado</h2>
       <div class="cards-grid">
-        <div *ngFor="let order of orderSummary" class="card" [style.border-left]="'4px solid ' + getStatusColor(order.status)">
+        <div *ngFor="let order of orderSummary" class="card"
+          [style.border-left]="'4px solid ' + getStatusColor(order.status)">
           <div class="card-header">
             <h3>{{ getStatusLabel(order.status) }}</h3>
           </div>
@@ -33,21 +34,23 @@
     <!-- Estadísticas de Impresión -->
     <section class="printing-stats" *ngIf="printingStats">
       <h2>Estadísticas de Impresión</h2>
-      
+
       <div class="stats-grid">
         <div class="stat-box">
           <h3>Hojas por Color</h3>
           <div class="stat-row">
             <span>Color:</span>
             <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="printingStats.colorPercentage" style="background: #e91e63;"></div>
+              <div class="progress-fill" [style.width.%]="printingStats.colorPercentage" style="background: #e91e63;">
+              </div>
             </div>
             <span class="percentage">{{ printingStats.colorPercentage.toFixed(1) }}%</span>
           </div>
           <div class="stat-row">
             <span>B/N:</span>
             <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="printingStats.bwPercentage" style="background: #212121;"></div>
+              <div class="progress-fill" [style.width.%]="printingStats.bwPercentage" style="background: #212121;">
+              </div>
             </div>
             <span class="percentage">{{ printingStats.bwPercentage.toFixed(1) }}%</span>
           </div>
@@ -83,6 +86,36 @@
           <div class="summary-item">
             <span>Hojas B/N:</span>
             <strong>{{ printingStats.bwSheets }}</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resumen de Pagos por Método -->
+    <section class="payment-summary" *ngIf="paymentSummary && paymentSummary.length > 0">
+      <h2>Resumen de Pagos por Método</h2>
+      <div class="payment-cards">
+        <div *ngFor="let payment of paymentSummary" class="payment-card">
+          <div class="payment-header">
+            <h3>{{ payment.paymentMethod }}</h3>
+          </div>
+          <div class="payment-body">
+            <div class="payment-stat">
+              <span class="label">Monto Total:</span>
+              <span class="value">${{ payment.totalAmount.toFixed(2) }}</span>
+            </div>
+            <div class="payment-stat">
+              <span class="label">Transacciones:</span>
+              <span class="value">{{ payment.transactionCount }}</span>
+            </div>
+            <div class="payment-stat">
+              <span class="label">Porcentaje:</span>
+              <span class="value">{{ payment.percentage.toFixed(1) }}%</span>
+            </div>
+            <div class="progress-bar-payment">
+              <div class="progress-fill-payment" [style.width.%]="payment.percentage" style="background: #4caf50;">
+              </div>
+            </div>
           </div>
         </div>
       </div>

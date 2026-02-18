@@ -13,10 +13,8 @@ import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
   selector: 'app-admin-page',
   imports: [CommonModule, FormsModule],
   templateUrl: './admin-page.html',
-  styleUrl: './admin-page.css'
+  styleUrl: './admin-page.css',
 })
-
-
 export class AdminPage implements OnInit {
   carts: CartWithItemsResponse[] = [];
   orderStatus = OrderStatusEnum;
@@ -31,25 +29,24 @@ export class AdminPage implements OnInit {
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadCompletedCarts();
   }
 
-  loadCompletedCarts(): void {
-    
-  }
+  loadCompletedCarts(): void {}
 
   filterByStatus(): void {
-    if (!this.filterStatus) { this.filteredCarts = [...this.carts]; return; }
-    this.filteredCarts = this.carts.filter(c => c.status === this.filterStatus);
+    if (!this.filterStatus) {
+      this.filteredCarts = [...this.carts];
+      return;
+    }
+    this.filteredCarts = this.carts.filter((c) => c.status === this.filterStatus);
   }
 
-  filterBySurname(): void {
-    
-  }
+  filterBySurname(): void {}
 
   clearFilters(): void {
     this.filterStatus = '';
@@ -57,9 +54,7 @@ export class AdminPage implements OnInit {
     this.filteredCarts = [...this.carts];
   }
 
-  updateStatus(cart: CartWithItemsResponse, newStatus: Cart['status']) {
-  
-  }
+  updateStatus(cart: CartWithItemsResponse, newStatus: Cart['status']) {}
 
   goToDetail(cart: CartWithItemsResponse) {
     this.router.navigate(['/admin/order', cart.id]);
@@ -70,30 +65,33 @@ export class AdminPage implements OnInit {
   }
 
   goToRecordAdmin() {
-    this.router.navigate(['/admin/record'])
+    this.router.navigate(['/admin/record']);
   }
 
   goToDashboard() {
     this.router.navigate(['/admin/dashboard']);
   }
 
+  goToReconciliation() {
+    this.router.navigate(['/admin/reconciliation']);
+  }
+
   onStatusChange(cart: CartWithItemsResponse, value: string) {
-  this.updateStatus(cart, value as unknown as Cart['status']);
-}
+    this.updateStatus(cart, value as unknown as Cart['status']);
+  }
 
-statusLabel(v: OrderStatusEnum | undefined): string {
-  if (!v) return '-';
-  
-  const labels: Record<string, string> = {
-    'pending': 'Pendiente',
-    'printing': 'Imprimiendo',
-    'binding': 'Encuadernando',
-    'ready': 'Listo',
-    'delivered': 'Entregado',
-    'cancelled': 'Cancelado'
-  };
+  statusLabel(v: OrderStatusEnum | undefined): string {
+    if (!v) return '-';
 
-  return labels[v as string] || '-';
-}
+    const labels: Record<string, string> = {
+      pending: 'Pendiente',
+      printing: 'Imprimiendo',
+      binding: 'Encuadernando',
+      ready: 'Listo',
+      delivered: 'Entregado',
+      cancelled: 'Cancelado',
+    };
 
+    return labels[v as string] || '-';
+  }
 }

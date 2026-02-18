@@ -20,13 +20,15 @@
   background-color: #fff;
   border-radius: 16px;
   padding: 20px 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   cursor: pointer;
 }
 .cart:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .cart-header,
@@ -39,8 +41,8 @@
 .cart-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
-  gap: 12px; 
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .cart-status span {
@@ -122,7 +124,9 @@
   color: #111827;
   font-size: 0.95rem;
   outline: none;
-  transition: border .2s ease, box-shadow .2s ease;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .filters select:focus,
 .filters input:focus {
@@ -138,7 +142,9 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color .2s ease, transform .2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 .filters button:hover {
   background-color: #024e73;
@@ -167,19 +173,20 @@
   border: 1px solid #d1d5db;
   background: #fff;
   color: #111827;
-  font-size: .95rem;
+  font-size: 0.95rem;
   outline: none;
-  transition: border .2s ease, box-shadow .2s ease;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .cart-actions select:focus {
   border-color: #0369a1;
-  box-shadow: 0 0 0 2px rgba(3,105,161,0.2);
+  box-shadow: 0 0 0 2px rgba(3, 105, 161, 0.2);
 }
 .filters button {
-  align-self: flex-end;  
-  margin-top: 22px;       
+  align-self: flex-end;
+  margin-top: 22px;
 }
-
 
 @media (max-width: 640px) {
   .filters button {
@@ -211,15 +218,17 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   margin-bottom: 20px;
 }
 
 .buttons {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
-  gap: 12px; 
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .price-admin-button:hover {
@@ -236,12 +245,34 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   margin-bottom: 20px;
 }
 
 .dashboard-button:hover {
   background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.reconciliation-button {
+  padding: 8px 16px;
+  background-color: #8b5cf6;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.reconciliation-button:hover {
+  background-color: #7c3aed;
   transform: translateY(-1px);
 }
 
@@ -254,7 +285,9 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   margin-bottom: 20px;
 }
 
@@ -288,11 +321,9 @@
   color: #1f2937;
 }
 
-
 @media (max-width: 640px) {
   .price-admin-button {
     width: 100%;
     text-align: center;
   }
 }
-
