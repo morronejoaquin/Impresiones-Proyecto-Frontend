@@ -13,7 +13,7 @@ export interface ImpresionesNotification {
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly API_URL = 'http://localhost:8080/api/notifications';
+  private readonly API_URL = 'http://localhost:8080/notifications';
 
   private notificationSubject = new Subject<ImpresionesNotification>();
   public notification$ = this.notificationSubject.asObservable();

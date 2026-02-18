@@ -16,7 +16,7 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private notificationService: NotificationService){
     if(this.getToken()){
-      // por el momento initPolling quedara desactivado
+      this.notificationService.initPolling();
     }
   }
   
@@ -25,7 +25,7 @@ export class AuthService {
       tap(res => {
         localStorage.setItem('token', res.token);
         setTimeout(() => {
-        // por el momento initPolling quedara desactivado
+          this.notificationService.initPolling();
         }, 500);
       })
     );
@@ -33,7 +33,10 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request).pipe(
-      tap(res => localStorage.setItem('token', res.token))
+      tap(res => {
+        localStorage.setItem('token', res.token)
+        this.notificationService.initPolling();
+      })
     );
   }
 

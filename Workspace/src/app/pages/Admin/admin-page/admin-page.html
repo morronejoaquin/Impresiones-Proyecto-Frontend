@@ -1,88 +1,102 @@
 <div class="admin-page">
-
-  <div class="buttons">
-    <button class="dashboard-button" (click)="goToDashboard()">Dashboard</button>
-    <button class="reconciliation-button" (click)="goToReconciliation()">Reconciliación de Pagos</button>
-    <button class="price-admin-button" (click)="goToPriceAdmin()">Administrar Precios</button>
-    <button class="record-admin-button" (click)="goToRecordAdmin()">Ver historial</button>
+  
+  <div class="buttons-nav">
+    <button class="btn-dash" routerLink="/admin/dashboard">📊 Dashboard</button>
+    <button class="btn-recon" routerLink="/admin/reconciliation">💰 Pagos</button>
+    <button class="btn-price" routerLink="/admin/prices">🏷️ Precios</button>
+    <button class="btn-record" routerLink="/admin/record">📜 Historial</button>
   </div>
 
-  <div class="filters">
-    <label>
-      Filtrar por Status:
-      <select [(ngModel)]="filterStatus" (change)="filterByStatus()">
-        <option value="">Todos</option>
-        <option value="pending">Pendiente</option>
-        <option value="printing">Imprimiendo</option>
-        <option value="binding">Anillando</option>
-        <option value="ready">Listo</option>
-        <option value="delivered">Entregado</option>
-        <option value="cancelled">Cancelado</option>
+  <div class="filters-panel">
+    <div class="filter-group">
+      <label>Estado</label>
+      <select [(ngModel)]="filters.status" (change)="applyFilters()">
+        <option [ngValue]="null">Todos</option>
+        @for (s of statusOptions; track s) {
+          <option [value]="s">{{ statusLabel(s) }}</option>
+        }
       </select>
-    </label>
-
-    <label>
-      Filtrar por Apellido:
-      <input type="text" [(ngModel)]="filterSurname" (input)="filterBySurname()" placeholder="Escriba apellido">
-    </label>
-
-    <button (click)="clearFilters()">Limpiar filtros</button>
-  </div>
-
-  @if (filteredCarts.length === 0) {
-  <p>No hay pedidos pendientes</p>
-  } @else {
-  <div class="carts">
-    @for (cart of filteredCarts; track cart.id) {
-    <div class="cart" (click)="goToDetail(cart)">
-
-      <div class="cart-header">
-        <div class="cart-status">
-          <span>{{ statusLabel(cart.status) }}</span>
-        </div>
-
-        <div class="cart-situacion">
-          @if(cart.status === orderStatus.READY){
-          <span>Listo para entregar</span>
-          }
-        </div>
-
-        <div class="cart-fecha">
-          <span class="fecha-label">Fecha:</span>
-          <span class="fecha-value">
-            {{ cart.completedAt ? (cart.completedAt | date:'dd/MM/yyyy HH:mm') : '—' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="cart-resumen">
-        <p>Cliente:</p>
-        <p>{{ cart.customer.name }} {{ cart.customer.surname }}</p>
-      </div>
-
-      <div class="cart-archivos">
-        <p>Archivos:</p>
-        <p>{{ cart.items.length }} items en total</p>
-      </div>
-
-      <div class="cart-total">
-        <p>Total:</p>
-        <p>${{ cart.total | number:'1.2-2' }}</p>
-      </div>
-
-      <div class="cart-actions" (click)="$event.stopPropagation()">
-        <label>
-          Estado:
-          <select [ngModel]="cart.status" (ngModelChange)="onStatusChange(cart, $event)"
-            [disabled]="savingIds.has(cart.id)">
-            <option *ngFor="let s of STATUSES" [value]="s">{{ s }}</option>
-          </select>
-        </label>
-        <span *ngIf="savingIds.has(cart.id)" style="opacity:.7">Guardando…</span>
-      </div>
-
     </div>
+
+    <div class="filter-group">
+      <label>Email Cliente</label>
+      <input type="text" [(ngModel)]="filters.customerEmail" (input)="applyFilters()" placeholder="Buscar email...">
+    </div>
+
+    <div class="filter-group">
+      <label>Desde</label>
+      <input type="date" [(ngModel)]="filters.startDate" (change)="applyFilters()">
+    </div>
+
+    <div class="filter-group">
+      <label>Hasta</label>
+      <input type="date" [(ngModel)]="filters.endDate" (change)="applyFilters()">
+    </div>
+
+    @if (hasActiveFilters()) {
+      <button class="btn-clear" (click)="clearFilters()">Limpiar</button>
     }
   </div>
+
+  @if (isLoading) {
+    <div class="loader">Cargando pedidos...</div>
+  } @else {
+    
+    @if (carts.length === 0) {
+      <div class="empty-state">No se encontraron pedidos con estos filtros.</div>
+    } @else {
+      <div class="carts-grid">
+        @for (cart of carts; track cart.id) {
+          <div class="cart-card" (click)="goToDetail(cart.id)">
+            
+            <div class="card-header">
+              <span class="status-badge" [attr.data-status]="cart.status">
+                {{ statusLabel(cart.status) }}
+              </span>
+              <span class="date-text">{{ cart.admReceivedAt | date:'dd/MM HH:mm' }}</span>
+            </div>
+
+            <div class="card-body">
+              <div class="info-row">
+                <span class="label">Cliente:</span>
+                <span class="value">{{ cart.customer.name }} {{ cart.customer.surname || '' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">{{ cart.customer.email }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Total:</span>
+                <span class="value price">${{ cart.total | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <div class="card-actions" (click)="$event.stopPropagation()">
+              <select [ngModel]="cart.status" (ngModelChange)="onStatusChange(cart, $event)" [disabled]="savingIds.has(cart.id)">
+                @for (s of statusOptions; track s) {
+                  <option [value]="s">{{ statusLabel(s) }}</option>
+                }
+              </select>
+              
+              @if (savingIds.has(cart.id)) {
+                <span class="saving-indicator">⌛</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="pagination">
+        <button [disabled]="currentPage === 0" (click)="currentPage = currentPage - 1; loadOrders()">
+          Anterior
+        </button>
+        
+        <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        
+        <button [disabled]="(currentPage + 1) >= totalPages" (click)="currentPage = currentPage + 1; loadOrders()">
+          Siguiente
+        </button>
+      </div>
+    }
   }
 </div>

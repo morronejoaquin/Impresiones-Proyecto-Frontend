@@ -4,94 +4,120 @@ import { CartService } from '../../../services/Cart/cart-service';
 import { OrderService } from '../../../services/Orders/order-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
+import CartResponse from '../../../models/Cart/cartResponse';
+import Page from '../../../models/PageModel/page';
+import CartStatusUpdateRequest from '../../../models/Cart/cartStatusUpdateRequest';
 
 @Component({
   standalone: true,
   selector: 'app-admin-page',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './admin-page.html',
   styleUrl: './admin-page.css',
 })
 export class AdminPage implements OnInit {
-  carts: CartWithItemsResponse[] = [];
-  orderStatus = OrderStatusEnum;
-
-  filteredCarts: CartWithItemsResponse[] = [];
-  filterStatus: string = '';
-  filterSurname: string = '';
-
-  readonly STATUSES = ['pending', 'printing', 'binding', 'ready', 'delivered', 'cancelled'];
+  carts: CartResponse[] = [];
+  isLoading = false;
   savingIds = new Set<string>();
+
+  currentPage = 0;
+  pageSize = 12;
+  totalElements = 0;
+
+  filters = {
+    status: null as OrderStatusEnum | null,
+    customerEmail: '',
+    startDate: '',
+    endDate: ''
+  };
+
+  orderStatus = OrderStatusEnum;
+  statusOptions = Object.values(OrderStatusEnum);
 
   constructor(
     private cartService: CartService,
-    private orderService: OrderService,
-    private router: Router,
-  ) {}
+    private router: Router
+  ) {
+  }
 
   ngOnInit(): void {
-    this.loadCompletedCarts();
+    this.loadOrders();
   }
 
-  loadCompletedCarts(): void {}
-
-  filterByStatus(): void {
-    if (!this.filterStatus) {
-      this.filteredCarts = [...this.carts];
-      return;
+  loadOrders(): void {
+    this.isLoading = true;
+    
+    if (this.hasActiveFilters()) {
+      this.cartService.filterCartsForAdmin(this.filters, this.currentPage, this.pageSize).subscribe({
+        next: (res) => this.handleResponse(res),
+        error: () => this.isLoading = false
+      });
+    } else {
+      this.cartService.getActiveCartsForAdmin(this.currentPage, this.pageSize).subscribe({
+        next: (res) => this.handleResponse(res),
+        error: () => this.isLoading = false
+      });
     }
-    this.filteredCarts = this.carts.filter((c) => c.status === this.filterStatus);
   }
 
-  filterBySurname(): void {}
-
-  clearFilters(): void {
-    this.filterStatus = '';
-    this.filterSurname = '';
-    this.filteredCarts = [...this.carts];
+  private handleResponse(response: Page<CartResponse>) {
+    this.carts = response.content || [];
+    this.totalElements = response.totalElements || 0;
+    this.isLoading = false;
   }
 
-  updateStatus(cart: CartWithItemsResponse, newStatus: Cart['status']) {}
-
-  goToDetail(cart: CartWithItemsResponse) {
-    this.router.navigate(['/admin/order', cart.id]);
+  applyFilters() {
+    this.currentPage = 0;
+    this.loadOrders();
   }
 
-  goToPriceAdmin() {
-    this.router.navigate(['/admin/prices']);
+  clearFilters() {
+    this.filters = { status: null, customerEmail: '', startDate: '', endDate: '' };
+    this.currentPage = 0;
+    this.loadOrders();
   }
 
-  goToRecordAdmin() {
-    this.router.navigate(['/admin/record']);
+  hasActiveFilters(): boolean {
+    return !!(this.filters.status || this.filters.customerEmail || this.filters.startDate || this.filters.endDate);
   }
 
-  goToDashboard() {
-    this.router.navigate(['/admin/dashboard']);
+  onStatusChange(cart: CartResponse, newStatus: OrderStatusEnum) {
+    this.savingIds.add(cart.id);
+    const request: CartStatusUpdateRequest = { status: newStatus };
+
+    this.cartService.actualizarEstado(cart.id, request).subscribe({
+      next: (updatedCart) => {
+        cart.status = updatedCart.status;
+      },
+      error: (err) => {
+        console.log("Error al actualizar el estado");
+      }
+    });
+    
+    // Simulación de guardado para la UI
+    setTimeout(() => this.savingIds.delete(cart.id), 1000);
   }
 
-  goToReconciliation() {
-    this.router.navigate(['/admin/reconciliation']);
+  goToDetail(id: string) { 
+    this.router.navigate(['/admin/order', id]); 
   }
 
-  onStatusChange(cart: CartWithItemsResponse, value: string) {
-    this.updateStatus(cart, value as unknown as Cart['status']);
-  }
-
-  statusLabel(v: OrderStatusEnum | undefined): string {
-    if (!v) return '-';
-
+  statusLabel(v: string): string {
     const labels: Record<string, string> = {
-      pending: 'Pendiente',
-      printing: 'Imprimiendo',
-      binding: 'Encuadernando',
-      ready: 'Listo',
-      delivered: 'Entregado',
-      cancelled: 'Cancelado',
+      'PENDING': 'Pendiente', 
+      'PRINTING': 'Imprimiendo', 
+      'BINDING': 'Anillando',
+      'READY': 'Listo', 
+      'DELIVERED': 'Entregado', 
+      'CANCELLED': 'Cancelado'
     };
+    return labels[v] || v;
+  }
 
-    return labels[v as string] || '-';
+  get totalPages(): number { 
+    return Math.ceil(this.totalElements / this.pageSize); 
   }
 }
