@@ -21,7 +21,9 @@ export class Header implements OnInit{
   }
 
   ngOnInit(): void {
-    this.userService.loadProfile();
+    if(this.authService.getToken()){
+      this.userService.loadProfile();
+    }
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)

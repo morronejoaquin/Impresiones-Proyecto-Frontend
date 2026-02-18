@@ -9,6 +9,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router); 
 
   const isApiRequest = req.url.includes('localhost:8080') || req.url.includes(environment.apiUrl);
+  
+  const isAuthPath = req.url.includes('/auth/login') || req.url.includes('/auth/register');
 
   let authReq = req;
   if (token && isApiRequest) {
@@ -19,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      if (error.status === 401 && !isAuthPath) {
         console.warn('Token expirado o inválido. Limpiando sesión...');
         
         localStorage.removeItem('token');

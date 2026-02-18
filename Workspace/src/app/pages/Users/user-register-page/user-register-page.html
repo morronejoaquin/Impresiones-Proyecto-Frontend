@@ -42,7 +42,7 @@
         <small>La contraseña debe tener mayúsculas, minúsculas, número y símbolo.</small>
       }
       @else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')) {
-        <small>Debe tener al menos 6 caracteres</small>
+        <small>Debe tener al menos 8 caracteres</small>
       }
       @else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('maxlength')) {
         <small>No puede superar los 18 caracteres</small>

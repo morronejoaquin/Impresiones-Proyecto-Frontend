@@ -16,6 +16,8 @@ export class HomePage implements OnInit{
   }
 
   ngOnInit(): void {
-    this.userService.loadProfile();
+    if(this.authService.getToken()){
+      this.userService.loadProfile();
+    }
   }
 }
