@@ -3,17 +3,35 @@ import { CartService } from '../../../services/Cart/cart-service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
+import Page from '../../../models/PageModel/page';
+import CartResponse from '../../../models/Cart/cartResponse';
+import { FormsModule } from '@angular/forms';
+
+interface HistoryFilters {
+  startDate?: string;
+  endDate?: string;
+}
 
 @Component({
   selector: 'app-admin-record-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './admin-record-page.html',
   styleUrl: './admin-record-page.css'
 })
 
 export class AdminRecordPage implements OnInit {
-  carts: CartWithItemsResponse[] = [];
+  deliveredCarts: CartResponse[] = [];
+  currentPage = 0;
+  pageSize = 15;
+  totalElements = 0;
+  isLoading = false;
+  noResults = false;
+
+  filters: HistoryFilters = {
+    startDate: '',
+    endDate: ''
+  };
 
   constructor(
     private cartService: CartService,
@@ -21,14 +39,78 @@ export class AdminRecordPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadCompletedCarts();
+    this.loadHistory();
   }
 
-  loadCompletedCarts(): void {
+  loadHistory(): void {
+    this.isLoading = true;
+    this.noResults = false;
+
+    const params = this.buildFilterParams();
     
+    this.cartService.getDeliveredHistory(params, this.currentPage, this.pageSize).subscribe({
+      next: (response: Page<CartResponse>) => {
+        this.deliveredCarts = response.content || [];
+        this.totalElements = response.totalElements || 0;
+        this.noResults = this.deliveredCarts.length === 0;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading history:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
-  goToDetail(cart: CartWithItemsResponse){
-    this.router.navigate(['/admin/order', cart.id])
+  applyFilters(): void {
+    this.currentPage = 0;
+    this.loadHistory();
+  }
+
+  clearFilters(): void {
+    this.filters = { startDate: '', endDate: '' };
+    this.currentPage = 0;
+    this.loadHistory();
+  }
+
+  hasActiveFilters(): boolean {
+    return !!(this.filters.startDate || this.filters.endDate);
+  }
+
+  private buildFilterParams(): any {
+    const params: any = {};
+    if (this.filters.startDate) params.startDate = this.filters.startDate;
+    if (this.filters.endDate) params.endDate = this.filters.endDate;
+    return params;
+  }
+
+  formatDate(date: string | undefined): string {
+    if (!date) return '—';
+    return new Date(date).toLocaleDateString('es-ES', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  goToDetail(cart: CartResponse) {
+    this.router.navigate(['/admin/order', cart.id]);
+  }
+
+  nextPage(): void {
+    if ((this.currentPage + 1) * this.pageSize < this.totalElements) {
+      this.currentPage++;
+      this.loadHistory();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadHistory();
+    }
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalElements / this.pageSize) || 1;
   }
 }

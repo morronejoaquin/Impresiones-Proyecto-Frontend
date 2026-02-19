@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import Cart from '../../../models/Cart/cartResponse';
 import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
-import { OrderService } from '../../../services/Orders/order-service';
 import { NotificationService } from '../../../services/Notification/notification-service';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { BindingTypeEnum } from '../../../models/Enums/bindingTypeEnum';
@@ -14,15 +13,15 @@ import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink, ConfirmModal],
+  imports: [CommonModule, ConfirmModal],
   templateUrl: './admin-order-detail.html',
   styleUrls: ['./admin-order-detail.css']
 })
 export class AdminOrderDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private cartsApi = inject(CartService);
-  private ordersApi = inject(OrderService);
   private notification = inject(NotificationService);
+  private location = inject(Location);
 
   cart = signal<Cart | null>(null);
   items = signal<OrderItem[]>([]);
@@ -73,6 +72,10 @@ export class AdminOrderDetailPage implements OnInit {
         }
       }
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   fileName(file: any): string {

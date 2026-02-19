@@ -1,44 +1,97 @@
-<div class="admin-record">
-
+<div class="admin-record-container">
   <div class="record-header">
-    <a routerLink="/admin" class="back">← Volver</a>
+    <a routerLink="/admin" class="back">
+      <span class="material-icons">arrow_back</span> Volver
+    </a>
   </div>
 
-  @if (carts.length === 0) {
-  <p>No hay pedidos entregados</p>
-  } @else {
-  <div class="carts">
-    @for (cart of carts; track cart.id) {
-    <div class="cart" (click)="goToDetail(cart)">
+  <div class="header-main">
+    <h1>Historial de Trabajos Entregados</h1>
+    <button class="btn-refresh" (click)="loadHistory()" [disabled]="isLoading">
+      <span class="material-icons">refresh</span>{{ isLoading ? 'Cargando...' : ' Refrescar' }}
+    </button>
+  </div>
 
-      <div class="cart-header">
-        <div class="cart-status">
-          <span>Entregado</span>
-        </div>
-
-        <div class="cart-fecha">
-          <span class="fecha-label">Entregado:</span>
-          <span class="fecha-value">
-            {{ cart.deliveredAt ? (cart.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}
-          </span>
-        </div>
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="start-date">Fecha Inicio</label>
+        <input type="date" id="start-date" [(ngModel)]="filters.startDate" (change)="applyFilters()" class="filter-input">
       </div>
 
-      <div class="cart-resumen">
-        <p>Cliente:</p>
-        <p>{{ cart.customer.name }} {{ cart.customer.surname }}</p>
+      <div class="filter-group">
+        <label for="end-date">Fecha Fin</label>
+        <input type="date" id="end-date" [(ngModel)]="filters.endDate" (change)="applyFilters()" class="filter-input">
       </div>
-
-      <div class="cart-archivos">
-        <p>Archivos:</p>
-        <p>{{ cart.items.length }} items en total</p>
-        <p>Total:</p>
-        <p>${{ cart.total | number:'1.2-2' }}</p>
-      </div>
-
     </div>
+
+    @if (hasActiveFilters()) {
+      <div class="filter-actions">
+        <button class="btn-clear-filters" (click)="clearFilters()">Limpiar Filtros</button>
+      </div>
     }
   </div>
-  }
 
+  <div class="table-wrapper">
+    @if (isLoading && deliveredCarts.length === 0) {
+      <div class="loading-state">
+        <div class="loader"></div>
+        <p>Cargando historial de pedidos...</p>
+      </div>
+    }
+
+    @if (!isLoading && noResults) {
+      <div class="no-data">
+        <span class="material-icons">info</span>
+        <p>No se encontraron trabajos entregados en el rango de fechas seleccionado.</p>
+      </div>
+    }
+
+    @if (deliveredCarts.length > 0) {
+      <table class="record-table">
+        <thead>
+          <tr>
+            <th>ID Pedido</th>
+            <th>Cliente</th>
+            <th>Email</th>
+            <th>Entrega</th>
+            <th class="text-right">Total</th>
+            <th class="text-center">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (cart of deliveredCarts; track cart.id) {
+            <tr class="table-row" (click)="goToDetail(cart)">
+              <td class="cart-id">#{{ cart.id.substring(0, 8) }}</td>
+              <td class="font-bold">{{ cart.customer.name }} {{ cart.customer.surname }}</td>
+              <td class="client-email">{{ cart.customer.email || '—' }}</td>
+              <td class="delivery-date">{{ formatDate(cart.deliveredAt) }}</td>
+              <td class="total text-right">
+                <strong>${{ cart.total | number:'1.2-2' }}</strong>
+              </td>
+              <td class="text-center">
+                <button class="btn-view">Ver detalle</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (deliveredCarts.length > 0) {
+    <div class="pagination">
+      <button class="btn-pagination" (click)="previousPage()" [disabled]="currentPage === 0">
+        ← Anterior
+      </button>
+      <span class="page-info">
+        Página <strong>{{ currentPage + 1 }}</strong> de <strong>{{ totalPages }}</strong>
+        <small>({{ totalElements }} pedidos)</small>
+      </span>
+      <button class="btn-pagination" (click)="nextPage()" 
+              [disabled]="(currentPage + 1) * pageSize >= totalElements">
+        Siguiente →
+      </button>
+    </div>
+  }
 </div>

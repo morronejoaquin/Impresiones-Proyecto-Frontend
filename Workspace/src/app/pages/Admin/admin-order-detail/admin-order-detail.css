@@ -22,6 +22,7 @@
 } 
 
 .record-header .back:hover { 
+  cursor: pointer;
   transform: translateY(-1px); 
   box-shadow: 0 6px 14px rgba(3, 105, 161, 0.28); 
   filter: brightness(1.03); 
@@ -237,6 +238,13 @@
   border: 1px solid #cbd5e1;
   background: white;
   font-weight: 600;
+}
+
+.status-select:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  color: #94a3b8;
+  border-color: #e2e8f0;
 }
 
 @media (max-width: 600px) {

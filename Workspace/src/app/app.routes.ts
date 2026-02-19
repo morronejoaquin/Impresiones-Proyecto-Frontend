@@ -108,13 +108,6 @@ export const routes: Routes = [
     data: { allowedRoles: ['administrador'] },
   },
   {
-    path: 'admin/history',
-    loadComponent: () =>
-      import('./pages/Admin/admin-history/admin-history').then((m) => m.AdminHistoryComponent),
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador'] },
-  },
-  {
     path: 'admin/dashboard',
     component: AdminDashboardComponent,
     canActivate: [permissionGuard],

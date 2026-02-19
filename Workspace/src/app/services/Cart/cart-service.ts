@@ -125,17 +125,6 @@ export class CartService {
     return this.http.get<OrderItemResponse>(`${this.apiUrl}/${cartId}/ordenes/${orderId}`);
   }
 
-  getDeliveredCarts(
-    date?: string,
-    dateType?: string,
-    page: number = 0,
-  ): Observable<Page<CartResponse>> {
-    let params = new HttpParams().set('page', page);
-    if (date) params = params.set('date', date);
-    if (dateType) params = params.set('dateType', dateType);
-    return this.http.get<Page<CartResponse>>(`${this.apiUrl}/delivered`, { params });
-  }
-
   getMyOrders(page: number = 0, size: number = 20): Observable<Page<CartHistoryResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<Page<CartHistoryResponse>>(`${this.apiUrl}/my-orders`, { params });
