@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import PricesResponse from '../../../models/Prices/pricesResponse';
 import PricesUpdateRequest from '../../../models/Prices/pricesUpdateRequest';
 import { NotificationService } from '../../../services/Notification/notification-service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-price-admin',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './price-admin.html',
   styleUrls: ['./price-admin.css']
 })
@@ -16,6 +17,7 @@ export class PriceAdminComponent implements OnInit {
   priceForm!: FormGroup;
   public prices: PricesResponse | null = null;
   loading = false;
+  initialValues: any;
 
   constructor(
     private fb: FormBuilder,
@@ -38,15 +40,22 @@ export class PriceAdminComponent implements OnInit {
       next: (data) => {
         this.prices = data;
 
-        this.priceForm.setValue({
+        const formValues = {
           pricePerSheetBW: this.prices.pricePerSheetBW,
           pricePerSheetColor: this.prices.pricePerSheetColor,
           priceRingedBinding: this.prices.priceRingedBinding
-        });
+        };
+
+        this.priceForm.setValue(formValues);
+        this.initialValues = formValues;
         
       },
       error: (err) => console.error('Error loading prices', err)
     });
+  }
+
+  get isUpdated(): boolean {
+    return JSON.stringify(this.initialValues) === JSON.stringify(this.priceForm.value);
   }
 
   savePrices() {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -10,10 +10,11 @@ import { OrderService } from '../../../services/Orders/order-service';
 import { NotificationService } from '../../../services/Notification/notification-service';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { BindingTypeEnum } from '../../../models/Enums/bindingTypeEnum';
+import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ConfirmModal],
   templateUrl: './admin-order-detail.html',
   styleUrls: ['./admin-order-detail.css']
 })
@@ -35,6 +36,11 @@ export class AdminOrderDetailPage implements OnInit {
 
   orderStatusEnum = OrderStatusEnum;
   protected readonly object = Object;
+
+  message = '';
+
+  // para que el select vuelva a su estado original al cancelar
+  @ViewChild('statusSelect') statusSelect!: ElementRef<HTMLSelectElement>;
 
   ngOnInit(): void {
     this.loadDetail();
@@ -99,8 +105,10 @@ export class AdminOrderDetailPage implements OnInit {
     const cartId = this.cart()?.id;
     if (!cartId) return;
 
+    this.statusToConfirm = newStatus as OrderStatusEnum;
+    this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(this.statusToConfirm)}?`;
+
     if (newStatus === OrderStatusEnum.READY || newStatus === OrderStatusEnum.DELIVERED || newStatus === OrderStatusEnum.CANCELLED) {
-      this.statusToConfirm = newStatus as OrderStatusEnum;
       this.showConfirm = true;
       return;
     }
@@ -120,6 +128,11 @@ export class AdminOrderDetailPage implements OnInit {
   cancelChangeStatus(): void {
     this.showConfirm = false;
     this.statusToConfirm = null;
+
+    if (this.statusSelect) {
+      this.statusSelect.nativeElement.value = this.cart()?.status || '';
+    }
+    
     this.loadDetail();
   }
 
@@ -144,6 +157,19 @@ export class AdminOrderDetailPage implements OnInit {
         }
       }
     });
+  }
+
+  statusLabel(v: string | null): string {
+    if (!v) return '-';
+    const labels: Record<string, string> = {
+      'PENDING': 'Pendiente', 
+      'PRINTING': 'Imprimiendo', 
+      'BINDING': 'Anillando',
+      'READY': 'Listo', 
+      'DELIVERED': 'Entregado', 
+      'CANCELLED': 'Cancelado'
+    };
+    return labels[v] || v;
   }
 
   downloadFile(cartId: string | undefined, orderId: string, name?: string): void {

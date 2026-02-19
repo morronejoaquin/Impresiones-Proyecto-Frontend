@@ -49,6 +49,16 @@
   font-weight: bold;
 }
 
+.btn-link {
+  background: #FF935D;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 .notification-item {
   display: flex;
   align-items: center;

@@ -1,36 +1,67 @@
 <div class="price-admin-container">
-  <h2>Administrar Precios de Impresiones</h2>
-
-  <form [formGroup]="priceForm" (ngSubmit)="savePrices()">
-    <div>
-      <label>Precio por hoja blanco y negro:</label>
-      <input type="number" formControlName="pricePerSheetBW" step="0.01" />
-      @if (priceForm.get('pricePerSheetBW')?.touched && priceForm.get('pricePerSheetBW')?.invalid) {
-        <small class="error-text">El precio debe ser mayor a 0.</small>
-      }
-    </div>
-
-    <div>
-      <label>Precio por hoja a Color:</label>
-      <input type="number" formControlName="pricePerSheetColor" step="0.01" />
-      @if (priceForm.get('pricePerSheetColor')?.touched && priceForm.get('pricePerSheetColor')?.invalid) {
-        <small class="error-text">El precio debe ser mayor a 0.</small>
-      }
-    </div>
-
-    <div>
-      <label>Precio encuadernación anillada:</label>
-      <input type="number" formControlName="priceRingedBinding" step="0.01" />
-    </div>
-
-    <button type="submit" [disabled]="loading || priceForm.invalid">
-      {{ loading ? 'Guardando...' : 'Actualizar Precios Globales' }}
-    </button>
-  </form>
-
-  <div class="warning-banner">
-    <i class="fas fa-exclamation-triangle"></i>
-    <p>Los cambios afectarán únicamente a nuevos pedidos, no a los ya recibidos.</p>
+  <div class="record-header">
+    <a routerLink="/admin" class="back">
+      <span class="material-icons">arrow_back</span> Volver
+    </a>
   </div>
 
+  <div class="price-card">
+    <div class="card-header">
+      <h2>Administrar Tarifas Globales</h2>
+      <p class="subtitle">Configure los costos de impresiones y servicios.</p>
+    </div>
+
+    <form [formGroup]="priceForm" (ngSubmit)="savePrices()" class="modern-form">
+      <div class="input-grid">
+        <div class="form-group">
+          <label>Hoja Blanco y Negro</label>
+          <div class="input-wrapper">
+            <span class="currency">$</span>
+            <input type="number" formControlName="pricePerSheetBW" step="0.01" />
+          </div>
+          @if (priceForm.get('pricePerSheetBW')?.touched && priceForm.get('pricePerSheetBW')?.invalid) {
+            <small class="error-msg">Requerido (mín. 0.01)</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Hoja a Color</label>
+          <div class="input-wrapper">
+            <span class="currency">$</span>
+            <input type="number" formControlName="pricePerSheetColor" step="0.01" />
+          </div>
+          @if (priceForm.get('pricePerSheetColor')?.touched && priceForm.get('pricePerSheetColor')?.invalid) {
+            <small class="error-msg">Requerido (mín. 0.01)</small>
+          }
+        </div>
+
+        <div class="form-group full-width">
+          <label>Servicio de Encuadernación Anillada</label>
+          <div class="input-wrapper">
+            <span class="currency">$</span>
+            <input type="number" formControlName="priceRingedBinding" step="0.01" />
+          </div>
+          @if (priceForm.get('priceRingedBinding')?.touched && priceForm.get('priceRingedBinding')?.invalid) {
+            <small class="error-msg">Requerido (mín. 0.01)</small>
+          }
+        </div>
+      </div>
+
+      <button type="submit" class="btn-save" [disabled]="loading || priceForm.invalid || isUpdated">
+        @if (loading) {
+          <span class="loader-spinner"></span> Guardando...
+        } @else {
+          <span class="material-icons">save</span> Actualizar Precios
+        }
+      </button>
+    </form>
+
+    <div class="warning-banner">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-content">
+        <strong>Aviso importante</strong>
+        <p>Los cambios afectarán únicamente a nuevos pedidos. Los carritos ya confirmados mantendrán su precio original.</p>
+      </div>
+    </div>
+  </div>
 </div>

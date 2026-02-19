@@ -6,7 +6,9 @@
 }
 
 .record-header .back { 
-  display: inline-block; 
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; 
   text-decoration: none; 
   padding: 8px 14px; 
   border-radius: 10px; 
@@ -46,7 +48,7 @@
   padding: 1.5rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
+  gap: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
   border: 1px solid #e2e8f0;
@@ -86,11 +88,16 @@
   overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
   border: 1px solid #e2e8f0;
+
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
 }
 
 .table-items {
   width: 100%;
   border-collapse: collapse;
+  min-width: 900px;
 }
 
 .table-items thead th {
@@ -162,7 +169,10 @@
 }
 
 .btn-download {
+  display: inline-flex;
   background: #2563eb;
+  align-items: center;
+  gap: 4px;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -227,4 +237,23 @@
   border: 1px solid #cbd5e1;
   background: white;
   font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .meta-card {
+    /* Aumentamos el espacio vertical cuando los items se apilan */
+    gap: 2rem; 
+    padding: 1.25rem;
+  }
+
+  .meta-item {
+    /* Opcional: Centrar el contenido en móvil para que luzca mejor */
+    text-align: center;
+    align-items: center;
+  }
+
+  .meta-label {
+    /* Un poquito más de separación entre el label y el valor en móvil */
+    margin-bottom: 4px;
+  }
 }

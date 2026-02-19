@@ -34,7 +34,6 @@ export class NotificationDropdown implements OnInit{
     this.notificationService.markAsRead(notif.id).subscribe({
       next: () => {
         this.isOpen = false;
-        // Navegamos a mis pedidos (puedes pasar el ID del pedido si el backend lo envía)
         this.router.navigate(['/my-orders']);
       }
     });

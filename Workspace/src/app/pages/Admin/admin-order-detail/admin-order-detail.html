@@ -1,6 +1,8 @@
 <section class="detail">
   <div class="record-header">
-    <a routerLink="/admin" class="back">← Volver al listado</a>
+    <a routerLink="/admin" class="back">
+      <span class="material-icons">arrow_back</span> Volver
+    </a>
   </div>
 
   @if (!notFound) {
@@ -24,10 +26,11 @@
         <div class="status-wrapper">
           <select #statusSelect
             class="status-select"
-            [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED" 
+            [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED"
+            [value]="c.status" 
             (change)="onStatusChange(statusSelect.value)">
             @for (s of object.values(orderStatusEnum); track s) {
-              <option [value]="s" [selected]="s === c.status">{{ s }}</option>
+              <option [value]="s" [selected]="s === c.status">{{ statusLabel(s) }}</option>
             }
           </select>
           @if (isUpdating) { <span class="loader-mini"></span> }
@@ -41,6 +44,11 @@
 
       <div class="meta-item">
         <span class="meta-label">Fecha Pedido</span>
+        <span class="meta-value">{{ c.admReceivedAt ? (c.admReceivedAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-label">Fecha Pedido Completado</span>
         <span class="meta-value">{{ c.completedAt ? (c.completedAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
       </div>
       
@@ -91,7 +99,7 @@
             <td class="text-right font-bold">${{ sub(it) | number:'1.2-2' }}</td>
             <td class="text-center">
               <button class="btn-download" (click)="downloadFile(cart()?.id, it.id, it.fileName)">
-                <span class="icon">📥</span> Descargar
+                <span class="material-icons">download</span> Descargar
               </button>
             </td>
           </tr>
@@ -108,7 +116,7 @@
 
   <div class="comments-section">
     <div class="section-header">
-      <h3>Comentarios adicionales</h3>
+      <h3>Comentarios adicionales:</h3>
     </div>
     <div class="comments-grid">
       @for (it of items(); track it.id) {
@@ -130,15 +138,10 @@
   }
 
   @if (showConfirm) {
-    <div class="modal-overlay">
-      <div class="modal-card">
-        <h3>Confirmar cambio</h3>
-        <p>¿Estás seguro de cambiar el estado a <strong>{{ statusToConfirm }}</strong>?</p>
-        <div class="modal-btns">
-          <button class="btn-confirm" (click)="confirmChangeStatus()">Sí, actualizar</button>
-          <button class="btn-cancel" (click)="cancelChangeStatus()">Cancelar</button>
-        </div>
-      </div>
-    </div>
+    <app-confirm-modal
+        [title]= "message"
+        (confirmed)="confirmChangeStatus()"
+        (cancelled)="cancelChangeStatus()"
+      ></app-confirm-modal>
   }
 </section>

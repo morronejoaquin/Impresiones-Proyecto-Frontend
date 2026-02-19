@@ -1,5 +1,15 @@
 @if (currentNotification) {
-    <div [class]="'toast ' + currentNotification.type" [class.show]="isVisible">
-        {{ currentNotification.message }}
+    <div class="notification-container">
+        <div [class]="'toast ' + currentNotification.type" [class.show]="isVisible">
+            <div class="toast-content">
+                <span class="toast-icon">
+                    @if (currentNotification.type === 'success') { <span class="material-icons">check_circle</span> }
+                    @else if (currentNotification.type === 'error') { <span class="material-icons">report_gmailerrorred</span> }
+                    @else { <span class="material-icons">info</span> }
+                </span>
+                <span class="toast-message">{{ currentNotification.message }}</span>
+            </div>
+            <div class="toast-progress"></div>
+        </div>
     </div>
 }

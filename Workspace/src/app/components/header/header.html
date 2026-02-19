@@ -26,7 +26,9 @@
             <a routerLink="/admin" class="admin-link">Admin</a>
           }
           <div class="user-actions">
-            <app-notification-dropdown></app-notification-dropdown>
+            @if(profile.role !== 'administrador'){
+              <app-notification-dropdown></app-notification-dropdown>
+            }
             
             <div class="user-dropdown-container">
               <button class="user-btn" (click)="toggleUserMenu()">
@@ -43,8 +45,6 @@
             </div>
           </div>
         }
-        
-
         
       } @else {
         <a routerLink="/user-login" class="login-btn">Iniciar Sesión</a>

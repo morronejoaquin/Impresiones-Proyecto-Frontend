@@ -18,9 +18,10 @@ export class NotificationDisplay {
   constructor(
     private notificationService: NotificationService,
     private router: Router 
-  ) {}
+  ) {
+  }
 
-    ngOnInit() {
+  ngOnInit() {
     const pending = this.notificationService.getPendingNotification();
     if (pending) {
       this.displayNotification(pending);
@@ -39,7 +40,7 @@ export class NotificationDisplay {
 
     setTimeout(() => {
         this.isVisible = true;
-    }, 0);
+    }, 50);
     
     const redirectUrl = notification.redirectUrl; 
 
