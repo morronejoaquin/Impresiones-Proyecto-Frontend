@@ -1,108 +1,144 @@
 <section class="detail">
   <div class="record-header">
-  <a routerLink="/admin" class="back">← Volver</a>
-</div>
-
-  <h1 *ngIf="!notFound">Pedido #{{ cart()?.id }}</h1>
-
-  <div *ngIf="notFound">
-    <h2>404 - Carrito no encontrado</h2>
-    <p>El ID del carrito no es válido o el pedido no existe.</p>
+    <a routerLink="/admin" class="back">← Volver al listado</a>
   </div>
 
-  <div class="meta" *ngIf="cart() as c">
-  <div><b>Cliente:</b> {{ c.customer.name }} {{ c.customer.surname }}</div>
+  @if (!notFound) {
+    <h1 class="title">Pedido #{{ cart()?.id }}</h1>
+  } @else {
+    <div class="error-container">
+      <h2>404 - Carrito no encontrado</h2>
+      <p>El ID del carrito no es válido o el pedido no existe.</p>
+    </div>
+  }
 
-  <div>
-    <b>Estado:</b>
-      <select #statusSelect
-        [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED" 
-        (change)="onStatusChange(statusSelect.value)">
-  
-        <option *ngFor="let s of object.values(orderStatusEnum)" 
-                [value]="s" 
-                [selected]="s === c.status">
-          {{ s }}
-        </option>
-      </select>
-    <span *ngIf="isUpdating" class="spinner">Cargando...</span>
-  </div>
+  @if (cart(); as c) {
+    <div class="meta-card">
+      <div class="meta-item">
+        <span class="meta-label">Cliente</span>
+        <span class="meta-value">{{ c.customer.name }} {{ c.customer.surname }}</span>
+      </div>
 
-  <div><b>Total (cart):</b> ${{ c.total | number:'1.2-2' }}</div>
+      <div class="meta-item">
+        <span class="meta-label">Estado</span>
+        <div class="status-wrapper">
+          <select #statusSelect
+            class="status-select"
+            [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED" 
+            (change)="onStatusChange(statusSelect.value)">
+            @for (s of object.values(orderStatusEnum); track s) {
+              <option [value]="s" [selected]="s === c.status">{{ s }}</option>
+            }
+          </select>
+          @if (isUpdating) { <span class="loader-mini"></span> }
+        </div>
+      </div>
 
-  <div><b>Fecha de pedido:</b>
-    <span>{{ c.completedAt ? (c.completedAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
-  </div>
-  <div><b>Fecha de entrega:</b>
-    <span>{{ c.deliveredAt ? (c.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
-  </div>
-</div>
+      <div class="meta-item">
+        <span class="meta-label">Total Pedido</span>
+        <span class="meta-value price">${{ c.total | number:'1.2-2' }}</span>
+      </div>
 
-
-  <h2>Items</h2>
-
- <table *ngIf="items().length; else noItems" class="items">
-  <thead>
-    <tr>
-      <th>Archivo</th>
-      <th>Tipo</th>
-      <th>Pág.</th>
-      <th>Copias</th>
-      <th>Doble cara</th>
-      <th>Color</th>
-      <th>Anillado</th>
-      <th>Precio</th>
-      <th>Subtotal</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let it of items(); trackBy: track">
-      <td>{{ fileName(it.fileName) }}</td>
-      <td>{{ it.fileType || '—' }}</td>
-      <td>{{ it.pages }}</td>
-      <td>{{ it.copies }}</td>
-      <td><span class="chip" [class.ok]="it.doubleSided" [class.muted]="!it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
-      <td><span class="chip" [class.ok]="it.color" [class.muted]="!it.color">{{ yesNo(it.color) }}</span></td>
-      <td><span class="chip chip-binding">{{ bindingLabel(it.binding) }}</span></td>
-      <td>${{ it.amount | number:'1.2-2' }}</td>
-      <td>${{ sub(it) | number:'1.2-2' }}</td>
-      <td>
-        <button type="button" (click)="downloadFile(cart()?.id, it.id, it.fileName)">Abrir/Descargar</button>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="7" class="right"><b>Total (items)</b></td>
-      <td><b>${{ total() | number:'1.2-2' }}</b></td>
-    </tr>
-  </tfoot>
-</table>
-
-
-  <ng-template #noItems>
-    <p class="muted">Este pedido no tiene items.</p>
-  </ng-template>
-
-  <section *ngIf="items().length">
-    <h3>Comentarios del Cliente</h3>
-    <ul>
-      <li *ngFor="let it of items()">
-        <b>{{ fileName(it.fileName) }}:</b>
-        <span>{{ it.comments || '—' }}</span>
-      </li>
-    </ul>
-  </section>
-
-  <div class="modal" *ngIf="showConfirm">
-    <div class="modal-content">
-      <h3>Confirmar cambio de estado</h3>
-      <p>¿Seguro que deseas cambiar el estado a <b>{{ statusToConfirm }}</b>?</p>
-      <div class="modal-actions">
-        <button (click)="confirmChangeStatus()">Confirmar</button>
-        <button (click)="cancelChangeStatus()">Cancelar</button>
+      <div class="meta-item">
+        <span class="meta-label">Fecha Pedido</span>
+        <span class="meta-value">{{ c.completedAt ? (c.completedAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
+      </div>
+      
+      <div class="meta-item">
+        <span class="meta-label">Fecha Entrega</span>
+        <span class="meta-value">{{ c.deliveredAt ? (c.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
       </div>
     </div>
+  }
+
+  <div class="section-header">
+    <h2>Documentos del pedido</h2>
   </div>
+
+  @if (items().length > 0) {
+    <div class="table-container">
+    <table class="table-items">
+      <thead>
+        <tr>
+          <th>Archivo</th>
+          <th>Detalles</th>
+          <th>Pág.</th>
+          <th>Copias</th>
+          <th>Doble cara</th>
+          <th>Color</th>
+          <th>Anillado</th>
+          <th class="text-right">Precio</th>
+          <th class="text-right">Subtotal</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (it of items(); track it.id) {
+          <tr>
+            <td class="font-medium">
+              <div class="file-info">
+                <span class="file-icon">📄</span>
+                {{ fileName(it.fileName) }}
+              </div>
+            </td>
+            <td><span class="type-tag">{{ it.fileType || 'PDF' }}</span></td>
+            <td>{{ it.pages }}</td>
+            <td>{{ it.copies }}</td>
+            <td><span class="chip" [class.ok]="it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
+            <td><span class="chip" [class.ok]="it.color">{{ yesNo(it.color) }}</span></td>
+            <td><span class="binding-badge">{{ bindingLabel(it.binding) }}</span></td>
+            <td class="text-right">${{ it.amount | number:'1.2-2' }}</td>
+            <td class="text-right font-bold">${{ sub(it) | number:'1.2-2' }}</td>
+            <td class="text-center">
+              <button class="btn-download" (click)="downloadFile(cart()?.id, it.id, it.fileName)">
+                <span class="icon">📥</span> Descargar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="7" class="text-right total-label">Total:</td>
+          <td colspan="3" class="text-right total-amount">${{ total() | number:'1.2-2' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="comments-section">
+    <div class="section-header">
+      <h3>Comentarios adicionales</h3>
+    </div>
+    <div class="comments-grid">
+      @for (it of items(); track it.id) {
+        <div class="comment-bubble">
+          <strong>{{ fileName(it.fileName) }}:</strong>
+          @if (it.comments && it.comments.trim() !== '') {
+            <p>{{ it.comments }}</p>
+          } @else {
+            <p class="muted-text">—</p>
+          }
+        </div>
+      }
+    </div>
+  </div>
+  } @else {
+    <div class="empty-state">
+      <p>Este pedido no contiene ningún documento.</p>
+    </div>
+  }
+
+  @if (showConfirm) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+        <h3>Confirmar cambio</h3>
+        <p>¿Estás seguro de cambiar el estado a <strong>{{ statusToConfirm }}</strong>?</p>
+        <div class="modal-btns">
+          <button class="btn-confirm" (click)="confirmChangeStatus()">Sí, actualizar</button>
+          <button class="btn-cancel" (click)="cancelChangeStatus()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
 </section>
