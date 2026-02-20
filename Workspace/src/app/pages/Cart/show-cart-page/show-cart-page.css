@@ -18,7 +18,6 @@
   color: var(--text-primary);
 }
 
-/* Layout en dos columnas */
 .cart-grid {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -27,7 +26,6 @@
   min-height: 50vh; 
 }
 
-/* Tarjetas de items */
 .cart-card {
   background: white;
   border-radius: 12px;
@@ -80,7 +78,6 @@
   color: var(--text-main);
 }
 
-/* Botones de acción inferiores */
 .card-actions {
   margin-top: 1.5rem;
   padding-top: 1rem;
@@ -108,7 +105,6 @@
   color: var(--danger); 
 }
 
-/* Sidebar de Resumen */
 .summary-card {
   background: white;
   padding: 1.5rem;

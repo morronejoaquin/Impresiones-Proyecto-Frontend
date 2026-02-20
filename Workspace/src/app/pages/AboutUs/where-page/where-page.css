@@ -1,59 +1,207 @@
+.container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #334155;
+}
+
 .map-section {
+  margin-bottom: 3rem;
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.map-container iframe {
+  display: block;
+}
+
+.map-overlay {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.btn-directions {
   display: flex;
-  justify-content: center;
-  margin: 30px 0;
+  align-items: center;
+  gap: 8px;
+  background-color: #4285F4;
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+  transition: transform 0.2s, background-color 0.2s;
 }
 
-.map-section iframe {
-  width: 70%;
-  max-width: 600px;
-  height: 300px;
-  border: none;
-  border-radius: 6px;
+.btn-directions:hover {
+  background-color: #3367D6;
+  transform: translateY(-2px);
 }
 
-.contact-info {
+.content-wrapper {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.contact-header {
   text-align: center;
-  color: #333;
-  margin: 30px auto;
+  margin-bottom: 3rem;
 }
 
-.contact-info h2 {
-  font-size: 20px;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
+.contact-header h2 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
 }
 
-.contact-info p {
-  margin: 5px 0;
-  color: #555;
-  font-size: 14px;
+.contact-header p {
+  color: #64748b;
+  font-size: 1.1rem;
 }
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 30px;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
 .info-item {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  transition: border-color 0.3s;
+}
+
+.info-item:hover {
+  border-color: #cbd5e1;
+}
+
+.icon-circle {
+  width: 45px;
+  height: 45px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
 .info-item h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #333;
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .info-item p {
-  color: #666;
-  font-size: 14px;
+  margin: 0;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.social-section {
+  text-align: center;
+  border-top: 2px solid #f1f5f9;
+  padding-top: 2rem;
+}
+
+.social-section h3 {
+  margin-bottom: 1.5rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn-social {
+  text-decoration: none;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  min-width: 140px;
+}
+
+.whatsapp { 
+  background-color: #25D366; 
+}
+
+.facebook { 
+  background-color: #1877F2; 
+}
+
+.instagram { 
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+}
+
+.btn-social:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .container { 
+    margin: 1rem auto; 
+  }
+  
+  .contact-header h2 { 
+    font-size: 1.5rem; 
+  }
+  
+  .content-wrapper { 
+    padding: 1.5rem; 
+  }
+  
+  .social-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn-social { 
+    width: 100%;
+    box-sizing: border-box; 
+  }
+
+  .map-overlay {
+    width: calc(100% - 40px);
+    left: 20px;
+  }
+  
+  .btn-directions {
+    justify-content: center;
+  }
 }

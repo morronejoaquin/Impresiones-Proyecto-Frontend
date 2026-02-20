@@ -48,6 +48,7 @@
     }
 
     @if (deliveredCarts.length > 0) {
+    <div class="table-container">
       <table class="record-table">
         <thead>
           <tr>
@@ -61,7 +62,7 @@
         </thead>
         <tbody>
           @for (cart of deliveredCarts; track cart.id) {
-            <tr class="table-row" (click)="goToDetail(cart)">
+            <tr class="table-row">
               <td class="cart-id">#{{ cart.id.substring(0, 8) }}</td>
               <td class="font-bold">{{ cart.customer.name }} {{ cart.customer.surname }}</td>
               <td class="client-email">{{ cart.customer.email || '—' }}</td>
@@ -70,27 +71,28 @@
                 <strong>${{ cart.total | number:'1.2-2' }}</strong>
               </td>
               <td class="text-center">
-                <button class="btn-view">Ver detalle</button>
+                <button class="btn-view" (click)="goToDetail(cart)">Ver detalle</button>
               </td>
             </tr>
           }
         </tbody>
       </table>
+    </div>
     }
   </div>
 
   @if (deliveredCarts.length > 0) {
     <div class="pagination">
       <button class="btn-pagination" (click)="previousPage()" [disabled]="currentPage === 0">
-        ← Anterior
+        <span class="material-icons">chevron_left</span> Anterior
       </button>
       <span class="page-info">
-        Página <strong>{{ currentPage + 1 }}</strong> de <strong>{{ totalPages }}</strong>
+        Página <strong>{{ currentPage + 1 }}</strong> de <strong> {{ totalPages }} </strong>
         <small>({{ totalElements }} pedidos)</small>
       </span>
       <button class="btn-pagination" (click)="nextPage()" 
               [disabled]="(currentPage + 1) * pageSize >= totalElements">
-        Siguiente →
+        Siguiente <span class="material-icons">chevron_right</span>
       </button>
     </div>
   }

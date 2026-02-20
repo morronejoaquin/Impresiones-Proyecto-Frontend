@@ -33,4 +33,9 @@ export class WherePage implements OnInit {
     // URL ESTÁNDAR DE GOOGLE MAPS (Corregida)
     return `https://maps.google.com/maps?q=${this.location.lat},${this.location.lng}&z=16&output=embed`;
   }
+
+  get externalMapUrl() {
+    if (!this.location) return '';
+    return `https://www.google.com/maps/dir/?api=1&destination=${this.location.lat},${this.location.lng}`;
+  }
 }

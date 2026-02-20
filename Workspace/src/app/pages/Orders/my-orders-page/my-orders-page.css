@@ -205,7 +205,6 @@
   color: #0f172a; 
 }
 
-/* Footer */
 .order-footer {
   padding: 1.2rem 1.5rem;
   background: #ffffff;
@@ -244,7 +243,6 @@
   color: #64748b; 
 }
 
-/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
