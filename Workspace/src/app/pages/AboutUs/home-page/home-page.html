@@ -1,6 +1,6 @@
 <div class="home">
     <section class="hero">
-        <div class="container">
+        <div class="container content-overlay">
           <div class="hero-content">
             <h1>Bienvenido a Puerto Colores</h1>
             <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
@@ -43,6 +43,14 @@
               <span class="material-icons">print</span>
             </div>
           </div>
+        </div>
+        <div class="hero-slider-background">
+          @for (img of images; track img; let i = $index) {
+            <div class="slide-full" [class.active]="i === currentImageIndex">
+              <img [src]="img" alt="Fondo Puerto Colores">
+            </div>
+          }
+          <div class="glass-gradient"></div>
         </div>
     </section>
 

@@ -10,6 +10,12 @@ select, input[type="number"], textarea {
     font-family: 'Inter', sans-serif;
 }
 
+main, .page-container {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+}
+
 :root {
   --primary-color: #C55DFF;
   --primary-dark: #2563eb;

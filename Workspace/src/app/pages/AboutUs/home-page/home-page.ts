@@ -15,9 +15,23 @@ export class HomePage implements OnInit{
   constructor(public authService: AuthService, public userService: UserService) {
   }
 
+  images = [
+    '/assets/imagen-1.jpg',
+    '/assets/imagen-2.jpg'
+  ];
+  
+  currentImageIndex = 0;
+
   ngOnInit(): void {
     if(this.authService.getToken()){
       this.userService.loadProfile();
     }
+    this.startImageCycle();
+  }
+
+  startImageCycle() {
+    setInterval(() => {
+      this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+    }, 10000);
   }
 }
