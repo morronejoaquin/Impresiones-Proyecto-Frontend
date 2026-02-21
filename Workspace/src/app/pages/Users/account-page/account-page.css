@@ -1,156 +1,219 @@
-:root {
-    --primary-color: #007bff;
-    --danger-color: #dc3545;
-    --danger-hover: #c82333;
-    --background-color: #f8f9fa;
-    --card-background: #ffffff;
-    --text-color: #212529;
-    --text-muted: #6c757d;
-    --border-color: #dee2e6;
-    --card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    --card-radius: 15px;
-}
-
 .account-container {
-    max-width: 700px;
-    margin: 3rem auto;
-    padding: 2rem;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: var(--background-color);
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0 1rem;
 }
 
-h2 {
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-    text-align: center;
+.profile-layout {
+  display: flex;
+  gap: 2rem;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
 }
 
-.card {
-    background: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
+.profile-sidebar {
+  color: var(--text-primary);
+  flex: 1;
+  background: #f8fafc;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #e2e8f0;
 }
 
-.card-body {
-    padding: 2rem 2.5rem;
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  background: #5D6DFF;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
 }
 
-.card-title {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--text-color);
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+.avatar-circle .material-icons {
+  font-size: 60px;
 }
 
-.card-text { 
-    font-size: 1.1rem;
-    color: var(--text-color);
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
+.badge-role {
+  padding: 4px 12px;
+  margin: 4px auto;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: #e2e8f0;
+  color: var(--text-secondary);
 }
 
-.card-text strong {
-    color: var(--text-muted);
-    min-width: 180px;
-    font-weight: 500;
+.badge-role.admin { 
+  background: #fee2e2; 
+  color: #dc2626; 
 }
 
-.card-footer {
-    background-color: #ffffff;
-    padding: 1.5rem 2.5rem;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+.profile-main {
+  flex: 2;
+  padding: 3rem;
+  color: var(--text-primary);
 }
 
-.btn-primary {
-    padding: 0.6rem 1.5rem;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: background-color 0.2s ease-in-out, transform 0.2s ease;
-}
-.btn-primary:hover {
-    background-color: #024fa1;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
-.btn-danger {
-    padding: 0.6rem 1.5rem;
-    background-color: #c82333;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: background-color 0.2s ease-in-out, transform 0.2s ease;
+.btn-edit-icon {
+  background-color: #5D6DFF;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
 }
 
-.btn-danger:hover {
-    background-color: #dc3545;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.full-width { 
+  grid-column: span 2; 
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  background: #f1f5f9;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #1e293b;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.form-group input.editable {
+  border-color: #cbd5e1;
+  background: white;
+}
+
+.form-group input.editable:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.btn-save, .btn-cancel {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.btn-save {
+  background: #5D6DFF;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(93, 109, 255, 0.2);
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #4a59e0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(93, 109, 255, 0.3);
+}
+
+.btn-cancel {
+  background: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-cancel:hover {
+  background: #f8fafc;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+.btn-logout {
+  margin-top: 2rem;
+  background: none;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
-    .account-container {
-        margin: 1rem; /* Reducir margen en móviles */
-        padding: 1rem; /* Reducir padding */
-    }
+  .profile-layout { 
+    flex-direction: column; 
+  }
 
-    h2 {
-        font-size: 1.75rem; /* Reducir tamaño de título */
-    }
+  .profile-sidebar { 
+    border-right: none; 
+    border-bottom: 1px solid #e2e8f0; 
+  }
 
-    .card-body {
-        padding: 1.5rem; /* Reducir padding del cuerpo de la tarjeta */
-    }
-    
-    .card-title {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
+  .form-grid { 
+    grid-template-columns: 1fr; 
+  }
 
-    /* Stackear (apilar) la información de texto en el móvil */
-    .card-text { 
-        flex-direction: column; /* Cambiar a apilado vertical */
-        align-items: flex-start; /* Alinear texto a la izquierda */
-        margin-bottom: 1rem;
-    }
+  .full-width { 
+    grid-column: span 1; 
+  }
 
-    .card-text strong {
-        min-width: unset; /* Quitar ancho fijo */
-        margin-bottom: 0.25rem; /* Añadir pequeño margen debajo del label */
-        font-weight: 600; /* Hacer el label más audaz */
-        color: var(--text-color); /* Cambiar color del label para mayor contraste */
-    }
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
 
-    .card-footer {
-        padding: 1rem 1.5rem; /* Reducir padding del footer */
-        flex-direction: column; /* Apilar los botones verticalmente */
-        gap: 0.75rem; /* Espaciado entre botones */
-    }
-
-    .btn-primary, .btn-danger {
-        width: 100%; /* Botones de ancho completo */
-        font-size: 0.95rem;
-    }
+  .btn-save, .btn-cancel {
+    width: 100%;
+    flex: none;
+    padding: 14px;
+  }
+  
+  .form-group input {
+    max-width: 100%;
+  }
 }

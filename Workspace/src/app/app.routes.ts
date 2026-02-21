@@ -8,7 +8,6 @@ import { ShowCartPage } from './pages/Cart/show-cart-page/show-cart-page';
 import { UserLoginPage } from './pages/Users/user-login-page/user-login-page';
 import { UserRegisterPage } from './pages/Users/user-register-page/user-register-page';
 import { AccountPage } from './pages/Users/account-page/account-page';
-import { UserEditPage } from './pages/Users/user-edit-page/user-edit-page';
 import { permissionGuard } from './guards/permission-guard';
 import { CartPaymentPage } from './pages/Cart/cart-payment-page/cart-payment-page';
 import { OrderReceivedPage } from './pages/Cart/order-received-page/order-received-page';
@@ -31,13 +30,6 @@ export const routes: Routes = [
     canActivate: [permissionGuard],
     data: { allowedRoles: ['cliente', 'administrador'] },
   },
-  {
-    path: 'user-edit',
-    component: UserEditPage,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] },
-  },
-
   {
     path: 'make-order',
     component: MakeOrderPage,

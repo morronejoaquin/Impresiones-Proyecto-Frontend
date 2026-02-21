@@ -1,36 +1,73 @@
 <div class="account-container">
-  <div *ngIf="isLoading" class="loading">
-    <p>Cargando datos de tu perfil...</p>
-  </div>
-
-  <div *ngIf="accessDenied && !isLoading" class="alert-error">
-    <p>Acceso denegado. Tu sesión ha expirado o no tienes permiso. Serás redirigido al login en breve...</p>
-  </div>
-
-  <div *ngIf="currentUser && !isLoading; else notLoggedIn">
-    <h2>Bienvenido, {{ currentUser.name }}</h2>
-
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Información de la Cuenta:</h5>
-        <p class="card-text"><strong>Nombre completo:</strong> {{ currentUser.name }} {{ currentUser.surname }}</p>
-        <p class="card-text"><strong>Email:</strong> {{ currentUser.email }} <span class="badge-info">(no editable)</span></p>
-        <p class="card-text"><strong>Teléfono:</strong> {{ currentUser.phone }}</p>
-        <p class="card-text"><strong>Rol actual:</strong>
-          <span *ngIf="currentUser.role === 'registered'" class="badge-role">Registrado</span>
-          <span *ngIf="currentUser.role === 'admin'" class="badge-role">Administrador</span>
-          <span *ngIf="currentUser.role === 'cliente'" class="badge-role">Cliente</span>
-          <span *ngIf="currentUser.role === 'guest'" class="badge-role">Invitado</span>
-        </p>
-      </div>
-      <div class="card-footer">
-        <button (click)="logout()" class="btn-danger">Cerrar Sesión</button>
-        <button (click)="editProfile()" class="btn-primary">Editar Perfil</button>
-      </div>
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Cargando tu perfil...</p>
     </div>
-  </div>
+  } @else if (currentUser) {
+    <div class="profile-layout">
+      
+      <aside class="profile-sidebar">
+        <div class="avatar-circle">
+          <span class="material-icons">person</span>
+        </div>
+        <h3>{{ currentUser.name }} {{ currentUser.surname }}</h3>
+        <span class="badge-role" [class]="currentUser.role">
+          {{ currentUser.role | titlecase }}
+        </span>
+        
+        <div class="sidebar-actions">
+          <button (click)="logout()" class="btn-logout">
+            <span class="material-icons">logout</span> Cerrar Sesión
+          </button>
+        </div>
+      </aside>
 
-  <ng-template #notLoggedIn>
-    <p>Por favor, inicia sesión para ver tu cuenta.</p>
-  </ng-template>
+      <main class="profile-main">
+        <div class="card-header">
+          <h2>{{ isEditing ? 'Editar Perfil' : 'Información Personal' }}</h2>
+          @if (!isEditing) {
+            <button (click)="toggleEdit()" class="btn-edit-icon">
+              <span class="material-icons">edit</span>
+            </button>
+          }
+        </div>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="profile-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" formControlName="name" [readonly]="!isEditing" [class.editable]="isEditing">
+            </div>
+
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" formControlName="surname" [readonly]="!isEditing" [class.editable]="isEditing">
+            </div>
+
+            <div class="form-group full-width">
+              <label>Email (No editable)</label>
+              <input type="email" [value]="currentUser.email" disabled class="input-disabled">
+            </div>
+
+            <div class="form-group full-width">
+              <label>Teléfono</label>
+              <input type="text" formControlName="phone" [readonly]="!isEditing" [class.editable]="isEditing">
+            </div>
+          </div>
+
+          @if (isEditing) {
+            <div class="form-actions">
+              <button type="button" class="btn-cancel" (click)="toggleEdit()" [disabled]="isSaving">
+                Cancelar
+              </button>
+              <button type="submit" class="btn-save" [disabled]="userForm.invalid || isSaving">
+                {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+              </button>
+            </div>
+          }
+        </form>
+      </main>
+    </div>
+  }
 </div>
