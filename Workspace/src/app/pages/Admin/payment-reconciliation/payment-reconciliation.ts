@@ -71,24 +71,7 @@ export class PaymentReconciliationComponent implements OnInit, OnDestroy {
   }
 
   loadPaymentData(): void {
-    this.loading = true;
-    this.error = null;
-    this.adminDashboardService
-      .getPaymentSummaryByMethod()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.paymentData = data;
-          this.calculateTotals();
-          this.updateChart();
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error loading payment data:', err);
-          this.error = 'Error loading payment reconciliation data';
-          this.loading = false;
-        },
-      });
+    
   }
 
   calculateTotals(): void {

@@ -1,4 +1,3 @@
-import CustomerDataRequest from "../Customer/customerDataRequest";
 import CustomerDataResponse from "../Customer/customerDataResponse";
 import { CartStatusEnum } from "../Enums/cartStatusEnum";
 import { OrderStatusEnum } from "../Enums/orderStatusEnum";
@@ -10,10 +9,10 @@ export default interface CartResponse {
   customer: CustomerDataResponse;
   status: OrderStatusEnum;
   cartStatus: CartStatusEnum;
-  createdAt?: string,
-  lastModifiedAt?: string,
+  createdAt?: string;
+  lastModifiedAt?: string;
   completedAt?: string; // ISO - cuándo se completó (para filtrar por fechas)
   deliveredAt?: string; // ISO: fecha/hora de entrega
-  admReceivedAt?: string,
+  admReceivedAt?: string;
   deleted: boolean;
 }

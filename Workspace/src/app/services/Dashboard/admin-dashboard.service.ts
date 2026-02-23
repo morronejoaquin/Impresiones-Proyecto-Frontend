@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { OrderSummaryByStatus } from '../../models/Dashboard/orderSummaryByStatus';
-import { PrintingStatistics } from '../../models/Dashboard/printingStatistics';
-import { PaymentSummaryByMethod } from '../../models/Dashboard/paymentSummaryByMethod';
+import AdminDashboardResponse from '../../models/Dashboard/adminDashboardResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminDashboardService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'http://localhost:8080/admin';
 
-  constructor(private http: HttpClient) {}
-
-  getOrdersSummaryByStatus(): Observable<OrderSummaryByStatus[]> {
-    return this.http.get<OrderSummaryByStatus[]>(`${this.apiUrl}/ordersByStatus`);
+  constructor(private http: HttpClient) {
   }
 
-  getPrintingStatistics(): Observable<PrintingStatistics> {
-    return this.http.get<PrintingStatistics>(`${this.apiUrl}/printingStatistics`);
+  getDashboardData(filters?: any): Observable<AdminDashboardResponse>{
+    let params = new HttpParams();
+
+    if (filters.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+    if (filters.endDate) {
+      params = params.set('endDate', filters.endDate);
+    }
+    
+    return this.http.get<AdminDashboardResponse>(`${this.apiUrl}/dashboard`, {params});
   }
 
-  getPaymentSummaryByMethod(): Observable<PaymentSummaryByMethod[]> {
-    return this.http.get<PaymentSummaryByMethod[]>(`${this.apiUrl}/paymentSummary`);
-  }
 }

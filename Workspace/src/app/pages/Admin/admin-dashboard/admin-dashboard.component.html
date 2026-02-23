@@ -1,124 +1,98 @@
 <div class="dashboard-container">
-  <div class="header">
-    <h1>Dashboard Administrativo</h1>
-    <button (click)="loadDashboardData()" class="refresh-btn">Actualizar</button>
-  </div>
+  <header class="dashboard-header">
+    <a routerLink="/admin" class="back">
+      <span class="material-icons">arrow_back</span> Volver
+    </a>
+    <div class="title-section">
+      <h1>Panel de Control Administrativo</h1>
+      <p class="subtitle">Estado actual de la imprenta</p>
+    </div>
+    <div class="actions">
+      <button (click)="loadDashboardData()" class="btn-refresh">
+        <span class="material-icons">refresh</span> Actualizar
+      </button>
+    </div>
+  </header>
 
-  <div *ngIf="loading" class="loading">Cargando datos...</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-
-  <div *ngIf="!loading && !error" class="content">
-    <!-- Resumen de Pedidos por Estado -->
-    <section class="orders-summary">
-      <h2>Resumen de Pedidos por Estado</h2>
-      <div class="cards-grid">
-        <div *ngFor="let order of orderSummary" class="card"
-          [style.border-left]="'4px solid ' + getStatusColor(order.status)">
-          <div class="card-header">
-            <h3>{{ getStatusLabel(order.status) }}</h3>
-          </div>
-          <div class="card-body">
-            <div class="stat">
-              <span class="label">Cantidad:</span>
-              <span class="value">{{ order.count }}</span>
-            </div>
-            <div class="stat">
-              <span class="label">Monto Total:</span>
-              <span class="value">${{ order.totalAmount.toFixed(2) }}</span>
-            </div>
-          </div>
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Consolidando estadísticas...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-state">
+      <span class="material-icons">error_outline</span>
+      <p>{{ error }}</p>
+    </div>
+  } @else {
+    <div class="dashboard-grid">
+      
+      <section class="section-orders full-width">
+        <div class="section-header">
+          <span class="material-icons">shopping_cart</span>
+          <h2>Pedidos por Estado</h2>
         </div>
-      </div>
-    </section>
+        <div class="cards-container">
+          @for (order of dashboardData?.orderSummary; track order.status) {
+            <div class="status-card" [style.border-top-color]="getStatusColor(order.status)">
+              <span class="status-label">{{ getStatusLabel(order.status) }}</span>
+              <span class="status-count">{{ order.count }}</span>
+              <span class="status-amount">${{ order.totalAmount | number:'1.2-2' }}</span>
+            </div>
+          }
+        </div>
+      </section>
 
-    <!-- Estadísticas de Impresión -->
-    <section class="printing-stats" *ngIf="printingStats">
-      <h2>Estadísticas de Impresión</h2>
-
-      <div class="stats-grid">
-        <div class="stat-box">
-          <h3>Hojas por Color</h3>
-          <div class="stat-row">
-            <span>Color:</span>
-            <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="printingStats.colorPercentage" style="background: #e91e63;">
+      <section class="section-production">
+        <div class="section-header">
+          <span class="material-icons">print</span>
+          <h2>Eficiencia de Producción</h2>
+        </div>
+        @if (dashboardData?.printingStats; as stats) {
+          <div class="production-box">
+            <div class="stat-item">
+              <label>Hojas Color vs B/N</label>
+              <div class="dual-progress">
+                <div class="bar color" [style.width.%]="stats.colorPercentage"></div>
+                <div class="bar bw" [style.width.%]="stats.bwPercentage"></div>
+              </div>
+              <div class="legend">
+                <span>Color: {{stats.colorPercentage | number:'1.1-1'}}%</span>
+                <span>B/N: {{stats.bwPercentage | number:'1.1-1'}}%</span>
               </div>
             </div>
-            <span class="percentage">{{ printingStats.colorPercentage.toFixed(1) }}%</span>
+            <div class="total-sheets">
+              <strong>{{stats.totalSheets}}</strong>
+              <span>Total Hojas Impresas</span>
+            </div>
           </div>
-          <div class="stat-row">
-            <span>B/N:</span>
-            <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="printingStats.bwPercentage" style="background: #212121;">
+        }
+      </section>
+
+      <section class="section-reconciliation">
+        <div class="section-header">
+          <span class="material-icons">payments</span>
+          <h2>Reconciliación de Pagos</h2>
+        </div>
+        <div class="chart-layout">
+          <div class="chart-wrapper">
+            <canvas baseChart type="pie" 
+                    [data]="pieChartData" 
+                    [options]="pieChartOptions">
+            </canvas>
+          </div>
+          <div class="totals-list">
+            @for (payment of dashboardData?.paymentSummary; track payment.paymentMethod) {
+              <div class="payment-row">
+                <span class="dot" [ngClass]="payment.paymentMethod.toLowerCase()"></span>
+                <span class="method">{{ formatMethod(payment.paymentMethod) }}</span>
+                <span class="amount">${{ payment.totalAmount | number:'1.2-2' }}</span>
               </div>
-            </div>
-            <span class="percentage">{{ printingStats.bwPercentage.toFixed(1) }}%</span>
+            }
           </div>
-          <div class="total">Total hojas: {{ printingStats.totalSheets }}</div>
         </div>
+      </section>
 
-        <div class="stat-box">
-          <h3>Tipo de Encuadernación</h3>
-          <div class="stat-row">
-            <span>Anilladas:</span>
-            <span class="value">{{ printingStats.ringedPercentage.toFixed(1) }}%</span>
-          </div>
-          <div class="stat-row">
-            <span>Engrapadas:</span>
-            <span class="value">{{ printingStats.stapledPercentage.toFixed(1) }}%</span>
-          </div>
-          <div class="stat-row">
-            <span>Sin Encuadernación:</span>
-            <span class="value">{{ printingStats.noBindingPercentage.toFixed(1) }}%</span>
-          </div>
-        </div>
-
-        <div class="stat-box">
-          <h3>Resumen</h3>
-          <div class="summary-item">
-            <span>Total hojas:</span>
-            <strong>{{ printingStats.totalSheets }}</strong>
-          </div>
-          <div class="summary-item">
-            <span>Hojas a color:</span>
-            <strong>{{ printingStats.colorSheets }}</strong>
-          </div>
-          <div class="summary-item">
-            <span>Hojas B/N:</span>
-            <strong>{{ printingStats.bwSheets }}</strong>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Resumen de Pagos por Método -->
-    <section class="payment-summary" *ngIf="paymentSummary && paymentSummary.length > 0">
-      <h2>Resumen de Pagos por Método</h2>
-      <div class="payment-cards">
-        <div *ngFor="let payment of paymentSummary" class="payment-card">
-          <div class="payment-header">
-            <h3>{{ payment.paymentMethod }}</h3>
-          </div>
-          <div class="payment-body">
-            <div class="payment-stat">
-              <span class="label">Monto Total:</span>
-              <span class="value">${{ payment.totalAmount.toFixed(2) }}</span>
-            </div>
-            <div class="payment-stat">
-              <span class="label">Transacciones:</span>
-              <span class="value">{{ payment.transactionCount }}</span>
-            </div>
-            <div class="payment-stat">
-              <span class="label">Porcentaje:</span>
-              <span class="value">{{ payment.percentage.toFixed(1) }}%</span>
-            </div>
-            <div class="progress-bar-payment">
-              <div class="progress-fill-payment" [style.width.%]="payment.percentage" style="background: #4caf50;">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+    </div>
+  }
 </div>

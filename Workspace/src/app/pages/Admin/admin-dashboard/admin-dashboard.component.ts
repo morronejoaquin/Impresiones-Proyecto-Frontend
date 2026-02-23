@@ -1,23 +1,50 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminDashboardService } from '../../../services/Dashboard/admin-dashboard.service';
-import { OrderSummaryByStatus } from '../../../models/Dashboard/orderSummaryByStatus';
-import { PrintingStatistics } from '../../../models/Dashboard/printingStatistics';
 import { PaymentSummaryByMethod } from '../../../models/Dashboard/paymentSummaryByMethod';
+import AdminDashboardResponse from '../../../models/Dashboard/adminDashboardResponse';
+import { Chart, ChartConfiguration, registerables } from 'chart.js';
+Chart.register(...registerables);
+import { BaseChartDirective } from 'ng2-charts';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, BaseChartDirective],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
 })
+
 export class AdminDashboardComponent implements OnInit {
-  orderSummary: OrderSummaryByStatus[] = [];
-  printingStats: PrintingStatistics | null = null;
-  paymentSummary: PaymentSummaryByMethod[] = [];
+  dashboardData: AdminDashboardResponse | null = null;
   loading = true;
   error: string | null = null;
+
+  filters = {
+    startDate: '',
+    endDate: ''
+  };
+  
+  // Chart data simplificado
+  pieChartData: ChartConfiguration<'pie'>['data'] = {
+    labels: [],
+    datasets: [{ 
+      data: [], 
+      backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+      hoverOffset: 4
+    }]
+  };
+
+  pieChartOptions: ChartConfiguration<'pie'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      }
+    }
+  };
 
   constructor(private dashboardService: AdminDashboardService) {}
 
@@ -27,51 +54,40 @@ export class AdminDashboardComponent implements OnInit {
 
   loadDashboardData(): void {
     this.loading = true;
-    this.error = null;
-    let completedRequests = 0;
-    const totalRequests = 3;
-
-    this.dashboardService.getOrdersSummaryByStatus().subscribe({
+    // Una sola llamada trae TODO
+    this.dashboardService.getDashboardData(this.filters).subscribe({
       next: (data) => {
-        this.orderSummary = data;
-        completedRequests++;
-        if (completedRequests === totalRequests) this.loading = false;
+        this.dashboardData = data;
+        this.updateChart(data.paymentSummary);
+        this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error al cargar resumen de pedidos';
-        console.error(err);
-        completedRequests++;
-        if (completedRequests === totalRequests) this.loading = false;
-      },
+        this.error = 'No se pudo sincronizar el dashboard';
+        this.loading = false;
+      }
     });
+  }
 
-    this.dashboardService.getPrintingStatistics().subscribe({
-      next: (data) => {
-        this.printingStats = data;
-        completedRequests++;
-        if (completedRequests === totalRequests) this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error al cargar estadísticas de impresión';
-        console.error(err);
-        completedRequests++;
-        if (completedRequests === totalRequests) this.loading = false;
-      },
-    });
+  updateChart(payments: PaymentSummaryByMethod[]): void {
+    this.pieChartData.labels = payments.map(p => this.formatMethod(p.paymentMethod));
+    this.pieChartData.datasets[0].data = payments.map(p => p.totalAmount);
+  }
 
-    this.dashboardService.getPaymentSummaryByMethod().subscribe({
-      next: (data) => {
-        this.paymentSummary = data;
-        completedRequests++;
-        if (completedRequests === totalRequests) this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error al cargar resumen de pagos';
-        console.error(err);
-        completedRequests++;
-        if (completedRequests === totalRequests) this.loading = false;
-      },
-    });
+  applyFilters() {
+    this.loadDashboardData();
+  }
+
+  clearFilters() {
+    this.filters = { startDate: '', endDate: '' };
+    this.loadDashboardData();
+  }
+
+  formatMethod(paymentMethod: string): string{
+    const methods: { [key: string]: string } = {
+      CASH: 'Efectivo',
+      MERCADO_PAGO: 'Mercado Pago',
+    };
+    return methods[paymentMethod] || paymentMethod;
   }
 
   getStatusLabel(status: string): string {
