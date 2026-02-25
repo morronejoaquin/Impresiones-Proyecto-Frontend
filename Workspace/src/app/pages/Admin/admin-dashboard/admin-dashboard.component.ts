@@ -7,11 +7,12 @@ import { Chart, ChartConfiguration, registerables } from 'chart.js';
 Chart.register(...registerables);
 import { BaseChartDirective } from 'ng2-charts';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, BaseChartDirective],
+  imports: [CommonModule, RouterLink, BaseChartDirective, FormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
 })
@@ -69,8 +70,14 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   updateChart(payments: PaymentSummaryByMethod[]): void {
-    this.pieChartData.labels = payments.map(p => this.formatMethod(p.paymentMethod));
-    this.pieChartData.datasets[0].data = payments.map(p => p.totalAmount);
+    this.pieChartData = {
+    ...this.pieChartData,
+    labels: payments.map(p => this.formatMethod(p.paymentMethod)),
+    datasets: [{
+      ...this.pieChartData.datasets[0],
+      data: payments.map(p => p.totalAmount)
+    }]
+  };
   }
 
   applyFilters() {

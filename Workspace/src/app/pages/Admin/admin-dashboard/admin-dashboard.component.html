@@ -8,11 +8,27 @@
       <p class="subtitle">Estado actual de la imprenta</p>
     </div>
     <div class="actions">
-      <button (click)="loadDashboardData()" class="btn-refresh">
-        <span class="material-icons">refresh</span> Actualizar
+      <button (click)="loadDashboardData()" class="btn-refresh" [disabled]="loading">
+        <span class="material-icons" [class.spinning]="loading">refresh</span> Actualizar
       </button>
     </div>
   </header>
+
+  <section class="filters-bar full-width">
+    <div class="filter-group">
+      <div class="input-field">
+        <label>Desde</label>
+        <input type="date" [(ngModel)]="filters.startDate" (change)="applyFilters()">
+      </div>
+      <div class="input-field">
+        <label>Hasta</label>
+        <input type="date" [(ngModel)]="filters.endDate" (change)="applyFilters()">
+      </div>
+      <button class="btn-clear" (click)="clearFilters()" *ngIf="filters.startDate || filters.endDate">
+        <span class="material-icons">close</span> Limpiar filtros
+      </button>
+    </div>
+  </section>
 
   @if (loading) {
     <div class="loading-state">
@@ -32,15 +48,19 @@
           <span class="material-icons">shopping_cart</span>
           <h2>Pedidos por Estado</h2>
         </div>
-        <div class="cards-container">
-          @for (order of dashboardData?.orderSummary; track order.status) {
-            <div class="status-card" [style.border-top-color]="getStatusColor(order.status)">
-              <span class="status-label">{{ getStatusLabel(order.status) }}</span>
-              <span class="status-count">{{ order.count }}</span>
-              <span class="status-amount">${{ order.totalAmount | number:'1.2-2' }}</span>
-            </div>
-          }
-        </div>
+        @if (dashboardData?.orderSummary?.length) {
+          <div class="cards-container">
+            @for (order of dashboardData?.orderSummary; track order.status) {
+              <div class="status-card" [style.border-top-color]="getStatusColor(order.status)">
+                <span class="status-label">{{ getStatusLabel(order.status) }}</span>
+                <span class="status-count">{{ order.count }}</span>
+                <span class="status-amount">${{ order.totalAmount | number:'1.2-2' }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="no-data">No se encontraron pedidos en este periodo.</p>
+        }
       </section>
 
       <section class="section-production">
@@ -49,23 +69,29 @@
           <h2>Eficiencia de Producción</h2>
         </div>
         @if (dashboardData?.printingStats; as stats) {
-          <div class="production-box">
-            <div class="stat-item">
-              <label>Hojas Color vs B/N</label>
-              <div class="dual-progress">
-                <div class="bar color" [style.width.%]="stats.colorPercentage"></div>
-                <div class="bar bw" [style.width.%]="stats.bwPercentage"></div>
+          @if (stats.totalSheets > 0) {
+            <div class="production-box">
+              <div class="stat-item">
+                <label>Hojas Color vs B/N</label>
+                <div class="dual-progress">
+                  <div class="bar color" [style.width.%]="stats.colorPercentage"></div>
+                  <div class="bar bw" [style.width.%]="stats.bwPercentage"></div>
+                </div>
+                <div class="legend">
+                  <span>Color: {{stats.colorPercentage | number:'1.1-1'}}%</span>
+                  <span>B/N: {{stats.bwPercentage | number:'1.1-1'}}%</span>
+                </div>
               </div>
-              <div class="legend">
-                <span>Color: {{stats.colorPercentage | number:'1.1-1'}}%</span>
-                <span>B/N: {{stats.bwPercentage | number:'1.1-1'}}%</span>
+              <div class="total-sheets">
+                <strong>{{stats.totalSheets}}</strong>
+                <span>Total Hojas Impresas</span>
               </div>
             </div>
-            <div class="total-sheets">
-              <strong>{{stats.totalSheets}}</strong>
-              <span>Total Hojas Impresas</span>
-            </div>
-          </div>
+          } @else {
+            <p class="no-data">Sin datos de impresión para este periodo.</p>
+          }
+        } @else {
+          <p class="no-data">Cargando estadísticas...</p>
         }
       </section>
 
@@ -74,23 +100,27 @@
           <span class="material-icons">payments</span>
           <h2>Reconciliación de Pagos</h2>
         </div>
-        <div class="chart-layout">
-          <div class="chart-wrapper">
-            <canvas baseChart type="pie" 
-                    [data]="pieChartData" 
-                    [options]="pieChartOptions">
-            </canvas>
+        @if (dashboardData?.paymentSummary?.length) {
+          <div class="chart-layout">
+            <div class="chart-wrapper">
+              <canvas baseChart type="pie" 
+                      [data]="pieChartData" 
+                      [options]="pieChartOptions">
+              </canvas>
+            </div>
+            <div class="totals-list">
+              @for (payment of dashboardData?.paymentSummary; track payment.paymentMethod) {
+                <div class="payment-row">
+                  <span class="dot" [ngClass]="payment.paymentMethod.toLowerCase()"></span>
+                  <span class="method">{{ formatMethod(payment.paymentMethod) }}</span>
+                  <span class="amount">${{ payment.totalAmount | number:'1.2-2' }}</span>
+                </div>
+              }
+            </div>
           </div>
-          <div class="totals-list">
-            @for (payment of dashboardData?.paymentSummary; track payment.paymentMethod) {
-              <div class="payment-row">
-                <span class="dot" [ngClass]="payment.paymentMethod.toLowerCase()"></span>
-                <span class="method">{{ formatMethod(payment.paymentMethod) }}</span>
-                <span class="amount">${{ payment.totalAmount | number:'1.2-2' }}</span>
-              </div>
-            }
-          </div>
-        </div>
+        } @else {
+          <p class="no-data">No hay registros de pagos aprobados.</p>
+        }
       </section>
 
     </div>
