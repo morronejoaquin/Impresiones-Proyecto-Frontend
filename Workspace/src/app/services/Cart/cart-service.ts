@@ -174,6 +174,9 @@ export class CartService {
     if (filters.endDate) {
       params = params.set('endDate', filters.endDate);
     }
+    if (filters.customerEmail) {
+      params = params.set('customerEmail', filters.customerEmail);
+    }
 
     return this.http.get<Page<CartResponse>>(`${this.apiUrl}/admin/history`, { params });
   }

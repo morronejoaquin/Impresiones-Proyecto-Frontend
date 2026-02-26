@@ -7,11 +7,6 @@ import Page from '../../../models/PageModel/page';
 import CartResponse from '../../../models/Cart/cartResponse';
 import { FormsModule } from '@angular/forms';
 
-interface HistoryFilters {
-  startDate?: string;
-  endDate?: string;
-}
-
 @Component({
   selector: 'app-admin-record-page',
   standalone: true,
@@ -28,7 +23,8 @@ export class AdminRecordPage implements OnInit {
   isLoading = false;
   noResults = false;
 
-  filters: HistoryFilters = {
+  filters = {
+    customerEmail: '',
     startDate: '',
     endDate: ''
   };
@@ -45,10 +41,8 @@ export class AdminRecordPage implements OnInit {
   loadHistory(): void {
     this.isLoading = true;
     this.noResults = false;
-
-    const params = this.buildFilterParams();
     
-    this.cartService.getDeliveredHistory(params, this.currentPage, this.pageSize).subscribe({
+    this.cartService.getDeliveredHistory(this.filters, this.currentPage, this.pageSize).subscribe({
       next: (response: Page<CartResponse>) => {
         this.deliveredCarts = response.content || [];
         this.totalElements = response.totalElements || 0;
@@ -68,20 +62,13 @@ export class AdminRecordPage implements OnInit {
   }
 
   clearFilters(): void {
-    this.filters = { startDate: '', endDate: '' };
+    this.filters = { startDate: '', endDate: '' , customerEmail: ''};
     this.currentPage = 0;
     this.loadHistory();
   }
 
   hasActiveFilters(): boolean {
-    return !!(this.filters.startDate || this.filters.endDate);
-  }
-
-  private buildFilterParams(): any {
-    const params: any = {};
-    if (this.filters.startDate) params.startDate = this.filters.startDate;
-    if (this.filters.endDate) params.endDate = this.filters.endDate;
-    return params;
+    return !!(this.filters.customerEmail || this.filters.startDate || this.filters.endDate);
   }
 
   formatDate(date: string | undefined): string {

@@ -10,11 +10,13 @@ import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import CartResponse from '../../../models/Cart/cartResponse';
 import Page from '../../../models/PageModel/page';
 import CartStatusUpdateRequest from '../../../models/Cart/cartStatusUpdateRequest';
+import { NotificationService } from '../../../services/Notification/notification-service';
+import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 
 @Component({
   standalone: true,
   selector: 'app-admin-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ConfirmModal],
   templateUrl: './admin-page.html',
   styleUrl: './admin-page.css',
 })
@@ -34,12 +36,17 @@ export class AdminPage implements OnInit {
     endDate: ''
   };
 
+  showConfirm = false;
+  statusToConfirm: { cart: CartResponse, newStatus: OrderStatusEnum } | null = null;
+  message = '';
+
   orderStatus = OrderStatusEnum;
   statusOptions = Object.values(OrderStatusEnum);
 
   constructor(
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -85,20 +92,67 @@ export class AdminPage implements OnInit {
   }
 
   onStatusChange(cart: CartResponse, newStatus: OrderStatusEnum) {
+    this.statusToConfirm = { cart, newStatus };
+    this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(newStatus)}?`;
+
+    if (newStatus === OrderStatusEnum.READY || 
+        newStatus === OrderStatusEnum.DELIVERED || 
+        newStatus === OrderStatusEnum.CANCELLED) {
+      this.showConfirm = true;
+    } else {
+      this.executeStatusUpdate(cart, newStatus);
+    }
+    
+  }
+
+  confirmChangeStatus() {
+    if (this.statusToConfirm) {
+      const { cart, newStatus } = this.statusToConfirm;
+      this.executeStatusUpdate(cart, newStatus);
+      
+      this.showConfirm = false;
+      this.statusToConfirm = null;
+    }
+  }
+
+  cancelChangeStatus() {
+    this.showConfirm = false;
+    this.statusToConfirm = null;
+    this.loadOrders(); // Recargamos para asegurar que el select muestre el valor real del backend
+  }
+
+  private executeStatusUpdate(cart: CartResponse, newStatus: OrderStatusEnum) {
     this.savingIds.add(cart.id);
     const request: CartStatusUpdateRequest = { status: newStatus };
 
     this.cartService.actualizarEstado(cart.id, request).subscribe({
       next: (updatedCart) => {
         cart.status = updatedCart.status;
+        this.notificationService.success(`Pedido actualizado a ${this.statusLabel(newStatus)}`);
+        
+        // Simulación de guardado para la UI
+        setTimeout(() => this.savingIds.delete(cart.id), 1000);
       },
       error: (err) => {
-        console.log("Error al actualizar el estado");
+        this.notificationService.error("Error al actualizar el estado");
+        this.savingIds.delete(cart.id);
+        this.loadOrders(); // Revertir UI
       }
     });
-    
-    // Simulación de guardado para la UI
-    setTimeout(() => this.savingIds.delete(cart.id), 1000);
+  }
+
+  nextPage(): void {
+    if ((this.currentPage + 1) * this.pageSize < this.totalElements) {
+      this.currentPage++;
+      this.loadOrders();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadOrders();
+    }
   }
 
   goToDetail(id: string) { 

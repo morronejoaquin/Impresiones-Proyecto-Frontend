@@ -55,6 +55,31 @@
   border: 1px solid #e2e8f0;
 }
 
+.status-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-wrapper select {
+  cursor: pointer;
+}
+
+.saving-indicator {
+  font-size: 1.2rem;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
 .meta-item {
   display: flex;
   flex-direction: column;

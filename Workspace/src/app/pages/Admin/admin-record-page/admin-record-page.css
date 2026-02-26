@@ -43,12 +43,10 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   margin-bottom: 2rem;
   border: 1px solid #e2e8f0;
-}
-
-.filter-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
   gap: 1.5rem;
+  align-items: flex-end;
 }
 
 .filter-group {
@@ -63,6 +61,38 @@
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   color: #334155;
+}
+
+.btn-clear {
+  background: #2563eb;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  background: #ffffff;
+  border: 2px #e2e8f0;
+  border-radius: 16px;
+  text-align: center;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.empty-state .material-icons {
+  margin: 4px auto;
 }
 
 .table-wrapper {
@@ -194,7 +224,7 @@
 }
 
 .text-center { 
-  text-align: center; 
+  text-align: left; 
 }
 
 .font-bold { 

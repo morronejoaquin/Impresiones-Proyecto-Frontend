@@ -26,14 +26,17 @@
         <div class="status-wrapper">
           <select #statusSelect
             class="status-select"
-            [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED"
+            [disabled]="c.status === orderStatusEnum.DELIVERED || c.status === orderStatusEnum.CANCELLED || isUpdating"
             [value]="c.status" 
             (change)="onStatusChange(statusSelect.value)">
             @for (s of object.values(orderStatusEnum); track s) {
               <option [value]="s" [selected]="s === c.status">{{ statusLabel(s) }}</option>
             }
           </select>
-          @if (isUpdating) { <span class="loader-mini"></span> }
+
+          @if (isUpdating) { 
+            <span class="saving-indicator">⌛</span> 
+          }
         </div>
       </div>
 
@@ -69,14 +72,13 @@
       <thead>
         <tr>
           <th>Archivo</th>
-          <th>Detalles</th>
+          <th>Tipo</th>
           <th>Pág.</th>
           <th>Copias</th>
           <th>Doble cara</th>
           <th>Color</th>
           <th>Anillado</th>
-          <th class="text-right">Precio</th>
-          <th class="text-right">Subtotal</th>
+          <th>Subtotal</th>
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
@@ -95,8 +97,7 @@
             <td><span class="chip" [class.ok]="it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
             <td><span class="chip" [class.ok]="it.color">{{ yesNo(it.color) }}</span></td>
             <td><span class="binding-badge">{{ bindingLabel(it.binding) }}</span></td>
-            <td class="text-right">${{ it.amount | number:'1.2-2' }}</td>
-            <td class="text-right font-bold">${{ sub(it) | number:'1.2-2' }}</td>
+            <td>${{ it.amount | number:'1.2-2' }}</td>
             <td class="text-center">
               <button class="btn-download" (click)="downloadFile(cart()?.id, it.id, it.fileName)">
                 <span class="material-icons">download</span> Descargar

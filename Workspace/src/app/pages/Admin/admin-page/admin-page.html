@@ -43,7 +43,10 @@
   } @else {
     
     @if (carts.length === 0) {
-      <div class="empty-state">No se encontraron pedidos con estos filtros.</div>
+      <div class="empty-state">
+        <span class="material-icons">info</span>
+        No se encontraron pedidos con estos filtros.
+      </div>
     } @else {
       <div class="carts-grid">
         @for (cart of carts; track cart.id) {
@@ -85,18 +88,30 @@
           </div>
         }
       </div>
-
-      <div class="pagination">
-        <button class="pagination-btn" [disabled]="currentPage === 0" (click)="currentPage = currentPage - 1; loadOrders()">
-          Anterior
-        </button>
-        
-        <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
-        
-        <button class="pagination-btn" [disabled]="(currentPage + 1) >= totalPages" (click)="currentPage = currentPage + 1; loadOrders()">
-          Siguiente
-        </button>
-      </div>
     }
+  }
+  
+  @if (carts.length > 0) {
+    <div class="pagination">
+      <button class="btn-pagination" (click)="previousPage()" [disabled]="currentPage === 0">
+        <span class="material-icons">chevron_left</span> Anterior
+      </button>
+      <span class="page-info">
+        Página <strong>{{ currentPage + 1 }}</strong> de <strong> {{ totalPages }} </strong>
+        <small>({{ totalElements }} pedidos)</small>
+      </span>
+      <button class="btn-pagination" (click)="nextPage()" 
+              [disabled]="(currentPage + 1) * pageSize >= totalElements">
+        Siguiente <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+  }
+
+  @if (showConfirm) {
+    <app-confirm-modal
+        [title]= "message"
+        (confirmed)="confirmChangeStatus()"
+        (cancelled)="cancelChangeStatus()"
+      ></app-confirm-modal>
   }
 </div>

@@ -10,6 +10,7 @@ import { NotificationService } from '../../../services/Notification/notification
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { BindingTypeEnum } from '../../../models/Enums/bindingTypeEnum';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
+import CartResponse from '../../../models/Cart/cartResponse';
 
 @Component({
   standalone: true,
@@ -23,7 +24,7 @@ export class AdminOrderDetailPage implements OnInit {
   private notification = inject(NotificationService);
   private location = inject(Location);
 
-  cart = signal<Cart | null>(null);
+  cart = signal<CartResponse | null>(null);
   items = signal<OrderItem[]>([]);
   total = signal<number>(0);
   isLoading = false;
@@ -97,9 +98,9 @@ export class AdminOrderDetailPage implements OnInit {
     const value = v?.toString();
 
     switch (value) {
-      case 'ringed':   return 'Anillado';
-      case 'stapled':  return 'Abrochado';
-      case 'none':     return 'Ninguno';
+      case 'RINGED':   return 'Anillado';
+      case 'STAPLED':  return 'Abrochado';
+      case 'NONE':     return 'Ninguno';
       default:         return '-';
     }
   }
@@ -144,9 +145,11 @@ export class AdminOrderDetailPage implements OnInit {
 
     this.cartsApi.actualizarEstado(cartId, { status }).subscribe({
       next: (resp) => {
-        this.isUpdating = false;
         this.cart.set(resp);
-        this.notification.success('Estado actualizado a ' + status);
+        this.notification.success(`Pedido actualizado a ${this.statusLabel(status)}`);
+
+        // Simulación de guardado para la UI
+        setTimeout(() => this.isUpdating = false, 1000);
       },
       error: (err) => {
         this.isUpdating = false;
