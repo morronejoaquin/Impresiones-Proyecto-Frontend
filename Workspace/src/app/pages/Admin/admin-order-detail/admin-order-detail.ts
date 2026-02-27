@@ -11,6 +11,7 @@ import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { BindingTypeEnum } from '../../../models/Enums/bindingTypeEnum';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 import CartResponse from '../../../models/Cart/cartResponse';
+import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
 
 @Component({
   standalone: true,
@@ -24,9 +25,8 @@ export class AdminOrderDetailPage implements OnInit {
   private notification = inject(NotificationService);
   private location = inject(Location);
 
-  cart = signal<CartResponse | null>(null);
-  items = signal<OrderItem[]>([]);
-  total = signal<number>(0);
+  cart = signal<CartWithItemsResponse | null>(null);
+
   isLoading = false;
   isUpdating = false;
   notFound = false;
@@ -53,19 +53,14 @@ export class AdminOrderDetailPage implements OnInit {
     this.isLoading = true;
     this.notFound = false;
 
-    forkJoin({
-      cart: this.cartsApi.getById(id),
-      items: this.cartsApi.getOrdersByCart(id)
-    }).subscribe({
-      next: ({ cart, items }) => {
-        this.cart.set(cart);
-        this.items.set(items || []);
-        this.total.set((items || []).reduce((s: number, it: any) => s + (it.amount || 0), 0));
+    this.cartsApi.getCartItems(id).subscribe({
+      next: (data: CartWithItemsResponse) => {
+        this.cart.set(data);
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Error loading cart detail:', err);
+        console.error('Error loading order detail:', err);
         if (err?.status === 404) {
           this.notFound = true;
         } else {
@@ -144,8 +139,16 @@ export class AdminOrderDetailPage implements OnInit {
     this.isUpdating = true;
 
     this.cartsApi.actualizarEstado(cartId, { status }).subscribe({
-      next: (resp) => {
-        this.cart.set(resp);
+      next: (resp: CartResponse) => {
+        this.cart.update(current => {
+          if (!current) return null;
+          return {
+            ...resp,
+            paymentMethod: current.paymentMethod,
+            paymentStatus: current.paymentStatus,         
+            items: current.items
+          };
+        });
         this.notification.success(`Pedido actualizado a ${this.statusLabel(status)}`);
 
         // Simulación de guardado para la UI
@@ -158,7 +161,7 @@ export class AdminOrderDetailPage implements OnInit {
           this.notFound = true;
         } else {
           this.notification.error('No se pudo actualizar el estado.');
-          // reload to reflect backend state
+
           this.loadDetail();
         }
       }
@@ -177,6 +180,18 @@ export class AdminOrderDetailPage implements OnInit {
     };
     return labels[v] || v;
   }
+
+  public paymentStatusMap: { [key: string]: string } = {
+    'PENDING': 'Pago Pendiente',
+    'APPROVED': 'Pago Aprobado',
+    'REJECTED': 'Pago Rechazado',
+    'UNKNOWN': 'Pendiente de Pago',
+  };
+
+  public paymentMethodMap: { [key: string]: string } = {
+    'CASH': 'Efectivo',
+    'MERCADO_PAGO': 'Mercado Pago',
+  };
 
   downloadFile(cartId: string | undefined, orderId: string, name?: string): void {
     if (!cartId) return;

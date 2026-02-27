@@ -14,21 +14,21 @@
     </div>
   </header>
 
-  <section class="filters-bar full-width">
+  <div class="filter-section">
     <div class="filter-group">
-      <div class="input-field">
-        <label>Desde</label>
-        <input type="date" [(ngModel)]="filters.startDate" (change)="applyFilters()">
-      </div>
-      <div class="input-field">
-        <label>Hasta</label>
-        <input type="date" [(ngModel)]="filters.endDate" (change)="applyFilters()">
-      </div>
-      <button class="btn-clear" (click)="clearFilters()" *ngIf="filters.startDate || filters.endDate">
-        <span class="material-icons">close</span> Limpiar filtros
-      </button>
+      <label for="start-date">Desde</label>
+      <input type="date" id="start-date" [(ngModel)]="filters.startDate" (change)="applyFilters()" class="filter-input">
     </div>
-  </section>
+
+    <div class="filter-group">
+      <label for="end-date">Hasta</label>
+      <input type="date" id="end-date" [(ngModel)]="filters.endDate" (change)="applyFilters()" class="filter-input">
+    </div>
+
+    @if (hasActiveFilters()) {
+      <button class="btn-clear" (click)="clearFilters()">Limpiar</button>
+    }
+  </div>
 
   @if (loading) {
     <div class="loading-state">

@@ -16,6 +16,8 @@ export default interface CartWithItemsResponse{
     completedAt?: string;
     deliveredAt?: string;
     admReceivedAt?: string,
+    paymentMethod: string,
+    paymentStatus: string,
     deleted: boolean;
     items: OrderItemResponse[]
 }

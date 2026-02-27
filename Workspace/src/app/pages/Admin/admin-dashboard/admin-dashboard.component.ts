@@ -27,7 +27,6 @@ export class AdminDashboardComponent implements OnInit {
     endDate: ''
   };
   
-  // Chart data simplificado
   pieChartData: ChartConfiguration<'pie'>['data'] = {
     labels: [],
     datasets: [{ 
@@ -55,7 +54,7 @@ export class AdminDashboardComponent implements OnInit {
 
   loadDashboardData(): void {
     this.loading = true;
-    // Una sola llamada trae TODO
+    
     this.dashboardService.getDashboardData(this.filters).subscribe({
       next: (data) => {
         this.dashboardData = data;
@@ -87,6 +86,10 @@ export class AdminDashboardComponent implements OnInit {
   clearFilters() {
     this.filters = { startDate: '', endDate: '' };
     this.loadDashboardData();
+  }
+
+  hasActiveFilters(): boolean {
+    return !!(this.filters.startDate || this.filters.endDate);
   }
 
   formatMethod(paymentMethod: string): string{

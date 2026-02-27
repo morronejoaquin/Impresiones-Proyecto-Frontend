@@ -60,12 +60,12 @@ export class CartService {
   }
 
   eliminarItem(itemId: string): Observable<string> {
-  return this.http.delete(`${this.apiUrl}/items/${itemId}`, {
-    responseType: 'text' 
-  }).pipe(
-    tap(() => this.refreshCart())
-  );
-}
+    return this.http.delete(`${this.apiUrl}/items/${itemId}`, {
+      responseType: 'text' 
+    }).pipe(
+      tap(() => this.refreshCart())
+    );
+  }
 
   getPendingCarts(page: number = 0, size: number = 20): Observable<Page<CartResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);

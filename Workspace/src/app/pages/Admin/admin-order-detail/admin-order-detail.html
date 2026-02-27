@@ -40,10 +40,17 @@
         </div>
       </div>
 
-      <div class="meta-item">
-        <span class="meta-label">Total Pedido</span>
-        <span class="meta-value price">${{ c.total | number:'1.2-2' }}</span>
-      </div>
+      @if (c.paymentMethod) {
+        <div class="meta-item">
+          <span class="meta-label">Pago</span>
+          <span class="meta-value">{{ paymentMethodMap[c.paymentMethod] }} - {{ paymentStatusMap[c.paymentStatus] }}</span>
+        </div>
+      } @else {
+        <div class="meta-item">
+          <span class="meta-label">Pago</span>
+          <span class="meta-value muted">Aún no se ha iniciado el pago</span>
+        </div>
+      }
 
       <div class="meta-item">
         <span class="meta-label">Fecha Pedido</span>
@@ -60,82 +67,82 @@
         <span class="meta-value">{{ c.deliveredAt ? (c.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
       </div>
     </div>
-  }
 
-  <div class="section-header">
-    <h2>Documentos del pedido</h2>
-  </div>
-
-  @if (items().length > 0) {
-    <div class="table-container">
-    <table class="table-items">
-      <thead>
-        <tr>
-          <th>Archivo</th>
-          <th>Tipo</th>
-          <th>Pág.</th>
-          <th>Copias</th>
-          <th>Doble cara</th>
-          <th>Color</th>
-          <th>Anillado</th>
-          <th>Subtotal</th>
-          <th class="text-center">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (it of items(); track it.id) {
-          <tr>
-            <td class="font-medium">
-              <div class="file-info">
-                <span class="file-icon">📄</span>
-                {{ fileName(it.fileName) }}
-              </div>
-            </td>
-            <td><span class="type-tag">{{ it.fileType || 'PDF' }}</span></td>
-            <td>{{ it.pages }}</td>
-            <td>{{ it.copies }}</td>
-            <td><span class="chip" [class.ok]="it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
-            <td><span class="chip" [class.ok]="it.color">{{ yesNo(it.color) }}</span></td>
-            <td><span class="binding-badge">{{ bindingLabel(it.binding) }}</span></td>
-            <td>${{ it.amount | number:'1.2-2' }}</td>
-            <td class="text-center">
-              <button class="btn-download" (click)="downloadFile(cart()?.id, it.id, it.fileName)">
-                <span class="material-icons">download</span> Descargar
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-      <tfoot>
-        <tr class="total-row">
-          <td colspan="7" class="text-right total-label">Total:</td>
-          <td colspan="3" class="text-right total-amount">${{ total() | number:'1.2-2' }}</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-
-  <div class="comments-section">
     <div class="section-header">
-      <h3>Comentarios adicionales:</h3>
+      <h2>Documentos del pedido</h2>
     </div>
-    <div class="comments-grid">
-      @for (it of items(); track it.id) {
-        <div class="comment-bubble">
-          <strong>{{ fileName(it.fileName) }}:</strong>
-          @if (it.comments && it.comments.trim() !== '') {
-            <p>{{ it.comments }}</p>
-          } @else {
-            <p class="muted-text">—</p>
+  
+    @if (c.items.length > 0) {
+      <div class="table-container">
+      <table class="table-items">
+        <thead>
+          <tr>
+            <th>Archivo</th>
+            <th>Tipo</th>
+            <th>Pág.</th>
+            <th>Copias</th>
+            <th>Doble cara</th>
+            <th>Color</th>
+            <th>Anillado</th>
+            <th>Subtotal</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (it of c.items; track it.id) {
+            <tr>
+              <td class="font-medium">
+                <div class="file-info">
+                  <span class="file-icon">📄</span>
+                  {{ fileName(it.fileName) }}
+                </div>
+              </td>
+              <td><span class="type-tag">{{ it.fileType || 'PDF' }}</span></td>
+              <td>{{ it.pages }}</td>
+              <td>{{ it.copies }}</td>
+              <td><span class="chip" [class.ok]="it.doubleSided">{{ yesNo(it.doubleSided) }}</span></td>
+              <td><span class="chip" [class.ok]="it.color">{{ yesNo(it.color) }}</span></td>
+              <td><span class="binding-badge">{{ bindingLabel(it.binding) }}</span></td>
+              <td>${{ it.amount | number:'1.2-2' }}</td>
+              <td class="text-center">
+                <button class="btn-download" (click)="downloadFile(cart()?.id, it.id, it.fileName)">
+                  <span class="material-icons">download</span> Descargar
+                </button>
+              </td>
+            </tr>
           }
-        </div>
-      }
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="7" class="text-right total-label">Total:</td>
+            <td colspan="3" class="text-right total-amount">${{ c.total | number:'1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-  </div>
-  } @else {
-    <div class="empty-state">
-      <p>Este pedido no contiene ningún documento.</p>
+
+    <div class="comments-section">
+      <div class="section-header">
+        <h3>Comentarios adicionales:</h3>
+      </div>
+      <div class="comments-grid">
+        @for (it of c.items; track it.id) {
+          <div class="comment-bubble">
+            <strong>{{ fileName(it.fileName) }}:</strong>
+            @if (it.comments && it.comments.trim() !== '') {
+              <p>{{ it.comments }}</p>
+            } @else {
+              <p class="muted-text">—</p>
+            }
+          </div>
+        }
+      </div>
     </div>
+    } @else {
+      <div class="empty-state">
+        <p>Este pedido no contiene ningún documento.</p>
+      </div>
+    }
   }
 
   @if (showConfirm) {
