@@ -104,6 +104,39 @@
   font-size: 1.25rem;
 }
 
+/* Contenedor para alinear el valor y el botón */
+.payment-info-group {
+  display: flex;
+  flex-direction: column; /* Apila el texto y el botón */
+  align-items: flex-start; /* Alinea a la izquierda */
+  gap: 8px;
+}
+
+.btn-small-approve {
+  /* Evita que el botón crezca más de lo necesario */
+  width: fit-content; 
+  align-self: flex-start;
+  
+  /* Mejoramos un poco el aspecto para que no parezca un bloque gigante */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #16a34a; /* Un verde más moderno */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.75rem; /* Un poco más pequeño para que sea discreto */
+  transition: all 0.2s ease;
+}
+
+.btn-small-approve:hover {
+  background-color: #15803d;
+  transform: translateY(-1px);
+}
+
 .section-header {
   margin: 20px auto;
 }

@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import Page from '../../models/PageModel/page';
 import PaymentCreateRequest from '../../models/Payment/paymentCreateRequest';
+import PaymentStatusUpdateRequest from '../../models/Payment/paymentStatusUpdateRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +39,9 @@ export class PaymentService {
       .set('size', size.toString())
       .set('sort', sort);
     return this.http.get<Page<PaymentHistoryResponse>>(`${this.apiUrl}/my`, { params });
+  }
+
+  updatePaymentStatus(cartId: string, request: PaymentStatusUpdateRequest): Observable<PaymentResponse>{
+    return this.http.patch<PaymentResponse>(`${this.apiUrl}/${cartId}/update-status`, request)
   }
 }

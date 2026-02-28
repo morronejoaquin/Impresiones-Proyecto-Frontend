@@ -73,16 +73,9 @@ export class CartService {
   }
 
   actualizarEstado(cartId: string, request: CartStatusUpdateRequest): Observable<CartResponse> {
-    return new Observable((observer) => {
-      this.http.patch<CartResponse>(`${this.apiUrl}/${cartId}/estado`, request).subscribe({
-        next: (resp) => {
-          this.refreshCart();
-          observer.next(resp);
-          observer.complete();
-        },
-        error: (err) => observer.error(err),
-      });
-    });
+    return this.http.patch<CartResponse>(`${this.apiUrl}/${cartId}/estado`, request).pipe(
+      tap(() => this.refreshCart())
+    );
   }
 
   descargarArchivo(cartId: string, ordenId: string): Observable<Blob> {

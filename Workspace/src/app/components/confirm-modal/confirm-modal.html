@@ -4,7 +4,7 @@
       <span class="material-icons">delete_sweep</span>
     </div>
     <h2>{{ title }}</h2>
-    <p>{{ message }}</p>
+    <p>{{ message || 'Esta acción no se puede deshacer'}}</p>
     
     <div class="modal-actions">
       <button class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">

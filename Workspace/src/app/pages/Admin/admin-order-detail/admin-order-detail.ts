@@ -12,6 +12,15 @@ import { BindingTypeEnum } from '../../../models/Enums/bindingTypeEnum';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 import CartResponse from '../../../models/Cart/cartResponse';
 import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
+import { PaymentStatusEnum } from '../../../models/Enums/paymentStatusEnum';
+import { PaymentService } from '../../../services/Payment/payment-service';
+
+type PendingAction = {
+  execute: () => void;
+  message: string;
+  subMessage?: string;
+  cancel?: () => void;
+};
 
 @Component({
   standalone: true,
@@ -24,6 +33,7 @@ export class AdminOrderDetailPage implements OnInit {
   private cartsApi = inject(CartService);
   private notification = inject(NotificationService);
   private location = inject(Location);
+  private paymentService = inject(PaymentService);
 
   cart = signal<CartWithItemsResponse | null>(null);
 
@@ -31,7 +41,7 @@ export class AdminOrderDetailPage implements OnInit {
   isUpdating = false;
   notFound = false;
 
-  statusToConfirm: OrderStatusEnum | null = null;
+  pendingAction: PendingAction | null = null;
   showConfirm = false;
 
   orderStatusEnum = OrderStatusEnum;
@@ -100,39 +110,77 @@ export class AdminOrderDetailPage implements OnInit {
     }
   }
 
+  private openConfirmModal(action: PendingAction): void {
+    this.pendingAction = action;
+    this.message = action.message;
+    this.showConfirm = true;
+  }
+
   onStatusChange(newStatus: string): void {
     const cartId = this.cart()?.id;
     if (!cartId) return;
 
-    this.statusToConfirm = newStatus as OrderStatusEnum;
-    this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(this.statusToConfirm)}?`;
+    const statusEnum = newStatus as OrderStatusEnum;
+    this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(statusEnum)}?`;
 
-    if (newStatus === OrderStatusEnum.READY || newStatus === OrderStatusEnum.DELIVERED || newStatus === OrderStatusEnum.CANCELLED) {
-      this.showConfirm = true;
-      return;
+    const action: PendingAction = {
+      execute: () => this.updateStatus(cartId, statusEnum),
+      message: this.message,
+      cancel: () => {
+        if (this.statusSelect) {
+          this.statusSelect.nativeElement.value = this.cart()?.status || '';
+        }
+      }
+    };
+
+    if (statusEnum == OrderStatusEnum.READY){
+      action.subMessage = 'Se le enviará una notificación al usuario';
     }
 
-    this.updateStatus(cartId, newStatus as OrderStatusEnum);
+    if ([OrderStatusEnum.READY, OrderStatusEnum.DELIVERED, OrderStatusEnum.CANCELLED].includes(statusEnum)) {
+      this.openConfirmModal(action);
+    } else {
+      action.execute();
+    }
+  }
+
+  onApprovePaymentManual(): void {
+    const cartId = this.cart()?.id;
+    if (!cartId) return;
+    
+    this.openConfirmModal({
+      message: '¿Estás seguro de que deseas marcar este pedido como pagado?',
+      execute: () => {
+        this.paymentService.updatePaymentStatus(cartId, { status: PaymentStatusEnum.APPROVED }).subscribe({
+          next: () => {
+            this.notification.success('Pago aprobado manualmente');
+            this.loadDetail();
+          },
+          error: () => {
+            this.notification.error('Error al aprobar pago');
+          }
+        });
+      }
+    });
   }
 
   confirmChangeStatus(): void {
-    const cartId = this.cart()?.id;
-    if (!cartId || !this.statusToConfirm) return;
-
-    this.showConfirm = false;
-    this.updateStatus(cartId, this.statusToConfirm);
-    this.statusToConfirm = null;
+    if (this.pendingAction) {
+      this.pendingAction.execute();
+    }
+    this.closeModal();
   }
 
   cancelChangeStatus(): void {
-    this.showConfirm = false;
-    this.statusToConfirm = null;
-
-    if (this.statusSelect) {
-      this.statusSelect.nativeElement.value = this.cart()?.status || '';
+    if (this.pendingAction?.cancel) {
+      this.pendingAction.cancel();
     }
-    
-    this.loadDetail();
+    this.closeModal();
+  }
+
+  private closeModal(): void {
+    this.showConfirm = false;
+    this.pendingAction = null;
   }
 
   updateStatus(cartId: string, status: OrderStatusEnum): void {

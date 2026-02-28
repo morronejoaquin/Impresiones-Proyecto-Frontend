@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ConfirmModal {
   @Input() title: string = '¿Estás seguro?';
-  @Input() message: string = 'Esta acción no se puede deshacer.';
+  @Input() message: string = '';
   @Input() confirmText: string = 'Confirmar';
   @Input() isLoading: boolean = false;
 

@@ -40,17 +40,24 @@
         </div>
       </div>
 
-      @if (c.paymentMethod) {
-        <div class="meta-item">
-          <span class="meta-label">Pago</span>
-          <span class="meta-value">{{ paymentMethodMap[c.paymentMethod] }} - {{ paymentStatusMap[c.paymentStatus] }}</span>
+      <div class="meta-item">
+        <span class="meta-label">Pago</span>
+        <div class="payment-info-group">
+          <span class="meta-value">
+            {{ paymentMethodMap[c.paymentMethod] }} - {{ paymentStatusMap[c.paymentStatus] }}
+          </span>
+          
+          @if (c.paymentStatus !== 'APPROVED') {
+            <button 
+              class="btn-small-approve" 
+              (click)="onApprovePaymentManual()"
+              [disabled]="isUpdating">
+              <span class="material-icons">check_circle</span>
+              Confirmar Pago
+            </button>
+          }
         </div>
-      } @else {
-        <div class="meta-item">
-          <span class="meta-label">Pago</span>
-          <span class="meta-value muted">Aún no se ha iniciado el pago</span>
-        </div>
-      }
+      </div>
 
       <div class="meta-item">
         <span class="meta-label">Fecha Pedido</span>
@@ -148,6 +155,7 @@
   @if (showConfirm) {
     <app-confirm-modal
         [title]= "message"
+        [message] = "pendingAction?.subMessage || ''"
         (confirmed)="confirmChangeStatus()"
         (cancelled)="cancelChangeStatus()"
       ></app-confirm-modal>
