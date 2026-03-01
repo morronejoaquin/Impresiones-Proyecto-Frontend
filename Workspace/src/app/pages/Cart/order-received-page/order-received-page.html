@@ -13,10 +13,23 @@
           <p>Tu pedido ha sido registrado correctamente para <strong>pago en efectivo</strong>.</p>
           <p class="highlight">⚠️ Recordá que la impresión comenzará una vez que abones el total en el local.</p>
         </div>
-      } @else if (paymentStatus === 'pending') {
-        <p class="description">Mercado Pago está procesando tu transacción. Te notificaremos cuando se apruebe.</p>
-      } @else {
-        <p class="description">Tu pago ha sido procesado con éxito. ¡Ya estamos trabajando en tu pedido!</p>
+      } @else if (paymentMethod === 'TRANSFER') {
+        <div class="instructions-box transfer">
+          <p>Pedido registrado para <strong>transferencia bancaria</strong>.</p>
+          <div class="bank-details">
+            <p><strong>Alias:</strong> impresiones.pago.ok</p>
+            <p><strong>CBU:</strong> 00000031000123456789</p>
+          </div>
+          <p class="highlight">⚠️ Envía el comprobante por WhatsApp para iniciar la impresión.</p>
+        </div>
+      }
+
+      @if (paymentMethod === 'MERCADO_PAGO') {
+        @if (paymentStatus === 'success') {
+          <p class="description">Tu pago ha sido procesado con éxito. ¡Ya estamos trabajando en tu pedido!</p>
+        } @else {
+          <p class="description">Mercado Pago está procesando tu transacción. Te notificaremos cuando se apruebe.</p>
+        }
       }
 
       <div class="order-info">
@@ -35,6 +48,9 @@
       <div class="actions">
         <button routerLink="/my-orders" class="btn-primary">Ver mis pedidos</button>
         <button routerLink="/" class="btn-outline">Volver al inicio</button>
+        @if(paymentMethod === 'TRANSFER'){
+          <a href="https://wa.me/5492235035233" target="_blank" class="btn-social whatsapp">Ir a WhatsApp</a>
+        }
       </div>
     </div>
   } @else {

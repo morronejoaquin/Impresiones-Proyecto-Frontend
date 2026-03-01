@@ -123,6 +123,21 @@ h1 {
   cursor: pointer;
 }
 
+.btn-social {
+  text-decoration: none;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  min-width: 140px;
+}
+
+.whatsapp { 
+  background-color: #25D366; 
+}
+
 /* Animación de entrada */
 .scale-in {
   animation: scaleIn 0.5s ease-out;

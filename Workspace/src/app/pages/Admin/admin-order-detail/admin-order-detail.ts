@@ -238,6 +238,7 @@ export class AdminOrderDetailPage implements OnInit {
 
   public paymentMethodMap: { [key: string]: string } = {
     'CASH': 'Efectivo',
+    'TRANSFER': 'Transferencia',
     'MERCADO_PAGO': 'Mercado Pago',
   };
 

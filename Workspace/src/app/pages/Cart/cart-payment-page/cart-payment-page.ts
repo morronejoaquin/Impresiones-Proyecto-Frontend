@@ -23,6 +23,7 @@ export class CartPaymentPage implements OnInit{
   cartTotal: number = 0;
   isLoading: boolean = true;
   showConfirmModal: boolean = false;
+  message = '';
 
   constructor(
     private fb: FormBuilder,
@@ -75,6 +76,17 @@ export class CartPaymentPage implements OnInit{
 
   onSubmit(): void {
     if (this.cartForm.invalid) return;
+
+    const method = this.cartForm.value.paymentMethod;
+  
+    if (method === 'MERCADO_PAGO') {
+      this.message = 'Serás redirigido de forma segura a la plataforma de Mercado Pago para completar tu pago.';
+    } else if (method === 'TRANSFER') {
+      this.message = 'Se registrará tu pedido y verás los datos bancarios para realizar la transferencia.';
+    } else {
+      this.message = 'Tu pedido quedará registrado. Deberás abonarlo en el local para que comencemos con la impresión.';
+    }
+
     this.showConfirmModal = true;
   }
 
@@ -94,7 +106,7 @@ export class CartPaymentPage implements OnInit{
         } else {
           this.isLoading = false;
           this.router.navigate(['/order-received'], { 
-            queryParams: { orderId: response.cartId } 
+            queryParams: { orderId: response.cartId, method: request.paymentMethod } 
           });
         }
       },

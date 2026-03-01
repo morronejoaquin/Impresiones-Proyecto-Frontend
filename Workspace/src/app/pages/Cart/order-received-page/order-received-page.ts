@@ -12,7 +12,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 export class OrderReceivedPage {
   orderId: string | null = null;
   paymentStatus: 'success' | 'failure' | 'pending' = 'success';
-  paymentMethod: 'CASH' | 'MERCADO_PAGO' = 'CASH';
+  paymentMethod: 'CASH' | 'TRANSFER' | 'MERCADO_PAGO' = 'CASH';
   mpPaymentId: string | null = null;
 
   constructor(private route: ActivatedRoute) {}
@@ -25,6 +25,8 @@ export class OrderReceivedPage {
       
       const status = params['collection_status'] || params['status'];
 
+      const methodFromUrl = params['method'] as any;
+      
       if (this.mpPaymentId || status) {
         this.paymentMethod = 'MERCADO_PAGO';
         
@@ -45,7 +47,7 @@ export class OrderReceivedPage {
             this.paymentStatus = 'success';
         }
       } else {
-        this.paymentMethod = 'CASH';
+        this.paymentMethod = methodFromUrl || 'CASH';
         this.paymentStatus = 'success';
       }
     });

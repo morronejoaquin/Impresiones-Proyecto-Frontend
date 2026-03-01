@@ -95,6 +95,7 @@ export class AdminDashboardComponent implements OnInit {
   formatMethod(paymentMethod: string): string{
     const methods: { [key: string]: string } = {
       CASH: 'Efectivo',
+      TRANSFER: 'Transferencia',
       MERCADO_PAGO: 'Mercado Pago',
     };
     return methods[paymentMethod] || paymentMethod;

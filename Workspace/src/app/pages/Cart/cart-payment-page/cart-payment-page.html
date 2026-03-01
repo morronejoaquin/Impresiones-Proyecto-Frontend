@@ -60,13 +60,24 @@
                 </div>
               </label>
 
+              <label class="payment-option-card" [class.active]="cartForm.get('paymentMethod')?.value === 'TRANSFER'">
+                <input type="radio" value="TRANSFER" formControlName="paymentMethod">
+                <div class="option-content">
+                  <span class="material-icons">account_balance_wallet</span>
+                  <div class="option-text">
+                    <span class="title">Transferencia</span>
+                    <span class="desc">Pagas ahora mismo y retirás en el local. Deberás enviar el comprobante para que empezemos con la impresión</span>
+                  </div>
+                </div>
+              </label>
+
               <label class="payment-option-card" [class.active]="cartForm.get('paymentMethod')?.value === 'MERCADO_PAGO'">
                 <input type="radio" value="MERCADO_PAGO" formControlName="paymentMethod">
                 <div class="option-content">
                   <span class="material-icons">account_balance_wallet</span>
                   <div class="option-text">
                     <span class="title">Mercado Pago</span>
-                    <span class="desc">Tarjetas o dinero en cuenta</span>
+                    <span class="desc">Pagas ahora mismo y tu pedido tendrá mayor prioridad</span>
                   </div>
                 </div>
               </label>
@@ -90,6 +101,7 @@
     @if (showConfirmModal) {
       <app-confirm-modal
         [title]="'¿Confirmar Pedido?'"
+        [message]="message"
         (confirmed)="executePayment()"
         (cancelled)="cancelPayment()"
       ></app-confirm-modal>

@@ -259,11 +259,15 @@ section {
 }
 
 .dot.cash { 
-  background: #36A2EB; 
+  background: #FFCE56; 
 }
 
 .dot.mercado_pago { 
-  background: #FF6384; 
+  background: #36A2EB; 
+}
+
+.dot.transfer {
+  background: #FF6384;
 }
 
 .amount {
