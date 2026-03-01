@@ -66,8 +66,17 @@ export class MakeOrderPage implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    this.selectedFile = input.files[0];
-    this.selectedFileName = this.selectedFile.name;
+    const file = input.files[0];
+    const maxSizeInBytes = 20 * 1024 * 1024;
+
+    if (file.size > maxSizeInBytes) {
+      this.notificationService.error('El archivo es demasiado grande. El máximo permitido es 20MB.');
+      input.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
     this.pageCount = null;
     this.imageWidth = null;
     this.imageHeight = null;
@@ -108,10 +117,18 @@ export class MakeOrderPage implements OnInit {
   removeFile(event: Event) {
     event.stopPropagation(); // Evita que se abra el selector de archivos al hacer clic en X
     this.selectedFile = null;
-    this.selectedFileName = '';
+    this.selectedFileName = 'Selecciona un archivo';
     this.pageCount = null;
     this.imageHeight = null;
     this.imageWidth = null;
+    
+    this.orderForm.patchValue({
+      pages: 1,
+      copies: 1,
+      doubleSided: false,
+      binding: 'NONE',
+      color: false,
+    });
   }
 
   async countPdfPages(file: File) {
@@ -198,6 +215,7 @@ export class MakeOrderPage implements OnInit {
         pages,
         copies,
         color,
+        isDoubleSided: doubleSided,
         binding: binding || null,
       };
 

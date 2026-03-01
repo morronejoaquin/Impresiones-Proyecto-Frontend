@@ -45,6 +45,17 @@
             <small class="error-msg">Requerido (mín. 0.01)</small>
           }
         </div>
+
+        <div class="form-group">
+          <label>Servicio Abrochado</label>
+          <div class="input-wrapper">
+            <span class="currency">$</span>
+            <input type="number" formControlName="priceStapledBinding" step="0.01" />
+          </div>
+          @if (priceForm.get('priceStapledBinding')?.touched && priceForm.get('priceStapledBinding')?.invalid) {
+            <small class="error-msg">Requerido (mín. 0)</small>
+          }
+        </div>
       </div>
 
       <button type="submit" class="btn-save" [disabled]="loading || priceForm.invalid || isUpdated">

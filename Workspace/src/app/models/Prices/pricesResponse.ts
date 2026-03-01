@@ -3,6 +3,7 @@ export default interface PricesResponse {
   pricePerSheetBW: number;
   pricePerSheetColor: number;
   priceRingedBinding: number;
+  priceStapledBinding: number;
   validFrom: string;
   validTo: string;
 }

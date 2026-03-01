@@ -71,6 +71,7 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
         pages: formValue.pages,
         copies: formValue.copies,
         color: formValue.color,
+        isDoubleSided: formValue.isDoubleSided,
         binding: formValue.binding
       };
 

@@ -29,7 +29,8 @@ export class PriceAdminComponent implements OnInit {
     this.priceForm = this.fb.group({
       pricePerSheetBW: [0, [Validators.required, Validators.min(0.01)]],
       pricePerSheetColor: [0, [Validators.required, Validators.min(0.01)]],
-      priceRingedBinding: [0, [Validators.required, Validators.min(0.01)]]
+      priceRingedBinding: [0, [Validators.required, Validators.min(0.01)]],
+      priceStapledBinding: [0, [Validators.required, Validators.min(0.01)]]
     });
 
     this.loadPrices();
@@ -43,7 +44,8 @@ export class PriceAdminComponent implements OnInit {
         const formValues = {
           pricePerSheetBW: this.prices.pricePerSheetBW,
           pricePerSheetColor: this.prices.pricePerSheetColor,
-          priceRingedBinding: this.prices.priceRingedBinding
+          priceRingedBinding: this.prices.priceRingedBinding,
+          priceStapledBinding: this.prices.priceStapledBinding
         };
 
         this.priceForm.setValue(formValues);

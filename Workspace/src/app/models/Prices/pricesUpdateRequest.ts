@@ -1,5 +1,6 @@
 export default interface PricesUpdateRequest{
-    pricePerSheet: number;
+    pricePerSheetBW: number;
     pricePerSheetColor: number;
     priceRingedBinding: number;
+    priceStapledBinding: number;
 }

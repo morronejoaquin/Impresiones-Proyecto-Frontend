@@ -15,7 +15,6 @@
   text-align: center;
 }
 
-/* Sección de Archivo con Botón X */
 .file-input-wrapper {
   border: 2px dashed #6c757d;
   border-radius: 12px;
@@ -72,7 +71,6 @@
   color: white;
 }
 
-/* Toggles de Color */
 .toggle-group {
   display: flex;
   background: #f1f5f9;
@@ -104,7 +102,6 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Grillas de Formulario */
 .form-grid, .options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -115,20 +112,33 @@
 .form-label {
   display: flex;
   align-items: center;
-  gap: 8px; /* Espacio entre texto e icono */
+  gap: 8px;
   font-size: 0.9rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--text-muted);
 }
 
-/* Inputs y Selects */
+.options-grid.is-locked {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
 select, input[type="number"], textarea {
   width: 100%;
   padding: 0.75rem;
   border: 1.5px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 select:focus, input:focus {
@@ -136,7 +146,6 @@ select:focus, input:focus {
   border-color: var(--primary);
 }
 
-/* Footer y Precio */
 .form-footer {
   margin-top: 2rem;
   padding-top: 1.5rem;
