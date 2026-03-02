@@ -1,6 +1,6 @@
 export default interface PriceCalculationResponse{
     total: number;
     pricePerSheet: number;
-    isDoubleSided: boolean;
+    doubleSided: boolean;
     bindingPrice: number;
 }

@@ -16,7 +16,7 @@ export class MyOrdersPage implements OnInit {
   orders: CartHistoryResponse[] = [];
   loading = false;
   currentPage = 0;
-  pageSize = 20;
+  pageSize = 4;
   totalPages = 0;
   totalElements = 0;
   hasNextPage = false;

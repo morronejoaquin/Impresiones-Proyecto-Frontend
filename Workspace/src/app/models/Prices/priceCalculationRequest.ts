@@ -4,6 +4,6 @@ export default interface PriceCalculationRequest{
     pages: number;
     copies: number;
     color: boolean;
-    isDoubleSided: boolean;
+    doubleSided: boolean;
     binding: BindingTypeEnum;
 }

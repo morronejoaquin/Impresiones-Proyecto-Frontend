@@ -223,7 +223,7 @@ export class MakeOrderPage implements OnInit {
         pages,
         copies,
         color,
-        isDoubleSided: doubleSided,
+        doubleSided,
         binding: binding || null,
       };
 
