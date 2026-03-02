@@ -30,7 +30,7 @@ import { CartService } from '../../services/Cart/cart-service';
       font-weight: 500;
     }
     .amount {
-      font-size: 1.8rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: #1976d2;
     }

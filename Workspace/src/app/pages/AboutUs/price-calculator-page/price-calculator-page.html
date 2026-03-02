@@ -69,10 +69,10 @@
                 <span>Precio por hoja:</span>
                 <span class="value">${{ priceResult.pricePerSheet | number:'1.2-2' }}</span>
               </div>
-              @if (priceResult.priceRingedBinding > 0) {
+              @if (priceResult.bindingPrice > 0) {
                 <div class="breakdown-item">
                   <span>Encuadernación:</span>
-                  <span class="value">${{ priceResult.priceRingedBinding | number:'1.2-2' }}</span>
+                  <span class="value">${{ priceResult.bindingPrice | number:'1.2-2' }}</span>
                 </div>
               }
             </div>

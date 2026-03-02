@@ -171,8 +171,16 @@ export class MakeOrderPage implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const orderId = params.get('orderId');
       if (orderId) {
-        this.editingOrderId = orderId;
-        this.loadOrderForEditing(orderId);
+        this.cartService.getMyCart().subscribe({
+          next: (cart) => {
+            const cartId = cart.id;
+            this.editingOrderId = orderId;
+            this.loadOrderForEditing(cartId, orderId);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        })
       }
     });
 
@@ -182,9 +190,9 @@ export class MakeOrderPage implements OnInit {
     this.calcularPrecio();
   }
 
-  private loadOrderForEditing(orderId: string): void {
+  private loadOrderForEditing(cartId: string, orderId: string): void {
     this.isLoading = true;
-    this.orderService.getById(orderId).subscribe({
+    this.cartService.getOrderByCartAndId(cartId, orderId).subscribe({
       next: (order) => {
         this.orderForm.patchValue({
           copies: order.copies,
