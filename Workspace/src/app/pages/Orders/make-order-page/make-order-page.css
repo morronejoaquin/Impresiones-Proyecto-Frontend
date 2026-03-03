@@ -200,6 +200,12 @@ select:focus, input:focus {
   color: var(--text-muted); 
 }
 
+.footer-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .price-amount { 
   font-size: 1.5rem; 
   font-weight: 800; 
@@ -210,7 +216,7 @@ select:focus, input:focus {
   background: var(--btn-primary);
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   border-radius: 12px;
   font-weight: 700;
   display: flex;
@@ -228,6 +234,27 @@ select:focus, input:focus {
 .btn-submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  padding: 1rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f8fafc;
+  color: #1e293b;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
 }
 
 .comments-section {

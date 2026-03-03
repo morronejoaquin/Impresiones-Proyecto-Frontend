@@ -120,13 +120,19 @@
       <span class="price-amount">${{ calculatedPrice | number:'1.2-2' }}</span>
     </div>
 
-    @if(editingOrderId){
-      <button class="btn-cancel" (click)="cancelUpdate()">Cancelar</button>
-    }
-    <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
-      <span class="material-icons" *ngIf="!isLoading">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
-      <span class="spinner-sm" *ngIf="isLoading"></span>
-      {{ editingOrderId ? 'Actualizar Pedido' : 'Agregar al Carrito' }}
-    </button>
+    <div class="footer-actions">
+      @if(editingOrderId){
+        <button type="button" class="btn-cancel" (click)="cancelUpdate()" [disabled]="isLoading">
+          <span class="material-icons">close</span>
+          Cancelar edición
+        </button>
+      }
+      
+      <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
+        <span class="material-icons" *ngIf="!isLoading">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
+        <span class="spinner-sm" *ngIf="isLoading"></span>
+        {{ editingOrderId ? 'Guardar cambios' : 'Agregar al Carrito' }}
+      </button>
+    </div>
   </div>
 </form>
