@@ -4,7 +4,6 @@
   min-height: 100vh; 
 }
 
-/* Navegación */
 .buttons-nav { 
   display: flex; 
   gap: 10px; 
@@ -135,7 +134,6 @@
   color: #64748b;
 }
 
-/* Badges Dinámicos */
 .status-badge { 
   padding: 6px 14px; 
   border-radius: 20px; 
@@ -194,6 +192,13 @@
   cursor: pointer;
   outline: none;
   transition: border-color 0.2s;
+}
+
+.status-select:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  color: #94a3b8;
+  border-color: #e2e8f0;
 }
 
 .saving-indicator {

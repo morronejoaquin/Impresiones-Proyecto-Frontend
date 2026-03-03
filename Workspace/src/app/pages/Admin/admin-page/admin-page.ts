@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import Cart from '../../../models/Cart/cartResponse';
 import { CartService } from '../../../services/Cart/cart-service';
-import { OrderService } from '../../../services/Orders/order-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import CartResponse from '../../../models/Cart/cartResponse';
 import Page from '../../../models/PageModel/page';
@@ -40,7 +37,7 @@ export class AdminPage implements OnInit {
   statusToConfirm: { cart: CartResponse, newStatus: OrderStatusEnum } | null = null;
   message = '';
 
-  orderStatus = OrderStatusEnum;
+  orderStatusEnum = OrderStatusEnum;
   statusOptions = Object.values(OrderStatusEnum);
 
   constructor(

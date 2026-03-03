@@ -4,11 +4,13 @@ import { CartService } from '../../../services/Cart/cart-service';
 import { Router, RouterModule } from '@angular/router';
 import Page from '../../../models/PageModel/page';
 import CartHistoryResponse from '../../../models/Cart/cartHistoryResponse';
+import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
+import { NotificationService } from '../../../services/Notification/notification-service';
 
 @Component({
   selector: 'app-my-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmModal],
   templateUrl: './my-orders-page.html',
   styleUrls: ['./my-orders-page.css']
 })
@@ -21,12 +23,17 @@ export class MyOrdersPage implements OnInit {
   totalElements = 0;
   hasNextPage = false;
 
+  cancelCartId: string | null = null;
+  showConfirm = false;
+  message = '';
+
+
   // Estados para traducir los valores de la API
   private orderStatusMap: { [key: string]: string } = {
     'PENDING': 'Recibido',
     'PRINTING': 'Imprimiendo',
     'BINDING': 'Encuadernando',
-    'READY': 'Listo',
+    'READY': 'Listo para retirar',
     'DELIVERED': 'Entregado',
     'CANCELLED': 'Cancelado'
   };
@@ -38,7 +45,7 @@ export class MyOrdersPage implements OnInit {
     'UNKNOWN': 'Pendiente de Pago',
   };
 
-  constructor(private cartService: CartService, private router: Router) {}
+  constructor(private cartService: CartService, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -76,10 +83,6 @@ export class MyOrdersPage implements OnInit {
     this.router.navigate(['/make-order']);
   }
 
-  goToOrderDetails(cartId: string): void {
-    this.router.navigate(['/order-detail', cartId]);
-  }
-
   previousPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -115,6 +118,49 @@ export class MyOrdersPage implements OnInit {
     };
 
     return bindingMap[binding] || binding;
+  }
+
+  prepareCancelOrder(cartId: string){
+    this.cancelCartId = cartId;
+    this.message = '¿Estás seguro de que deseas cancelar este pedido?';
+    this.showConfirm = true;
+  }
+
+  cancelOrder() {
+    if(!this.cancelCartId) return;
+
+    this.cartService.cancelOrder(this.cancelCartId as string).subscribe({
+      next: () => {
+        this.notificationService.success("Su pedido ha sido cancelado correctamente");
+        this.finalizarAccion();
+      },
+      error: (err) => {
+        if (err.status === 200) {
+          this.notificationService.success("Su pedido ha sido cancelado correctamente");
+          this.finalizarAccion();
+        } else {
+          this.notificationService.error("Ha ocurrido un error al intentar cancelar su pedido");
+          console.error(err);
+          this.showConfirm = false;
+        }
+      }
+    })
+  }
+
+  confirmCancelOrder() {
+    this.cancelOrder();
+    this.showConfirm = false;
+  }
+
+  cancelCancelOrder() {
+    this.showConfirm = false;
+    this.loadOrders();
+  }
+
+  private finalizarAccion() {
+    this.showConfirm = false;
+    this.cancelCartId = null;
+    this.loadOrders();
   }
 }
 

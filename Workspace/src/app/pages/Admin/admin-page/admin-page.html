@@ -75,7 +75,11 @@
             </div>
 
             <div class="card-actions" (click)="$event.stopPropagation()">
-              <select [ngModel]="cart.status" (ngModelChange)="onStatusChange(cart, $event)" [disabled]="savingIds.has(cart.id)">
+              <select 
+                class="status-select" 
+                [ngModel]="cart.status" 
+                (ngModelChange)="onStatusChange(cart, $event)" 
+                [disabled]="savingIds.has(cart.id) || cart.status === orderStatusEnum.DELIVERED || cart.status === orderStatusEnum.CANCELLED">
                 @for (s of statusOptions; track s) {
                   <option [value]="s">{{ statusLabel(s) }}</option>
                 }

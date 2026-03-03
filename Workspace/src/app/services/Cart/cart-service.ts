@@ -123,6 +123,12 @@ export class CartService {
     return this.http.get<Page<CartHistoryResponse>>(`${this.apiUrl}/my-orders`, { params });
   }
 
+  cancelOrder(cartId: string) {
+    return this.http.patch(`${this.apiUrl}/cancel-order/${cartId}`, {}, {
+      responseType: 'text'
+    });
+  }
+
   public refreshCart(): void {
     this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`).subscribe({
       next: (cart) => {

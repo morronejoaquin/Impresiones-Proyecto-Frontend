@@ -22,7 +22,7 @@
         <div class="order-card">
           <div class="order-header">
             <div class="order-info-main">
-              <span class="order-date">{{ getFormattedDate(order.createdAt) }}</span>
+              <span class="order-date">{{ getFormattedDate(order.admReceivedAt) }}</span>
               <span class="order-id-label">Seguimiento: {{ order.cartId.toString().substring(0,16) }}</span>
             </div>
             <div class="status-group">
@@ -64,9 +64,18 @@
             <div class="footer-details">
               <span class="label">Método de pago: <span class="value">{{ order.paymentMethod === 'MERCADO_PAGO' ? 'Mercado Pago' : (order.paymentMethod === 'TRANSFER' ? 'Transferencia' : (order.paymentMethod === 'CASH' || order.paymentMethod === 'N/A' ? 'Efectivo' : order.paymentMethod)) }}</span></span>
             </div>
-            <div class="total-section">
-              <span class="total-label">Total del Pedido</span>
-              <span class="total-amount">${{ order.total | number:'1.2-2' }}</span>
+            <div class="footer-right-actions">
+              @if (order.paymentStatus === 'PENDING' && order.status === 'PENDING') {
+                <button class="btn-cancel" (click)="prepareCancelOrder(order.cartId)">
+                  <span class="material-icons">close</span>
+                  Cancelar
+                </button>
+              }
+              
+              <div class="total-section">
+                <span class="total-label">Total del Pedido</span>
+                <span class="total-amount">${{ order.total | number:'1.2-2' }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -86,5 +95,13 @@
         </div>
       }
     </div>
+  }
+
+  @if (showConfirm) {
+    <app-confirm-modal
+        [title]= "message"
+        (confirmed)="confirmCancelOrder()"
+        (cancelled)="cancelCancelOrder()"
+      ></app-confirm-modal>
   }
 </div>

@@ -108,7 +108,7 @@ export class AdminDashboardComponent implements OnInit {
       BINDING: 'Anillando',
       READY: 'Listo',
       DELIVERED: 'Entregado',
-      CANCELED: 'Cancelado',
+      CANCELLED: 'Cancelado',
     };
     return labels[status] || status;
   }
