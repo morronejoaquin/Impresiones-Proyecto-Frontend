@@ -14,7 +14,7 @@
             ({{ (selectedFile.size / 1024 / 1024) | number:'1.1-2' }} MB)
           }
           <ng-container *ngIf="isPdf || (editingOrderId && selectedFileName.toLowerCase().endsWith('.pdf'))">
-            {{ pageCount ?? '...' }} páginas
+            {{ pageCount ?? '...' }} {{ (pageCount === 1) ? 'página' : 'páginas' }}
           </ng-container>
           <ng-container *ngIf="isImage">
             {{ imageWidth }}x{{ imageHeight }} px
@@ -59,36 +59,53 @@
       <label class="form-label" for="doubleSided">
         Doble cara <span class="material-icons">import_export</span>
       </label>
-      <input type="checkbox" id="doubleSided" formControlName="doubleSided">
+      <div class="checkbox-input-wrapper">
+        <input type="checkbox" id="doubleSided" formControlName="doubleSided">
+        @if (orderForm.get('doubleSided')?.value) {
+          <span class="sheets-badge">
+            {{ physicalSheets }} {{ (physicalSheets === 1) ? 'hoja física' : 'hojas físicas' }}
+          </span>
+        }
+      </div>
+      @if (isPdf && orderForm.get('pages')?.value === 1) {
+        <small class="info-msg">* Doble cara no disponible.</small>
+      }
     </div>
 
     <div class="form-group">
       <label class="form-label" for="binding">Anillado / Terminación</label>
       <select id="binding" formControlName="binding" [attr.disabled]="isPdf ? null : true">
         <option value="NONE">Ninguno</option>
-
-        @if(orderForm.get('pages')?.value >= 8) {
+   
+        @if (physicalSheets >= 8) {
           <option value="RINGED">Anillado</option>
         }
-
-        @if (orderForm.get('pages')?.value <= 50 && 
-            (orderForm.get('doubleSided')?.value ? orderForm.get('pages')?.value > 2 : orderForm.get('pages')?.value > 1)) {
+                   
+        @if (physicalSheets >= 2 && physicalSheets <= 50) {
           <option value="STAPLED">Abrochado</option>
         }
 
       </select>
 
-      <div class="binding-info">
-        @if (orderForm.get('pages')?.value < 8 && orderForm.get('pages')?.value > 0 && isPdf) {
-          <small class="info-msg">* Anillado disponible desde 8 páginas.</small>
-        }
-        
-        @if (orderForm.get('pages')?.value > 50) {
-          <small class="error-msg">* Máximo 50 páginas para abrochado.</small>
-        } @else if (orderForm.get('doubleSided')?.value && orderForm.get('pages')?.value <= 2 && orderForm.get('pages')?.value > 0) {
-          <small class="info-msg">* Abrochado requiere al menos 2 hojas físicas.</small>
-        }
-      </div>
+      @if(isPdf){
+        <div class="binding-info">
+          @if (orderForm.get('pages')?.value > 1 && physicalSheets < 8) {
+            <small class="info-msg">* Anillado disponible desde 8 hojas físicas.</small>
+          }
+          
+          @if (physicalSheets > 50) {
+            <small class="error-msg">* Máximo 50 hojas para abrochado.</small>
+          } 
+          
+          @if (orderForm.get('doubleSided')?.value && physicalSheets <= 2 && physicalSheets > 0) {
+            <small class="info-msg">* Abrochado requiere al menos 2 hojas físicas.</small>
+          }
+
+          @if (orderForm.get('pages')?.value === 1) {
+            <small class="info-msg">* Anillado y abrochado no disponibles.</small>
+          }
+        </div>
+      }
     </div>
   </div>
 
@@ -103,6 +120,9 @@
       <span class="price-amount">${{ calculatedPrice | number:'1.2-2' }}</span>
     </div>
 
+    @if(editingOrderId){
+      <button class="btn-cancel" (click)="cancelUpdate()">Cancelar</button>
+    }
     <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
       <span class="material-icons" *ngIf="!isLoading">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
       <span class="spinner-sm" *ngIf="isLoading"></span>

@@ -167,6 +167,17 @@ export class MakeOrderPage implements OnInit {
     return this.selectedFile ? this.selectedFile.size : null;
   }
 
+  get physicalSheets(): number {
+    const pages = this.orderForm.get('pages')?.value || 0;
+    const isDoubleSided = this.orderForm.get('doubleSided')?.value || false;
+
+    if (pages === 0) return 0;
+
+    // Si es doble faz, se divide por 2 y se redondea hacia arriba
+    // Ejemplo: 15 páginas / 2 = 7.5 -> 8 hojas físicas.
+    return isDoubleSided ? Math.ceil(pages / 2) : pages;
+  }
+
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const orderId = params.get('orderId');
@@ -184,7 +195,21 @@ export class MakeOrderPage implements OnInit {
       }
     });
 
-    this.orderForm.valueChanges.subscribe(() => {
+    this.orderForm.valueChanges.subscribe((values) => {
+      const { pages, doubleSided, binding } = values;
+  
+      if (binding === 'RINGED' && this.physicalSheets < 8) {
+        this.orderForm.patchValue({ binding: 'NONE' }, { emitEvent: false });
+      }
+
+      if (this.physicalSheets <= 1 && binding === 'STAPLED') {
+        this.orderForm.patchValue({ binding: 'NONE' }, { emitEvent: false });
+      }
+
+      if (binding === 'STAPLED' && (this.physicalSheets < 2 || this.physicalSheets > 50)) {
+        this.orderForm.patchValue({ binding: 'NONE' }, { emitEvent: false });
+      }
+
       this.calcularPrecio();
     });
     this.calcularPrecio();
@@ -327,5 +352,10 @@ export class MakeOrderPage implements OnInit {
         this.notificationService.error('Error al actualizar el pedido. Intenta nuevamente.');
       },
     });
+  }
+
+  cancelUpdate() {
+    this.editingOrderId = null;
+    this.router.navigate(["/cart"]);
   }
 }

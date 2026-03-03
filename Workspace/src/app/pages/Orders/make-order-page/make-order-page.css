@@ -125,6 +125,22 @@
   filter: grayscale(1);
 }
 
+.checkbox-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sheets-badge {
+  background-color: #e3f2fd; /* Un azul muy claro */
+  color: #1976d2;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
@@ -136,7 +152,7 @@ input[type="checkbox"] {
   margin-top: 5px;
   display: flex;
   flex-direction: column;
-  min-height: 1.2em; /* Mantiene el espacio aunque no haya mensaje */
+  min-height: 1.2em;
 }
 
 .info-msg {
@@ -187,7 +203,8 @@ select:focus, input:focus {
 .price-amount { 
   font-size: 1.5rem; 
   font-weight: 800; 
-  color: var(--text-main); }
+  color: var(--text-main); 
+}
 
 .btn-submit {
   background: var(--btn-primary);
