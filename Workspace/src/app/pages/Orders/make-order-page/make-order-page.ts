@@ -38,6 +38,8 @@ export class MakeOrderPage implements OnInit {
   public calculatedPrice: number | null = null;
   public editingOrderId: string | null = null;
   isLoading: boolean = false;
+  initialValues: any;
+  currentCartItemsCount: number = 0;
 
   constructor(
     private zone: NgZone,
@@ -178,20 +180,44 @@ export class MakeOrderPage implements OnInit {
     return isDoubleSided ? Math.ceil(pages / 2) : pages;
   }
 
+  get isUnChanged(): boolean {
+
+    if (!this.editingOrderId || !this.initialValues) return false;
+
+    const currentValues = {
+      copies: this.orderForm.value.copies,
+      doubleSided: this.orderForm.value.doubleSided,
+      color: this.orderForm.value.color,
+      binding: this.orderForm.value.binding,
+      comments: this.orderForm.value.comments || '',
+      pages: this.orderForm.value.pages || 1,
+    };
+
+    return JSON.stringify(this.initialValues) === JSON.stringify(currentValues);
+  }
+
+  get isCartFull(): boolean {
+
+    if (this.editingOrderId) return false;
+
+    return this.currentCartItemsCount >= 6;
+  }
+
   ngOnInit(): void {
+    this.cartService.getMyCart().subscribe({
+      next: (cart) => {
+        this.currentCartItemsCount = cart.items.length;
+      },
+      error: (err) => console.error('Error al obtener el carrito:', err)
+    });
+
     this.route.paramMap.subscribe((params) => {
       const orderId = params.get('orderId');
       if (orderId) {
-        this.cartService.getMyCart().subscribe({
-          next: (cart) => {
-            const cartId = cart.id;
-            this.editingOrderId = orderId;
-            this.loadOrderForEditing(cartId, orderId);
-          },
-          error: (err) => {
-            console.log(err);
-          }
-        })
+        this.editingOrderId = orderId;
+        this.cartService.getMyCart().subscribe(cart => {
+          this.loadOrderForEditing(cart.id, orderId);
+        });
       }
     });
 
@@ -219,14 +245,18 @@ export class MakeOrderPage implements OnInit {
     this.isLoading = true;
     this.cartService.getOrderByCartAndId(cartId, orderId).subscribe({
       next: (order) => {
-        this.orderForm.patchValue({
-          copies: order.copies,
-          doubleSided: order.doubleSided,
-          color: order.color,
-          binding: order.binding,
-          comments: order.comments,
-          pages: order.pages || 1,
-        });
+        const values = {
+        copies: order.copies,
+        doubleSided: order.doubleSided,
+        color: order.color,
+        binding: order.binding,
+        comments: order.comments || '',
+        pages: order.pages || 1,
+      };
+
+        this.orderForm.patchValue(values);
+        this.initialValues = values;
+
         this.pageCount = order.pages;
         this.selectedFileName = order.fileName || 'Archivo cargado';
         this.isLoading = false;

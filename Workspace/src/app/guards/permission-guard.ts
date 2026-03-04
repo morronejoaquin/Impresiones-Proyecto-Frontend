@@ -25,9 +25,6 @@ export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
   // 3. Normalizar los roles permitidos de la ruta a minúsculas
   const requiredRoles = allowedRoles.map(r => r.toLowerCase());
 
-  console.log('Roles del usuario:', userRoles);
-  console.log('Roles requeridos:', requiredRoles);
-
   const hasPermission = userRoles.some(role => requiredRoles.includes(role));
 
   if (hasPermission) {

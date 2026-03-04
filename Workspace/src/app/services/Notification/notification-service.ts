@@ -33,8 +33,12 @@ export class NotificationService {
 
   constructor(private http: HttpClient) {}
 
-  public initPolling() {
-    if (this.isPollingActive) return;
+  public initPolling(userRole: string) {
+
+    if(this.isPollingActive || userRole !== 'cliente'){
+      return;
+    }
+
     this.isPollingActive = true;
 
     timer(0, 30000).pipe(

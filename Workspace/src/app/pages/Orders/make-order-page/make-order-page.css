@@ -186,8 +186,10 @@ select:focus, input:focus {
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-color);
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
 .price-display {
@@ -255,6 +257,22 @@ select:focus, input:focus {
   color: #1e293b;
   border-color: #cbd5e1;
   transform: translateY(-2px);
+}
+
+.form-footer .error-msg {
+  flex: 0 0 100%; 
+  color: #d32f2f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.5rem; /* Separación del mensaje con los botones de arriba */
+  background: #fff5f5; /* Un fondo sutil lo hace ver más profesional */
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 4px solid #d32f2f;
+  box-sizing: border-box;
 }
 
 .comments-section {

@@ -128,11 +128,17 @@
         </button>
       }
       
-      <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading">
+      <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading || isUnChanged || isCartFull">
         <span class="material-icons" *ngIf="!isLoading">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
         <span class="spinner-sm" *ngIf="isLoading"></span>
         {{ editingOrderId ? 'Guardar cambios' : 'Agregar al Carrito' }}
       </button>
     </div>
+    @if (isCartFull && !editingOrderId) {
+      <p class="error-msg">
+        <span class="material-icons sm-icon">warning</span>
+        Tu carrito está lleno (máximo 6 pedidos). Por favor, finaliza tu compra o elimina algún item.
+      </p>
+    }
   </div>
 </form>

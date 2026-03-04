@@ -9,14 +9,27 @@ import UserResponse from '../../models/Users/userResponse';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { NotificationService } from '../Notification/notification-service';
+import { UserService } from '../Users/user-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = `http://localhost:8080/auth`;
 
-  constructor(private http: HttpClient, private router: Router, private notificationService: NotificationService){
-    if(this.getToken()){
-      this.notificationService.initPolling();
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private notificationService: NotificationService,
+    private userService: UserService
+  ){
+    this.checkAndInitNotifications();
+  }
+
+  private checkAndInitNotifications() {
+    if (this.getToken()) {
+      this.userService.getProfile().subscribe({
+        next: (user) => this.notificationService.initPolling(user.role),
+        error: () => this.notificationService.clearAndStop()
+      });
     }
   }
   
@@ -25,7 +38,7 @@ export class AuthService {
       tap(res => {
         localStorage.setItem('token', res.token);
         setTimeout(() => {
-          this.notificationService.initPolling();
+          this.checkAndInitNotifications();
         }, 500);
       })
     );
@@ -35,7 +48,7 @@ export class AuthService {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request).pipe(
       tap(res => {
         localStorage.setItem('token', res.token)
-        this.notificationService.initPolling();
+        this.checkAndInitNotifications();
       })
     );
   }
