@@ -12,7 +12,7 @@ import PaymentStatusUpdateRequest from '../../models/Payment/paymentStatusUpdate
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = `http://localhost:8080/payments`;
+  private apiUrl = `${environment.apiUrl}/payments`;
 
   constructor(private http: HttpClient){
   }

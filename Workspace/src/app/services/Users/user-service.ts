@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = `http://localhost:8080/users`;
+  private apiUrl = `${environment.apiUrl}/users`;
 
   private profileSubject = new BehaviorSubject<ProfileResponse | null>(null);
   public profile$ = this.profileSubject.asObservable();

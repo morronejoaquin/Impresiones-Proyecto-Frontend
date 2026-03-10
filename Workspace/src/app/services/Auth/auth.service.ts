@@ -5,7 +5,6 @@ import { Observable, tap } from 'rxjs';
 import AuthResponse from '../../models/Auth/authResponse';
 import RegisterRequest from '../../models/Auth/registerRequest';
 import RegisterResponse from '../../models/Auth/registerResponse';
-import UserResponse from '../../models/Users/userResponse';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { NotificationService } from '../Notification/notification-service';
@@ -13,7 +12,7 @@ import { UserService } from '../Users/user-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = `http://localhost:8080/auth`;
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(
     private http: HttpClient, 

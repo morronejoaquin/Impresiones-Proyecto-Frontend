@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class StoreLocationService {
-  private apiUrl = `http://localhost:8080/store`;
+  private apiUrl = `${environment.apiUrl}/store`;
 
   constructor(private http: HttpClient) {}
 

@@ -10,7 +10,7 @@ import pricesUpdateRequest from '../../models/Prices/pricesUpdateRequest';
   providedIn: 'root'
 })
 export class PriceManagerService {
-  private apiUrl = `http://localhost:8080/prices`;
+  private apiUrl = `${environment.apiUrl}/prices`;
 
   constructor(private http: HttpClient){
   }

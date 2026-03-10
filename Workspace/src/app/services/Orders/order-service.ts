@@ -13,7 +13,7 @@ import { CartService } from '../Cart/cart-service';
 })
 
 export class OrderService {
-  private apiUrl = `http://localhost:8080/orderItems`;
+  private apiUrl = `${environment.apiUrl}/orderItems`;
 
   constructor(private http: HttpClient, private cartService: CartService){
   }

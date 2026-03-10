@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, retry, share, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 import NotificationResponse from '../../models/NotificationModel/notificationResponse';
+import { environment } from '../../../environments/environment';
 
 export interface ImpresionesNotification {
   message: string;
@@ -13,7 +14,7 @@ export interface ImpresionesNotification {
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly API_URL = 'http://localhost:8080/notifications';
+  private readonly API_URL = `${environment.apiUrl}notifications`;
 
   private notificationSubject = new Subject<ImpresionesNotification>();
   public notification$ = this.notificationSubject.asObservable();
