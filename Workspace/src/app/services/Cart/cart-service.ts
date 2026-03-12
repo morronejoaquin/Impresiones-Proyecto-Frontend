@@ -14,7 +14,7 @@ import CartHistoryResponse from '../../models/Cart/cartHistoryResponse';
   providedIn: 'root',
 })
 export class CartService {
-  private apiUrl = `http://localhost:8080/carts`;
+  private apiUrl = `${environment.apiUrl}/carts`;
   private cartUpdatedSubject = new Subject<CartWithItemsResponse | null>();
   public cartUpdated$ = this.cartUpdatedSubject.asObservable();
 
