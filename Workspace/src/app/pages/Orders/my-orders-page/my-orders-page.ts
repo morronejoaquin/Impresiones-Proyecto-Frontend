@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../../services/Cart/cart-service';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import Page from '../../../models/PageModel/page';
 import CartHistoryResponse from '../../../models/Cart/cartHistoryResponse';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
@@ -45,10 +45,17 @@ export class MyOrdersPage implements OnInit {
     'UNKNOWN': 'Pendiente de Pago',
   };
 
-  constructor(private cartService: CartService, private router: Router, private notificationService: NotificationService) {}
+  constructor(private cartService: CartService, private router: Router, private notificationService: NotificationService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.loadOrders();
+
+    this.route.params.subscribe(params => {
+    const targetId = params['id'];
+    if (targetId) {
+      this.highlightOrder(targetId);
+    }
+  });
   }
 
   loadOrders(): void {
@@ -67,6 +74,16 @@ export class MyOrdersPage implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  highlightOrder(id: string) {
+    setTimeout(() => {
+      const element = document.getElementById('order-' + id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-order');
+      }
+    }, 600);
   }
 
   getOrderStatusLabel(status: string | null | undefined): string {

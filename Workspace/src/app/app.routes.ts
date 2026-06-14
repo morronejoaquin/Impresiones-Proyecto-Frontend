@@ -41,6 +41,12 @@ export const routes: Routes = [
     data: { allowedRoles: ['cliente', 'administrador'] },
   },
   {
+    path: 'my-orders/:id',
+    component: MyOrdersPage,
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['cliente', 'administrador'] },
+  },
+  {
     path: 'make-order/:orderId',
     component: MakeOrderPage,
     canActivate: [permissionGuard],

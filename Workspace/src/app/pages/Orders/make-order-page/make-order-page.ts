@@ -208,7 +208,13 @@ export class MakeOrderPage implements OnInit {
       next: (cart) => {
         this.currentCartItemsCount = cart.items.length;
       },
-      error: (err) => console.error('Error al obtener el carrito:', err)
+      error: (err) => {
+        this.cartService.createCart().subscribe({
+          next: (cart) => {
+            console.log("Creando carrito");
+          }
+        })
+      }
     });
 
     this.route.paramMap.subscribe((params) => {

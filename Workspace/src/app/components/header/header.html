@@ -5,9 +5,15 @@
       <span>Puerto Colores</span>
     </a>
 
-    <button class="mobile-toggle" (click)="toggleMobile()">
-      <span class="material-icons">{{ isMobileOpen ? 'close' : 'menu' }}</span>
-    </button>
+    <div class="header-actions">
+      @if(this.authService.getToken()){
+        <app-notification-dropdown class="notif-wrapper"></app-notification-dropdown>
+      }
+      
+      <button class="mobile-toggle" (click)="toggleMobile()">
+        <span class="material-icons">{{ isMobileOpen ? 'close' : 'menu' }}</span>
+      </button>
+    </div>
 
     <div class="nav-menu" [class.open]="isMobileOpen">
       <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
@@ -25,11 +31,7 @@
           @if(profile.role === 'administrador') {
             <a routerLink="/admin" class="admin-link">Admin</a>
           }
-          <div class="user-actions">
-            @if(profile.role !== 'administrador'){
-              <app-notification-dropdown></app-notification-dropdown>
-            }
-            
+          <div class="user-actions-desktop">
             <div class="user-dropdown-container">
               <button class="user-btn" (click)="toggleUserMenu()">
                 <span class="material-icons">account_circle</span>
@@ -43,6 +45,11 @@
                 </div>
               }
             </div>
+          </div>
+
+          <div class="user-actions-mobile">
+            <a routerLink="/account" class="mobile-btn" (click)="toggleMobile()">Mi Cuenta</a>
+            <button (click)="logout()" class="mobile-btn logout-btn-mobile">Cerrar Sesión</button>
           </div>
         }
         

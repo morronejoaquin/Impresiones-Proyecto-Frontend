@@ -31,10 +31,12 @@ export class NotificationDropdown implements OnInit{
   }
 
   handleNotificationClick(notif: NotificationResponse) {
+    
+    const cartId = notif.relatedOrderId;
     this.notificationService.markAsRead(notif.id).subscribe({
       next: () => {
         this.isOpen = false;
-        this.router.navigate(['/my-orders']);
+        this.router.navigate(['/my-orders', cartId]);
       }
     });
   }

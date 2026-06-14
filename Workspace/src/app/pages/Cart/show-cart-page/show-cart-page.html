@@ -18,7 +18,9 @@
           <article class="cart-card">
             <div class="card-main">
               <div class="file-info">
-                <span class="material-icons file-icon">description</span>
+                <span class="material-icons file-icon">
+                  {{ item.fileName.toLowerCase().endsWith('.pdf') ? 'description' : 'image' }}
+                </span>
                 <div>
                   <h3>{{ item.fileName }}</h3>
                   <div class="chips-group">

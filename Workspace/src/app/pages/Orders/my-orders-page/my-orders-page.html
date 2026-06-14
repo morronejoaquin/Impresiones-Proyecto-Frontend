@@ -19,7 +19,7 @@
   } @else {
     <div class="orders-container">
       @for (order of orders; track order.cartId) {
-        <div class="order-card">
+        <div [id]="'order-' + order.cartId" class="order-card">
           <div class="order-header">
             <div class="order-info-main">
               <span class="order-date">{{ getFormattedDate(order.admReceivedAt) }}</span>

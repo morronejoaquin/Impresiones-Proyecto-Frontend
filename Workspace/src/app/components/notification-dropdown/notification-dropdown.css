@@ -4,16 +4,17 @@
 }
 
 .bell-btn {
-  background: none;
-  border: none;
-  font-size: 1.4rem;
-  color: #ffffff;
-  cursor: pointer;
-  position: relative;
-  padding: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #5D6DFF 0%, #C55DFF 50%,  #FF935D 100%);
+  color: white !important;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  border: none;
 }
 
 .badge {
@@ -31,8 +32,8 @@
 .dropdown-menu {
   position: absolute;
   right: 0;
-  top: 45px;
-  width: 320px;
+  top: 60px;
+  width: 300px;
   background: white;
   border-radius: 12px;
   z-index: 1000;
@@ -76,7 +77,7 @@
 .unread-dot {
   width: 8px;
   height: 8px;
-  background-color: #3b82f6; /* Azul para indicar nuevo */
+  background-color: #3b82f6;
   border-radius: 50%;
   flex-shrink: 0;
   margin-left: 10px;
@@ -107,4 +108,24 @@
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 992px) {
+  :host {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+  
+  .dropdown-menu {
+    bottom: 70px;
+    top: auto;
+    right: 0;
+  }
+
+  .bell-btn {
+    width: 60px;
+    height: 60px;
+  }
 }
