@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../../services/Cart/cart-service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -27,6 +27,7 @@ export class MyOrdersPage implements OnInit {
   showConfirm = false;
   message = '';
 
+  @ViewChild('top') topElement!: ElementRef;
 
   // Estados para traducir los valores de la API
   private orderStatusMap: { [key: string]: string } = {
@@ -67,6 +68,8 @@ export class MyOrdersPage implements OnInit {
         this.totalElements = page.totalElements || 0;
         this.hasNextPage = !page.last;
         this.loading = false;
+
+        this.scrollToTop();
       },
       error: (err) => {
         console.error('Error loading orders', err);
@@ -74,6 +77,17 @@ export class MyOrdersPage implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  scrollToTop(): void {
+    setTimeout(() => {
+      if (this.topElement) {
+        this.topElement.nativeElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 100);
   }
 
   highlightOrder(id: string) {

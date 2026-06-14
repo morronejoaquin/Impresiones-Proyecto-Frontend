@@ -295,4 +295,7 @@ select:focus, input:focus {
   .options-grid {
     margin-bottom: 1.5rem;
   }
+  select {
+    width: 80%;
+  }
 }

@@ -1,4 +1,4 @@
-<div class="page-wrapper">
+<div class="page-wrapper" #top>
   <div class="header-section">
     <h1>Mis Pedidos</h1>
     <p class="subtitle">Historial de tus impresiones confirmadas</p>
@@ -40,7 +40,9 @@
               <div class="order-item">
                 <div class="item-main">
                   <div class="pdf-icon-wrapper">
-                    <span class="material-icons">description</span>
+                    <span class="material-icons">
+                      {{ item.fileName.toLowerCase().endsWith('.pdf') ? 'description' : 'image' }}
+                    </span>
                   </div>
                   <div class="item-info">
                     <p class="item-name">{{ item.fileName }}</p>

@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 export class NotificationDisplay {
   currentNotification: ImpresionesNotification | null = null;
 
-  // controla show de css
   isVisible: boolean = false; 
 
   constructor(

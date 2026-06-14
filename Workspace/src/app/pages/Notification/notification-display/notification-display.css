@@ -94,7 +94,6 @@
 
 @media (max-width: 600px) {
     .notification-container {
-        top: auto;
         bottom: 20px;
         right: 10px;
         left: 10px;
