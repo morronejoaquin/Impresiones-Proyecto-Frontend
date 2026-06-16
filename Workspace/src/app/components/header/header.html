@@ -7,7 +7,11 @@
 
     <div class="header-actions">
       @if(this.authService.getToken()){
-        <app-notification-dropdown class="notif-wrapper"></app-notification-dropdown>
+        @if(userService.profile$ | async; as profile) {
+          @if(profile.role !== 'administrador') {
+            <app-notification-dropdown class="notif-wrapper"></app-notification-dropdown>
+          }
+        }
       }
       
       <button class="mobile-toggle" (click)="toggleMobile()">

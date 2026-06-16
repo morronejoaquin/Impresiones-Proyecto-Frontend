@@ -51,7 +51,7 @@
             <button 
               class="btn-small-approve" 
               (click)="onApprovePaymentManual()"
-              [disabled]="isUpdating">
+              [disabled]="isUpdating || c.status === orderStatusEnum.CANCELLED">
               <span class="material-icons">check_circle</span>
               Confirmar Pago
             </button>

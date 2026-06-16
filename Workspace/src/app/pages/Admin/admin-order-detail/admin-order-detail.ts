@@ -233,6 +233,7 @@ export class AdminOrderDetailPage implements OnInit {
     'PENDING': 'Pago Pendiente',
     'APPROVED': 'Pago Aprobado',
     'REJECTED': 'Pago Rechazado',
+    'CANCELLED': 'Pago Cancelado',
     'UNKNOWN': 'Pendiente de Pago',
   };
 

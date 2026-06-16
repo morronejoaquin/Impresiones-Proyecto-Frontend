@@ -114,7 +114,6 @@
 .btn-small-approve {
   width: fit-content; 
   align-self: flex-start;
-  
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -132,6 +131,10 @@
 .btn-small-approve:hover {
   background-color: #15803d;
   transform: translateY(-1px);
+}
+
+.btn-small-approve:disabled {
+  display: none;
 }
 
 .section-header {
