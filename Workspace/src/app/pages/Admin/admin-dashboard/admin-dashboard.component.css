@@ -227,6 +227,50 @@ section {
   color: var(--text-primary);
 }
 
+.binding-stats {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.binding-legend {
+  margin-top: 20px;
+}
+
+.legend-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 50px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.progress-bg {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.percentage {
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.bar.ringed { 
+  background: #9c27b0; height: 100%; 
+}
+
+.bar.stapled { 
+  background: #ff9800; height: 100%; 
+}
+
+.bar.none { 
+  background: #0495dd; height: 100%; 
+}
+
 .chart-layout {
   display: flex;
   align-items: center;
@@ -235,7 +279,7 @@ section {
 
 .chart-wrapper {
   flex: 1;
-  max-height: 200px;
+  max-height: 300px;
 }
 
 .totals-list {
@@ -250,6 +294,17 @@ section {
   align-items: center;
   gap: 0.8rem;
   font-size: 0.95rem;
+}
+
+.percentage {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-right: auto; /* Empuja el monto a la derecha */
+}
+
+.amount {
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .dot {

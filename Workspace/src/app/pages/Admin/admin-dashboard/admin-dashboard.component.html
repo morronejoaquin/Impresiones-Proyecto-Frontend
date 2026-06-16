@@ -84,7 +84,29 @@
               </div>
               <div class="total-sheets">
                 <strong>{{stats.totalSheets}}</strong>
-                <span>Total Hojas Impresas</span>
+                <span>Hojas Impresas</span>
+              </div>
+            </div>
+            <div class="binding-stats">
+              <div class="stat-item">
+                <label>Tipo de Encuadernado</label>
+                <div class="binding-legend">
+                  <div class="legend-row">
+                    <span>Anillado</span>
+                    <div class="progress-bg"><div class="bar ringed" [style.width.%]="stats.ringedPercentage"></div></div>
+                    <span class="percentage">{{ stats.ringedPercentage | number:'1.1-1' }}%</span>
+                  </div>
+                  <div class="legend-row">
+                    <span>Abrochado</span>
+                    <div class="progress-bg"><div class="bar stapled" [style.width.%]="stats.stapledPercentage"></div></div>
+                    <span class="percentage">{{ stats.stapledPercentage | number:'1.1-1' }}%</span>
+                  </div>
+                  <div class="legend-row">
+                    <span>Sin encuadernar</span>
+                    <div class="progress-bg"><div class="bar none" [style.width.%]="stats.noBindingPercentage"></div></div>
+                    <span class="percentage">{{ stats.noBindingPercentage | number:'1.1-1' }}%</span>
+                  </div>
+                </div>
               </div>
             </div>
           } @else {
@@ -113,6 +135,7 @@
                 <div class="payment-row">
                   <span class="dot" [ngClass]="payment.paymentMethod.toLowerCase()"></span>
                   <span class="method">{{ formatMethod(payment.paymentMethod) }}</span>
+                  <span class="percentage">({{ payment.percentage | number:'1.1-1' }}%)</span>
                   <span class="amount">${{ payment.totalAmount | number:'1.2-2' }}</span>
                 </div>
               }
