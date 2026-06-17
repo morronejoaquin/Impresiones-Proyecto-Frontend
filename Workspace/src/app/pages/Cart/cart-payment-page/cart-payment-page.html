@@ -20,7 +20,9 @@
             @for (item of orders; track item.id) {
               <div class="checkout-item-card">
                 <div class="item-main">
-                  <span class="material-icons file-icon">description</span>
+                  <span class="material-icons file-icon">
+                    {{ item.fileName.toLowerCase().endsWith('.pdf') ? 'description' : 'image' }}
+                  </span>
                   <div class="item-info">
                     <span class="file-name">{{ item.fileName }}</span>
                     <div class="chips-group">

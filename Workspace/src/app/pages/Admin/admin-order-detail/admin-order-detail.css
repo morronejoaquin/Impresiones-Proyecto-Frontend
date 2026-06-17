@@ -180,6 +180,18 @@
   background-color: #f8fafc;
 }
 
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-info .material-icons {
+  font-size: 1.8rem;
+  color: #3b82f6;
+  display: flex;
+}
+
 .table-items tfoot {
   border-top: 3px solid #f1f5f9;
 }

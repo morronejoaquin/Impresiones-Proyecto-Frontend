@@ -69,12 +69,16 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   updateChart(payments: PaymentSummaryByMethod[]): void {
+
+    const backgroundColors = payments.map(p => this.methodColors[p.paymentMethod] || '#CCCCCC');
+
     this.pieChartData = {
     ...this.pieChartData,
     labels: payments.map(p => this.formatMethod(p.paymentMethod)),
     datasets: [{
       ...this.pieChartData.datasets[0],
-      data: payments.map(p => p.totalAmount)
+      data: payments.map(p => p.totalAmount),
+      backgroundColor: backgroundColors
     }]
   };
   }
@@ -124,4 +128,10 @@ export class AdminDashboardComponent implements OnInit {
     };
     return colors[status] || '#999';
   }
+
+  private methodColors: { [key: string]: string } = {
+  'MERCADO_PAGO': '#36A2EB',
+  'TRANSFER': '#FF6384',
+  'CASH': '#FFCE56'
+};
 }

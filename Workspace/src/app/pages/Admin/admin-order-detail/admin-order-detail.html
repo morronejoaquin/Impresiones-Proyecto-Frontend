@@ -100,7 +100,9 @@
             <tr>
               <td class="font-medium">
                 <div class="file-info">
-                  <span class="file-icon">📄</span>
+                  <span class="material-icons">
+                      {{ it.fileName.toLowerCase().endsWith('.pdf') ? 'description' : 'image' }}
+                  </span>
                   {{ fileName(it.fileName) }}
                 </div>
               </td>
