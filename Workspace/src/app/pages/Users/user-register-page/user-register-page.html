@@ -36,28 +36,34 @@
       }
     </fieldset>
   
-    <fieldset>
-      <input formControlName="password" type="password" placeholder="Contraseña" />
-      @if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('pattern')) {
-        <small>La contraseña debe tener mayúsculas, minúsculas, número y símbolo.</small>
-      }
-      @else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')) {
-        <small>Debe tener al menos 8 caracteres</small>
-      }
-      @else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('maxlength')) {
-        <small>No puede superar los 18 caracteres</small>
-      }@else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')) {
-        <small>La contraseña es obligatoria</small>
-      }
+    <fieldset class="password">
+      <input [type]="showPassword ? 'text' : 'password'" 
+         formControlName="password" 
+         placeholder="Contraseña" />
+  
+      <button class="password-button" type="button" (click)="togglePasswordVisibility()" >
+        <span class="material-icons">
+          {{ showPassword ? 'visibility_off' : 'visibility' }}
+        </span>
+      </button>
+         
+      <div class="requirements-list">
+        @for (req of passwordRequirements; track req.label) {
+          <div class="requirement" [class.met]="isRequirementMet(req.regex)">
+            <span class="dot"></span>
+            <small>{{ req.label }}</small>
+          </div>
+        }
+      </div>
     </fieldset>
 
     <fieldset>
       <input formControlName="confirmPassword" type="password" placeholder="Confirmar Contraseña" />
-      @if (registerForm.touched && registerForm.hasError('passwordMismatch')) {
+      @if (registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')) {
         <small>Las contraseñas no coinciden</small>
       }
     </fieldset>
   
-    <button type="submit">Registrarse</button>
+    <button class="submit-button" type="submit">Registrarse</button>
   </form>
   

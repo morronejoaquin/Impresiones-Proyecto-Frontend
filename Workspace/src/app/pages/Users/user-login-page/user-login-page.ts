@@ -18,6 +18,8 @@ export class UserLoginPage {
   errorMessage: string | null = null;
   user: ProfileResponse | null = null;
 
+  showPassword = false;
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -28,6 +30,10 @@ export class UserLoginPage {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   verificarLogin() {

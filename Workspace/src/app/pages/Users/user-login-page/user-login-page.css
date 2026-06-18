@@ -23,6 +23,7 @@ h1 {
   flex-direction: column;
   text-align: left;
   gap: 0.4rem;
+  position: relative;
 }
 
 label {
@@ -48,6 +49,25 @@ input:focus {
   border-color: #1500ff; 
   box-shadow: 0 0 5px rgba(21, 0, 255, 0.2);
   outline: none;
+}
+
+.password-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 10px;
+  top: 26px;
+  cursor: pointer;
+  background: white;
+  border: none;
+  border-radius: 30px;
+  padding: 4px;
+}
+
+.material-icons {
+  font-size: 1.8rem;
+  color: #64748b;
 }
 
 .error-message {

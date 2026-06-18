@@ -18,7 +18,12 @@
 
   <div class="field-container">
     <label>Contraseña</label>
-    <input type="password" formControlName="password" placeholder="********">
+    <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="********">
+    <button class="password-button" type="button" (click)="togglePasswordVisibility()" >
+      <span class="material-icons">
+        {{ showPassword ? 'visibility_off' : 'visibility' }}
+      </span>
+    </button>
     @if (formUser.get('password')?.touched && formUser.get('password')?.invalid) {
       <span class="error-message">La contraseña es obligatoria</span>
     }

@@ -57,12 +57,65 @@ form {
     font-size: 0.95rem;
   }
 
-  small {
-  color: #ff4d4f;
-  font-size: 0.8rem;
-  margin-top: 4px;
-  font-weight: 400;
+  .password {
+    position: relative;
   }
+  
+  .password-button {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 18px;
+    top: 10px;
+    cursor: pointer;
+    background: white;
+    border: none;
+    border-radius: 30px;
+    padding: 4px;
+  }
+
+  .material-icons {
+    font-size: 1.8rem;
+    color: #64748b;
+  }
+
+  .requirements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .requirement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+    transition: background-color 0.3s ease;
+  }
+
+  .requirement.met {
+    color: #059669;
+  }
+
+  .requirement.met .dot {
+    background-color: #059669;
+  }
+
+  small {
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    margin-top: 4px;
+    font-weight: 400;
+    }
 
   .alert-error {
     background-color: #fff2f0;
@@ -78,13 +131,13 @@ form {
     border-color: #ff4d4f;
   }
 
-  button:disabled {
+  .submit-button:disabled {
     background: #ccc;
     cursor: not-allowed;
     transform: none;
   }
   
-  button {
+  .submit-button {
     background: var(--btn-primary);
     color: white;
     padding: 12px;
@@ -96,7 +149,7 @@ form {
     transition: transform 0.2s ease, box-shadow 0.3s ease;
   }
   
-  button:hover {
+  .submit-button:hover {
     transform: scale(1.03);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }

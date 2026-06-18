@@ -15,6 +15,8 @@ export class UserRegisterPage implements OnInit {
   registerForm!: FormGroup;
   errorMessage: string | null = null;
 
+  showPassword = false;
+
   // Validador personalizado para confirmar contraseña
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password');
@@ -23,6 +25,10 @@ export class UserRegisterPage implements OnInit {
       ? { passwordMismatch: true } 
       : null;
   };
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +45,20 @@ export class UserRegisterPage implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(18), Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordRequirements = [
+    { label: 'Al menos 8 caracteres', regex: /.{8,}/ },
+    { label: 'Máximo 18 caracteres', regex: /^.{0,18}$/ },
+    { label: 'Una mayúscula', regex: /[A-ZÑ]/ },
+    { label: 'Una minúscula', regex: /[a-zñ]/ },
+    { label: 'Un número', regex: /\d/ },
+    { label: 'Un símbolo (@$!%*?&)', regex: /[@$!%*?&]/ }
+  ];
+
+  isRequirementMet(regex: RegExp): boolean {
+    const password = this.registerForm.get('password')?.value || '';
+    return regex.test(password);
   }
 
   onRegisterSubmit() {
