@@ -59,7 +59,7 @@ export class MyOrdersPage implements OnInit {
   });
   }
 
-  loadOrders(): void {
+  loadOrders(shouldScroll: boolean = false): void {
     this.loading = true;
     this.cartService.getMyOrders(this.currentPage, this.pageSize).subscribe({
       next: (page: Page<CartHistoryResponse>) => {
@@ -69,7 +69,9 @@ export class MyOrdersPage implements OnInit {
         this.hasNextPage = !page.last;
         this.loading = false;
 
-        this.scrollToTop();
+        if (shouldScroll) {
+          this.scrollToTop();
+        }
       },
       error: (err) => {
         console.error('Error loading orders', err);
@@ -117,14 +119,14 @@ export class MyOrdersPage implements OnInit {
   previousPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
-      this.loadOrders();
+      this.loadOrders(true);
     }
   }
 
   nextPage(): void {
     if (this.hasNextPage) {
       this.currentPage++;
-      this.loadOrders();
+      this.loadOrders(true);
     }
   }
 

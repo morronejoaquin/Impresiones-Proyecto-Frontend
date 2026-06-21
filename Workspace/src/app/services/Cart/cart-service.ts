@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, tap } from 'rxjs';
+import { catchError, Observable, of, Subject, tap, throwError } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import CartWithItemsResponse from '../../models/Cart/cartWithItemsResponse';
@@ -25,18 +25,15 @@ export class CartService {
   }
 
   getMyCart(): Observable<CartWithItemsResponse> {
-    return new Observable((observer) => {
-      this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`).subscribe({
-        next: (cart) => {
-          this.cartUpdatedSubject.next(cart);
-          observer.next(cart);
-          observer.complete();
-        },
-        error: (err) => {
-          observer.error(err);
-        },
-      });
-    });
+    return this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`).pipe(
+      tap((cart) => this.cartUpdatedSubject.next(cart)),
+      catchError((err) => {
+        if (err.status === 404 && err.error?.codigo === 'CART_001') {
+          return of(null as any);
+        }
+        return throwError(() => err);
+      })
+    );
   }
 
   agregarItem(request: OrderItemCreateRequest, file: File): Observable<OrderItemResponse> {

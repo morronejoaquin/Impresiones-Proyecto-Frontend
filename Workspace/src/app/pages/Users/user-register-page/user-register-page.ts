@@ -16,6 +16,7 @@ export class UserRegisterPage implements OnInit {
   errorMessage: string | null = null;
 
   showPassword = false;
+  showPasswordConfirm = false;
 
   // Validador personalizado para confirmar contraseña
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -28,6 +29,10 @@ export class UserRegisterPage implements OnInit {
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  togglePasswordConfirmVisibility() {
+    this.showPasswordConfirm = !this.showPasswordConfirm;
   }
 
   constructor(
@@ -49,7 +54,7 @@ export class UserRegisterPage implements OnInit {
 
   passwordRequirements = [
     { label: 'Al menos 8 caracteres', regex: /.{8,}/ },
-    { label: 'Máximo 18 caracteres', regex: /^.{0,18}$/ },
+    { label: 'Máximo 18 caracteres', regex: /^.{1,18}$/ },
     { label: 'Una mayúscula', regex: /[A-ZÑ]/ },
     { label: 'Una minúscula', regex: /[a-zñ]/ },
     { label: 'Un número', regex: /\d/ },
@@ -75,11 +80,8 @@ export class UserRegisterPage implements OnInit {
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        if (error.status === 409 || error.error?.message?.includes('email')) {
-          this.errorMessage = "Este correo electrónico ya se encuentra registrado";
-        } else {
-          this.errorMessage = "Ocurrió un error inesperado. Inténtalo más tarde.";
-        }
+        const data = error.error;
+        this.errorMessage = data.mensaje || data.error || data.message || "El email ya está registrado";
       }
     });
   }

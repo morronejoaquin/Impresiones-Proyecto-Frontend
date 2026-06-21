@@ -75,6 +75,24 @@ form {
     padding: 4px;
   }
 
+  .password-confirm {
+    position: relative;
+  }
+
+  .password-button-confirm {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 18px;
+    top: 10px;
+    cursor: pointer;
+    background: white;
+    border: none;
+    border-radius: 30px;
+    padding: 4px;
+  }
+
   .material-icons {
     font-size: 1.8rem;
     color: #64748b;
@@ -158,6 +176,7 @@ form {
     form {
       width: 90%;
       padding: 1.5rem;
+      box-sizing: border-box;
     }
   
     h1 {

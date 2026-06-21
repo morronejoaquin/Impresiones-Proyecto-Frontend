@@ -45,7 +45,7 @@
     @if (carts.length === 0) {
       <div class="empty-state">
         <span class="material-icons">info</span>
-        No se encontraron pedidos con estos filtros.
+        No se encontraron pedidos.
       </div>
     } @else {
       <div class="carts-grid">
@@ -114,6 +114,7 @@
   @if (showConfirm) {
     <app-confirm-modal
         [title]= "message"
+        [message]="pendingAction?.subMessage || ''"
         (confirmed)="confirmChangeStatus()"
         (cancelled)="cancelChangeStatus()"
       ></app-confirm-modal>

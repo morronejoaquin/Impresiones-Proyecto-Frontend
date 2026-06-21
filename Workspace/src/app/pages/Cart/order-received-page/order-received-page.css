@@ -2,9 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 40px 15px;
   background-color: #f0f2f5;
   min-height: 85vh;
+  overflow-x: hidden;
 }
 
 .result-card {
@@ -90,6 +91,25 @@ h1 {
   margin-bottom: 0; 
 }
 
+.copy-box {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.copy-box:hover {
+  background: rgba(255, 255, 255, 0.021);
+}
+
+.copy-icon {
+  font-size: 20px;
+  color: #ccc;
+}
+
 /* Botones */
 .actions {
   display: flex;
@@ -149,5 +169,23 @@ h1 {
   }
   to { 
     opacity: 1; transform: scale(1); 
+  }
+}
+
+@media (max-width: 480px) {
+  .result-card {
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+  
+  h1 { 
+    font-size: 1.5rem; 
+  }
+  
+  .icon-circle {
+    width: 65px;
+    height: 65px;
+    font-size: 30px;
   }
 }

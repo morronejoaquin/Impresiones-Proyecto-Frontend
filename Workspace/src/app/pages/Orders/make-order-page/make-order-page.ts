@@ -206,15 +206,12 @@ export class MakeOrderPage implements OnInit {
   ngOnInit(): void {
     this.cartService.getMyCart().subscribe({
       next: (cart) => {
+        if (cart) {
         this.currentCartItemsCount = cart.items.length;
+        } else {
+          this.cartService.createCart().subscribe();
+        }
       },
-      error: (err) => {
-        this.cartService.createCart().subscribe({
-          next: (cart) => {
-            console.log("Creando carrito");
-          }
-        })
-      }
     });
 
     this.route.paramMap.subscribe((params) => {

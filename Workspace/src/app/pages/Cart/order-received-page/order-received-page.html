@@ -35,7 +35,10 @@
       <div class="order-info">
         <div class="info-row">
           <span>Número de seguimiento:</span>
-          <strong>#{{ orderId?.substring(0, 16) }}</strong>
+          <strong class="copy-box" (click)="copyToClipboard(orderId)" title="Click para copiar">
+            #{{ orderId?.substring(0, 16) }} 
+            <span class="material-icons copy-icon">content_copy</span>
+          </strong>
         </div>
         @if (mpPaymentId) {
           <div class="info-row">

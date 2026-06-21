@@ -41,6 +41,10 @@
          formControlName="password" 
          placeholder="Contraseña" />
   
+      @if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')) {
+        <small>La contraseña es obligatoria</small>
+      }
+
       <button class="password-button" type="button" (click)="togglePasswordVisibility()" >
         <span class="material-icons">
           {{ showPassword ? 'visibility_off' : 'visibility' }}
@@ -57,8 +61,15 @@
       </div>
     </fieldset>
 
-    <fieldset>
-      <input formControlName="confirmPassword" type="password" placeholder="Confirmar Contraseña" />
+    <fieldset class="password-confirm">
+      <input [type]="showPasswordConfirm ? 'text' : 'password'" formControlName="confirmPassword" type="password" placeholder="Confirmar Contraseña" />
+
+      <button class="password-button-confirm" type="button" (click)="togglePasswordConfirmVisibility()" >
+        <span class="material-icons">
+          {{ showPasswordConfirm ? 'visibility_off' : 'visibility' }}
+        </span>
+      </button>
+
       @if (registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')) {
         <small>Las contraseñas no coinciden</small>
       }

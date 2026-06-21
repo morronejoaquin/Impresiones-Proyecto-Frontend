@@ -52,4 +52,17 @@ export class OrderReceivedPage {
       }
     });
   }
+
+  async copyToClipboard(fullId: string | null) {
+    if (!fullId) return;
+
+    const textToCopy = fullId.substring(0, 16);
+    
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      
+    } catch (err) {
+      console.error('Error al copiar: ', err);
+    }
+  }
 }

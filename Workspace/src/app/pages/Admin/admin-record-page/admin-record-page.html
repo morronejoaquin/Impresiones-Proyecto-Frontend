@@ -48,6 +48,13 @@
       </div>
     }
 
+    @if (!isLoading && deliveredCarts.length === 0) {
+      <div class="empty-state">
+        <span class="material-icons">info</span>
+        No se encontraron pedidos entregados.
+      </div>
+    }
+
     @if (deliveredCarts.length > 0) {
     <div class="table-container">
       <table class="record-table">

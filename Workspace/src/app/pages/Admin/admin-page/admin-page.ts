@@ -10,6 +10,12 @@ import CartStatusUpdateRequest from '../../../models/Cart/cartStatusUpdateReques
 import { NotificationService } from '../../../services/Notification/notification-service';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 
+type PendingAction = {
+  execute: () => void;
+  message: string;
+  subMessage?: string;
+};
+
 @Component({
   standalone: true,
   selector: 'app-admin-page',
@@ -33,6 +39,7 @@ export class AdminPage implements OnInit {
     endDate: ''
   };
 
+  pendingAction: PendingAction | null = null;
   showConfirm = false;
   statusToConfirm: { cart: CartResponse, newStatus: OrderStatusEnum } | null = null;
   message = '';
@@ -89,26 +96,33 @@ export class AdminPage implements OnInit {
   }
 
   onStatusChange(cart: CartResponse, newStatus: OrderStatusEnum) {
-    this.statusToConfirm = { cart, newStatus };
     this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(newStatus)}?`;
 
-    if (newStatus === OrderStatusEnum.READY || 
-        newStatus === OrderStatusEnum.DELIVERED || 
-        newStatus === OrderStatusEnum.CANCELLED) {
+    const statusLabel = this.statusLabel(newStatus);
+    const action: PendingAction = {
+      execute: () => this.executeStatusUpdate(cart, newStatus),
+      message: this.message
+    };
+
+    if (newStatus === OrderStatusEnum.READY) {
+      action.subMessage = 'Se le enviará una notificación al usuario';
+    }
+
+    this.pendingAction = action;
+
+    if ([OrderStatusEnum.READY, OrderStatusEnum.DELIVERED, OrderStatusEnum.CANCELLED].includes(newStatus)) {
       this.showConfirm = true;
     } else {
-      this.executeStatusUpdate(cart, newStatus);
+      action.execute();
     }
     
   }
 
   confirmChangeStatus() {
-    if (this.statusToConfirm) {
-      const { cart, newStatus } = this.statusToConfirm;
-      this.executeStatusUpdate(cart, newStatus);
-      
+    if (this.pendingAction) {
+      this.pendingAction.execute();
       this.showConfirm = false;
-      this.statusToConfirm = null;
+      this.pendingAction = null;
     }
   }
 
