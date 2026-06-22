@@ -14,6 +14,7 @@ import { OrderReceivedPage } from './pages/Cart/order-received-page/order-receiv
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
 import { AdminDashboardComponent } from './pages/Admin/admin-dashboard/admin-dashboard.component';
 import { PaymentReconciliationComponent } from './pages/Admin/payment-reconciliation/payment-reconciliation';
+import { PriceHistoryAdmin } from './pages/Admin/price-history-admin/price-history-admin';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -33,40 +34,44 @@ export const routes: Routes = [
   {
     path: 'make-order',
     component: MakeOrderPage,
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'my-orders',
     component: MyOrdersPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] },
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'my-orders/:id',
     component: MyOrdersPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] },
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'make-order/:orderId',
     component: MakeOrderPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] },
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'cart',
     component: ShowCartPage,
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'cart-payment',
     component: CartPaymentPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] },
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'order-received',
     component: OrderReceivedPage,
     canActivate: [permissionGuard],
-    data: { allowedRoles: ['cliente', 'administrador'] },
+    data: { allowedRoles: ['cliente'] },
   },
   {
     path: 'price-calculator',
@@ -96,6 +101,12 @@ export const routes: Routes = [
     path: 'admin/prices',
     loadComponent: () =>
       import('./pages/Admin/price-admin/price-admin').then((m) => m.PriceAdminComponent),
+    canActivate: [permissionGuard],
+    data: { allowedRoles: ['administrador'] },
+  },
+  {
+    path: 'admin/prices-history',
+    component: PriceHistoryAdmin,
     canActivate: [permissionGuard],
     data: { allowedRoles: ['administrador'] },
   },

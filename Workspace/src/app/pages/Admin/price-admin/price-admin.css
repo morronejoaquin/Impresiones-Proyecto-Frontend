@@ -42,6 +42,8 @@
   margin-bottom: 2rem;
   border-bottom: 2px solid #f1f5f9;
   padding-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .card-header h2 {
@@ -53,6 +55,27 @@
 .subtitle {
   color: #64748b;
   margin-top: 0.5rem;
+}
+
+.navigate-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; 
+  text-decoration: none; 
+  padding: 8px 14px; 
+  border-radius: 10px; 
+  background: #0369a1; 
+  color: #fff; 
+  font-weight: 600; 
+  font-size: 0.95rem; 
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.25); 
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  margin: 10px auto;
+}
+
+.navigate-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
 .input-grid {
@@ -176,5 +199,8 @@
   }
   .full-width {
     grid-column: span 1;
+  }
+  .card-header {
+    flex-direction: column;
   }
 }

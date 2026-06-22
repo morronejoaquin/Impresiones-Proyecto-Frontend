@@ -34,4 +34,8 @@ export class PriceManagerService {
   updatePrices(request: pricesUpdateRequest): Observable<string> {
     return this.http.post(`${this.apiUrl}`, request, { responseType: 'text' });
   }
+
+  getPricesHistory(): Observable<PricesResponse[]> {
+    return this.http.get<PricesResponse[]>(`${this.apiUrl}/history`);
+  }
 }

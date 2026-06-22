@@ -1,0 +1,28 @@
+<div class="history-container">
+  <div class="back-button">
+    <a routerLink="/admin/prices" class="back">
+      <span class="material-icons">arrow_back</span> Volver
+    </a>
+  </div>  
+  <h2 class="tittle">Historial Evolutivo de Precios</h2>
+  
+  @if(loading) {
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Consultando registros...</p>
+        </div>
+    } @else if(errorMessage) {
+        <div class="error-container">
+            <p>{{ errorMessage }}</p>
+            <button (click)="loadHistoryPrices()" class="btn-retry">Reintentar</button>
+        </div>
+    } @else {
+        <div class="line-chart">
+            <canvas baseChart
+                    [data]="lineChartData"
+                    [options]="lineChartOptions"
+                    [type]="'line'">
+            </canvas>
+        </div>
+    }
+</div>

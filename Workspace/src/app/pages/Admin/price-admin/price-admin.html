@@ -7,8 +7,15 @@
 
   <div class="price-card">
     <div class="card-header">
-      <h2>Administrar Tarifas Globales</h2>
-      <p class="subtitle">Configure los costos de impresiones y servicios.</p>
+      <div class="title-card">
+        <h2>Administrar Tarifas Globales</h2>
+        <p class="subtitle">Configure los costos de impresiones y servicios.</p>
+      </div>
+      <div class="route">
+        <a routerLink="/admin/prices-history" class="navigate-button"> Ir a historial
+          <span class="material-icons">arrow_forward</span>
+        </a>
+      </div>
     </div>
 
     <form [formGroup]="priceForm" (ngSubmit)="savePrices()" class="modern-form">
