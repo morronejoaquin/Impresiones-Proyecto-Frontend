@@ -12,7 +12,8 @@
             <p>Consultando registros...</p>
         </div>
     } @else if(errorMessage) {
-        <div class="error-container">
+        <div class="error-state">
+            <span class="material-icons">error_outline</span>
             <p>{{ errorMessage }}</p>
             <button (click)="loadHistoryPrices()" class="btn-retry">Reintentar</button>
         </div>

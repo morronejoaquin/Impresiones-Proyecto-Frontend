@@ -36,7 +36,7 @@
   <div class="table-wrapper">
     @if (isLoading && deliveredCarts.length === 0) {
       <div class="loading-state">
-        <div class="loader"></div>
+        <div class="spinner"></div>
         <p>Cargando historial de pedidos...</p>
       </div>
     }
@@ -51,7 +51,8 @@
     @if (!isLoading && deliveredCarts.length === 0) {
       <div class="empty-state">
         <span class="material-icons">info</span>
-        No se encontraron pedidos entregados.
+        <p>No se encontraron pedidos entregados.</p>
+        <button (click)="loadHistory()" class="btn-retry">Reintentar</button>
       </div>
     }
 

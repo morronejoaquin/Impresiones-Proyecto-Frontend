@@ -39,6 +39,7 @@
     <div class="error-state">
       <span class="material-icons">error_outline</span>
       <p>{{ error }}</p>
+      <button (click)="loadDashboardData()" class="btn-retry">Reintentar</button>
     </div>
   } @else {
     <div class="dashboard-grid">

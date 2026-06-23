@@ -39,13 +39,17 @@
   </div>
 
   @if (isLoading) {
-    <div class="loader">Cargando pedidos...</div>
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando pedidos...</p>
+    </div>
   } @else {
     
     @if (carts.length === 0) {
       <div class="empty-state">
         <span class="material-icons">info</span>
-        No se encontraron pedidos.
+        <p>No se encontraron pedidos.</p>
+        <button (click)="loadOrders()" class="btn-retry">Reintentar</button>
       </div>
     } @else {
       <div class="carts-grid">

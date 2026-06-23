@@ -25,6 +25,11 @@
   transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
 }
 
+.back:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
 .title-section h1 {
   font-size: 1.8rem;
   color: var(--text-primary);
@@ -358,6 +363,22 @@ section {
   justify-content: center;
   padding: 4rem;
   text-align: center;
+  color: #64748b;
+}
+
+.btn-retry {
+  background: #e53935;
+  color: white;
+  border: none;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600; 
+  font-size: 0.95rem; 
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.25); 
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  margin: 10px auto;
 }
 
 .spinner {
@@ -412,5 +433,8 @@ section {
     width: 100%;
     border-top: 1px solid #f1f5f9;
     padding-top: 0.5rem;
+  }
+  .back{
+    margin-right: 200px;
   }
 }
