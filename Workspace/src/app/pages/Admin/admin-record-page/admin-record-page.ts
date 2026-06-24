@@ -21,13 +21,14 @@ export class AdminRecordPage implements OnInit {
   pageSize = 15;
   totalElements = 0;
   isLoading = false;
-  noResults = false;
 
   filters = {
     customerEmail: '',
     startDate: '',
     endDate: ''
   };
+
+  errorType: 'NONE' | 'CONNECTION' | 'NO_RESULTS' = 'NONE';
 
   constructor(
     private cartService: CartService,
@@ -40,18 +41,18 @@ export class AdminRecordPage implements OnInit {
 
   loadHistory(): void {
     this.isLoading = true;
-    this.noResults = false;
+    this.errorType = 'NONE';
     
     this.cartService.getDeliveredHistory(this.filters, this.currentPage, this.pageSize).subscribe({
       next: (response: Page<CartResponse>) => {
         this.deliveredCarts = response.content || [];
         this.totalElements = response.totalElements || 0;
-        this.noResults = this.deliveredCarts.length === 0;
+        this.errorType = this.deliveredCarts.length === 0 ? 'NO_RESULTS' : 'NONE';
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading history:', err);
         this.isLoading = false;
+        this.errorType = 'CONNECTION';
       }
     });
   }

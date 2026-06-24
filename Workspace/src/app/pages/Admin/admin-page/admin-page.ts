@@ -47,6 +47,8 @@ export class AdminPage implements OnInit {
   orderStatusEnum = OrderStatusEnum;
   statusOptions = Object.values(OrderStatusEnum);
 
+  errorType: 'NONE' | 'CONNECTION' | 'NO_RESULTS' = 'NONE';
+
   constructor(
     private cartService: CartService,
     private router: Router,
@@ -60,16 +62,23 @@ export class AdminPage implements OnInit {
 
   loadOrders(): void {
     this.isLoading = true;
+    this.errorType = 'NONE';
     
     if (this.hasActiveFilters()) {
       this.cartService.filterCartsForAdmin(this.filters, this.currentPage, this.pageSize).subscribe({
         next: (res) => this.handleResponse(res),
-        error: () => this.isLoading = false
+        error: () => {
+          this.isLoading = false
+          this.errorType = 'CONNECTION';
+        }
       });
     } else {
       this.cartService.getActiveCartsForAdmin(this.currentPage, this.pageSize).subscribe({
         next: (res) => this.handleResponse(res),
-        error: () => this.isLoading = false
+        error: () => {
+          this.isLoading = false
+          this.errorType = 'CONNECTION';
+        }
       });
     }
   }
@@ -78,6 +87,13 @@ export class AdminPage implements OnInit {
     this.carts = response.content || [];
     this.totalElements = response.totalElements || 0;
     this.isLoading = false;
+
+    // Lógica de detección de estado
+    if (this.carts.length === 0) {
+      this.errorType = 'NO_RESULTS';
+    } else {
+      this.errorType = 'NONE';
+    }
   }
 
   applyFilters() {

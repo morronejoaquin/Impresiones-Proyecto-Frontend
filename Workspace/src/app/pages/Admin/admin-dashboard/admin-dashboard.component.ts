@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 export class AdminDashboardComponent implements OnInit {
   dashboardData: AdminDashboardResponse | null = null;
   loading = true;
-  error: string | null = null;
+  errorType: 'NONE' | 'CONNECTION' = 'NONE';
 
   filters = {
     startDate: '',
@@ -54,6 +54,7 @@ export class AdminDashboardComponent implements OnInit {
 
   loadDashboardData(): void {
     this.loading = true;
+    this.errorType = 'NONE';
     
     this.dashboardService.getDashboardData(this.filters).subscribe({
       next: (data) => {
@@ -62,8 +63,8 @@ export class AdminDashboardComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'No se pudo sincronizar el dashboard';
         this.loading = false;
+        this.errorType = 'CONNECTION';
       }
     });
   }

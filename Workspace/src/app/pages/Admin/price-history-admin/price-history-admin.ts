@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
 export class PriceHistoryAdmin implements OnInit{
   
   loading = true;
-  errorMessage: string | null = null;
+  errorType: 'NONE' | 'CONNECTION' | 'NO_DATA' = 'NONE';
 
   private pricesHistory: any[] = [];
 
@@ -67,24 +67,27 @@ export class PriceHistoryAdmin implements OnInit{
 
   loadHistoryPrices(){
     this.loading = true;
-    this.errorMessage = null;
+    this.errorType = 'NONE';
 
     this.priceService.getPricesHistory().subscribe({
       next: (data: any) => {
         this.loading = false;
-        this.pricesHistory = data;
-        // Asignación de datos
-        this.lineChartData.labels = data.map((_: any, index: number) => `Precio. ${index + 1}`);
-        this.lineChartData.datasets[0].data = data.map((d: any) => d.pricePerSheetBW);
-        this.lineChartData.datasets[1].data = data.map((d: any) => d.pricePerSheetColor);
-        this.lineChartData.datasets[2].data = data.map((d: any) => d.priceRingedBinding);
-        this.lineChartData.datasets[3].data = data.map((d: any) => d.priceStapledBinding);
-        
+
+        if (!data || data.length === 0) {
+          this.errorType = 'NO_DATA';
+        } else {
+          this.pricesHistory = data;
+          // Asignación de datos
+          this.lineChartData.labels = data.map((_: any, index: number) => `Precio. ${index + 1}`);
+          this.lineChartData.datasets[0].data = data.map((d: any) => d.pricePerSheetBW);
+          this.lineChartData.datasets[1].data = data.map((d: any) => d.pricePerSheetColor);
+          this.lineChartData.datasets[2].data = data.map((d: any) => d.priceRingedBinding);
+          this.lineChartData.datasets[3].data = data.map((d: any) => d.priceStapledBinding);
+        }
       },
       error: (err) => {
         this.loading = false;
-        // El interceptor ya mostró el toast, aquí solo capturamos el error para mostrar UI
-        this.errorMessage = "No fue posible cargar el historial.";
+        this.errorType = 'CONNECTION';
       }
     });
   }

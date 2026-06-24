@@ -1,7 +1,7 @@
 .admin-record-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 20px; 
+  background: #f4f7f6; 
+  min-height: 100vh;
 }
 
 .record-header { 
@@ -75,7 +75,7 @@
   max-width: 100px;
 }
 
-.loading-state {
+.loading-state, .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,6 +83,10 @@
   padding: 4rem;
   text-align: center;
   color: #64748b;
+}
+
+.empty-state .material-icons {
+  margin: 4px auto;
 }
 
 .btn-retry {
@@ -114,26 +118,6 @@
   to { 
     transform: rotate(360deg); 
   }
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  margin: 2rem auto;
-  max-width: 600px;
-  background: #ffffff;
-  border: 2px #e2e8f0;
-  border-radius: 16px;
-  text-align: center;
-  color: #64748b;
-  transition: all 0.3s ease;
-}
-
-.empty-state .material-icons {
-  margin: 4px auto;
 }
 
 .table-wrapper {

@@ -43,15 +43,18 @@
       <div class="spinner"></div>
       <p>Cargando pedidos...</p>
     </div>
+  } @else if (errorType === 'CONNECTION') {
+    <div class="error-state">
+      <span class="material-icons">cloud_off</span>
+      <p>No se pudo conectar con el servidor. Verifica tu conexión.</p>
+      <button (click)="loadOrders()" class="btn-retry">Reintentar</button>
+    </div>
+  } @else if (errorType === 'NO_RESULTS') {
+    <div class="empty-state">
+      <span class="material-icons">search_off</span>
+      <p>No se encontraron pedidos.</p>
+    </div>
   } @else {
-    
-    @if (carts.length === 0) {
-      <div class="empty-state">
-        <span class="material-icons">info</span>
-        <p>No se encontraron pedidos.</p>
-        <button (click)="loadOrders()" class="btn-retry">Reintentar</button>
-      </div>
-    } @else {
       <div class="carts-grid">
         @for (cart of carts; track cart.id) {
           <div class="cart-card" (click)="goToDetail(cart.id)">
@@ -97,7 +100,6 @@
         }
       </div>
     }
-  }
   
   @if (carts.length > 0) {
     <div class="pagination">

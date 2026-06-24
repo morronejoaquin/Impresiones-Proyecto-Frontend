@@ -1,6 +1,10 @@
 .dashboard-container {
-  max-width: 1200px;
-  margin: 20px auto;
+  width: 100%;
+  padding: 20px; 
+  background: #f4f7f6;
+  min-height: 100vh;
+  box-sizing: border-box; 
+  overflow-x: hidden;
 }
 
 .dashboard-header {
@@ -97,31 +101,6 @@
   cursor: pointer;
   width: 100%;
   max-width: 100px;
-}
-
-.loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra horizontalmente */
-    justify-content: center; /* Centra verticalmente si el contenedor tiene altura */
-    padding: 140px 0;
-    text-align: center;
-}
-
-.loading-state p {
-    margin-top: 15px;
-    color: #555;
-    font-weight: 500;
-}
-
-.spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 36px;
-    height: 36px;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 10px;
 }
 
 @keyframes rotate {
@@ -325,7 +304,7 @@ section {
 .percentage {
   font-size: 0.85rem;
   color: var(--text-muted);
-  margin-right: auto; /* Empuja el monto a la derecha */
+  margin-right: auto;
 }
 
 .amount {
@@ -364,6 +343,10 @@ section {
   padding: 4rem;
   text-align: center;
   color: #64748b;
+}
+
+.error-state .material-icons {
+  margin: 4px auto;
 }
 
 .btn-retry {
@@ -408,10 +391,6 @@ section {
 }
 
 @media (max-width: 600px) {
-  :host { 
-    padding: 1rem; 
-  }
-
   .dashboard-header { 
     flex-direction: column; gap: 1rem; text-align: center; 
   }
@@ -435,6 +414,7 @@ section {
     padding-top: 0.5rem;
   }
   .back{
-    margin-right: 200px;
+    align-self: flex-start;
+    margin-bottom: 10px;
   }
 }

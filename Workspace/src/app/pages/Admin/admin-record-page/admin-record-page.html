@@ -33,62 +33,60 @@
     }
   </div>
 
-  <div class="table-wrapper">
-    @if (isLoading && deliveredCarts.length === 0) {
-      <div class="loading-state">
-        <div class="spinner"></div>
-        <p>Cargando historial de pedidos...</p>
-      </div>
-    }
-
-    @if (!isLoading && noResults) {
-      <div class="empty-state">
-        <span class="material-icons">info</span>
-        <p>No se encontraron trabajos entregados con estos filtros</p>
-      </div>
-    }
-
-    @if (!isLoading && deliveredCarts.length === 0) {
-      <div class="empty-state">
-        <span class="material-icons">info</span>
-        <p>No se encontraron pedidos entregados.</p>
-        <button (click)="loadHistory()" class="btn-retry">Reintentar</button>
-      </div>
-    }
-
-    @if (deliveredCarts.length > 0) {
-    <div class="table-container">
-      <table class="record-table">
-        <thead>
-          <tr>
-            <th>ID Pedido</th>
-            <th>Cliente</th>
-            <th>Email</th>
-            <th>Entrega</th>
-            <th class="text-right">Total</th>
-            <th class="text-center">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (cart of deliveredCarts; track cart.id) {
-            <tr class="table-row">
-              <td class="cart-id">#{{ cart.id.substring(0, 8) }}</td>
-              <td class="font-bold">{{ cart.customer.name }} {{ cart.customer.surname }}</td>
-              <td class="client-email">{{ cart.customer.email || '—' }}</td>
-              <td class="delivery-date">{{ formatDate(cart.deliveredAt) }}</td>
-              <td class="total text-right">
-                <strong>${{ cart.total | number:'1.2-2' }}</strong>
-              </td>
-              <td class="text-center">
-                <button class="btn-view" (click)="goToDetail(cart)">Ver detalle</button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-    }
+  @if (isLoading) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando historial de pedidos...</p>
   </div>
+
+  } @else if (errorType === 'CONNECTION') {
+    <div class="empty-state">
+      <span class="material-icons">cloud_off</span>
+      <p>Error al conectar con el servidor.</p>
+      <button (click)="loadHistory()" class="btn-retry">Reintentar</button>
+    </div>
+
+  } @else if (errorType === 'NO_RESULTS') {
+    <div class="empty-state">
+      <span class="material-icons">search_off</span>
+      <p>No se encontraron pedidos entregados.</p>
+    </div>
+
+  } @else {
+
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table class="record-table">
+          <thead>
+            <tr>
+              <th>ID Pedido</th>
+              <th>Cliente</th>
+              <th>Email</th>
+              <th>Entrega</th>
+              <th class="text-right">Total</th>
+              <th class="text-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cart of deliveredCarts; track cart.id) {
+              <tr class="table-row">
+                <td class="cart-id">#{{ cart.id.substring(0, 8) }}</td>
+                <td class="font-bold">{{ cart.customer.name }} {{ cart.customer.surname }}</td>
+                <td class="client-email">{{ cart.customer.email || '—' }}</td>
+                <td class="delivery-date">{{ formatDate(cart.deliveredAt) }}</td>
+                <td class="total text-right">
+                  <strong>${{ cart.total | number:'1.2-2' }}</strong>
+                </td>
+                <td class="text-center">
+                  <button class="btn-view" (click)="goToDetail(cart)">Ver detalle</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
 
   @if (deliveredCarts.length > 0) {
     <div class="pagination">

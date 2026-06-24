@@ -35,10 +35,10 @@
       <div class="spinner"></div>
       <p>Consolidando estadísticas...</p>
     </div>
-  } @else if (error) {
+  } @else if (errorType === 'CONNECTION') {
     <div class="error-state">
-      <span class="material-icons">error_outline</span>
-      <p>{{ error }}</p>
+      <span class="material-icons">cloud_off</span>
+      <p>No se pudo conectar con el servidor.</p>
       <button (click)="loadDashboardData()" class="btn-retry">Reintentar</button>
     </div>
   } @else {
