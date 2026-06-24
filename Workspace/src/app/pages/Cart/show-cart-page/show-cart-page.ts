@@ -24,7 +24,7 @@ export class ShowCartPage implements OnInit, OnDestroy {
   cartTotal: number = 0;
   private currentCartId!: string;
   isLoading: boolean = true;
-  errorMessage: string = '';
+  errorType: 'NONE' | 'CONNECTION' | 'EMPTY' = 'NONE';
   itemToDeleteId: string | null = null;
   isDeleting: boolean = false;
   private destroy$ = new Subject<void>();
@@ -60,27 +60,25 @@ export class ShowCartPage implements OnInit, OnDestroy {
 
   loadCart(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+    this.errorType = 'NONE';
 
     this.cartService.getMyCart().subscribe({
       next: (cart: CartWithItemsResponse) => {
         this.currentCartId = cart.id;
         this.orders = cart.items || [];
         this.cartTotal = cart.total;
+        this.errorType = this.orders.length === 0 ? 'EMPTY' : 'NONE';
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching cart:', err);
         this.isLoading = false;
 
         if (err.status === 404) {
-          this.errorMessage = 'No tienes un carrito activo.';
+          this.errorType = 'EMPTY';
           this.orders = [];
           this.cartTotal = 0;
-        } else if (err.status === 403) {
-          this.errorMessage = 'No tienes permiso para ver el carrito.';
         } else {
-          this.errorMessage = 'Error al cargar el carrito. Por favor, intenta nuevamente.';
+          this.errorType = 'CONNECTION';
         }
       },
     });

@@ -22,7 +22,6 @@
   font-size: clamp(0.9rem, 2vw, 1.1rem);
 }
 
-/* Grid Responsivo */
 .calculator-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -30,10 +29,9 @@
   align-items: start;
 }
 
-/* Tarjetas */
 .config-card, .result-card {
   background: white;
-  padding: clamp(1.5rem, 4vw, 2.5rem); /* Padding que se reduce en móvil */
+  padding: clamp(1.5rem, 4vw, 2.5rem);
   border-radius: 20px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
   border: 1px solid #f1f5f9;
@@ -50,7 +48,6 @@
   border-bottom: 2px solid #f8fafc;
 }
 
-/* Formulario y Espaciados Internos */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -89,7 +86,6 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-/* Toggles Adaptativos */
 .toggle-group {
   display: flex;
   background: #f1f5f9;
@@ -121,7 +117,6 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Binding Cards (3 columnas que pasan a 1 en móvil muy pequeño) */
 .binding-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -228,15 +223,15 @@
 
 @media (max-width: 600px) {
   .form-row {
-    grid-template-columns: 1fr; /* Inputs uno debajo de otro en móvil */
+    grid-template-columns: 1fr;
   }
   
   .binding-cards {
-    grid-template-columns: 1fr; /* Opciones de encuadernación en lista */
+    grid-template-columns: 1fr;
   }
 
   .toggle-btn span:not(.material-icons) {
-    font-size: 0.8rem; /* Texto más pequeño en botones */
+    font-size: 0.8rem;
   }
 }
 
@@ -246,6 +241,6 @@
   }
   
   .result-card {
-    order: -1; /* Muestra el resultado arriba en tablets/móviles (opcional) */
+    order: -1;
   }
 }

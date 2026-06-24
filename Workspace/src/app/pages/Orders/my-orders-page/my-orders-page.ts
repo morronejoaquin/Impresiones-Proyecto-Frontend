@@ -27,6 +27,8 @@ export class MyOrdersPage implements OnInit {
   showConfirm = false;
   message = '';
 
+  errorType: 'NONE' | 'CONNECTION' | 'NO_DATA' = 'NONE';
+
   @ViewChild('top') topElement!: ElementRef;
 
   // Estados para traducir los valores de la API
@@ -61,12 +63,15 @@ export class MyOrdersPage implements OnInit {
 
   loadOrders(shouldScroll: boolean = false): void {
     this.loading = true;
+    this.errorType = 'NONE';
+
     this.cartService.getMyOrders(this.currentPage, this.pageSize).subscribe({
       next: (page: Page<CartHistoryResponse>) => {
         this.orders = page.content || [];
         this.totalPages = page.totalPages || 0;
         this.totalElements = page.totalElements || 0;
         this.hasNextPage = !page.last;
+        this.errorType = this.orders.length === 0 ? 'NO_DATA' : 'NONE';
         this.loading = false;
 
         if (shouldScroll) {
@@ -74,9 +79,9 @@ export class MyOrdersPage implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error loading orders', err);
         this.orders = [];
         this.loading = false;
+        this.errorType = 'CONNECTION';
       }
     });
   }

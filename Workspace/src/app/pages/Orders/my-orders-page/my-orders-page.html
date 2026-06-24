@@ -5,11 +5,18 @@
   </div>
 
   @if (loading) {
-    <div class="loading-container">
+    <div class="loading-state">
       <div class="spinner"></div>
       <p>Cargando historial...</p>
     </div>
-  } @else if (orders.length === 0) {
+  } @else if(errorType === 'CONNECTION') {
+    <div class="error-state">
+      <span class="material-icons">cloud_off</span>
+      <p>No se pudo conectar con el servidor.</p>
+      <button (click)="loadOrders()" class="btn-retry">Reintentar</button>
+    </div>
+
+  } @else if (errorType === 'NO_DATA') {
     <div class="empty-state">
       <div class="empty-icon">📦</div>
       <h2>No tienes pedidos cerrados</h2>

@@ -5,13 +5,27 @@
   </header>
 
   @if(isLoading) {
-    <div class="loader-container">
+    <div class="loading-state">
       <div class="spinner"></div>
       <p>Sincronizando tus pedidos...</p>
     </div>
-  }
 
-  @if(!isLoading && orders.length > 0) {
+  } @else if(errorType === 'CONNECTION') {
+    <div class="error-state">
+      <span class="material-icons">cloud_off</span>
+      <p>No se pudo conectar con el servidor.</p>
+      <button (click)="loadCart()" class="btn-retry">Reintentar</button>
+    </div>
+
+  } @else if(errorType === 'EMPTY') {
+    <div class="empty-cart">
+      <span class="material-icons">shopping_cart</span>
+      <p class="empty-cart-message">Tu carrito está vacío.</p>
+      <p class="empty-cart-subtitle">Agrega pedidos para comenzar tu compra.</p>
+      <button type="button" class="btn-go-to-order" (click)="goToOrder()">Ir a realizar pedido</button>
+    </div>
+
+  } @else {
     <div class="cart-grid">
       <section class="items-list">
         @for (item of orders; track item.id) {
@@ -59,15 +73,6 @@
           </button>
         </div>
       </aside>
-    </div>
-  }
-
-  @if(orders.length === 0) {
-    <div class="empty-cart">
-      <span class="material-icons">shopping_cart</span>      
-      <p class="empty-cart-message">Tu carrito está vacío.</p>
-      <p class="empty-cart-subtitle">Agrega pedidos para comenzar tu compra.</p>
-      <button type="button" class="btn-go-to-order" (click)="goToOrder()">Ir a realizar pedido</button>
     </div>
   }
 

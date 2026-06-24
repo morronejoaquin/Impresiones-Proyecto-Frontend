@@ -1,7 +1,7 @@
 .history-container {
-    width: 90%;
-    margin: auto; 
-    padding: 40px 0px 40px 0px
+  width: 90%;
+  margin: auto; 
+  padding: 40px 0px 40px 0px;
 }
 
 .back-button {
@@ -40,6 +40,8 @@
     display: block;
     padding-top: 20px;
     height: 400px;
+    background-color: white;
+    margin-top: 10px;
 }
 
 .loading-state, .error-state {
