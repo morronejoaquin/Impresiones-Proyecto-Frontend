@@ -280,6 +280,9 @@ select:focus, input:focus {
 }
 
 @media (max-width: 480px) {
+  .order-form {
+    margin: 14px;
+  }
   .form-grid, .options-grid { 
     grid-template-columns: 1fr; 
   }

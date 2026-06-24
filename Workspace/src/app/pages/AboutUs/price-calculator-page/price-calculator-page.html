@@ -39,13 +39,25 @@
           <label class="form-label">Encuadernación</label>
           <div class="binding-cards">
             @for (option of bindingOptions; track option.value) {
-              <div class="binding-card" 
-                   [class.selected]="calculatorForm.get('binding')?.value === option.value"
-                   (click)="calculatorForm.patchValue({binding: option.value})">
-                <span class="material-icons card-icon">
-                  {{ option.value === 'NONE' ? 'description' : option.value === 'RINGED' ? 'menu_book' : 'push_pin' }}
-                </span>
-                <span class="card-label">{{ option.label }}</span>
+              @let isAvailable = isOptionAvailable(option.value);
+
+              <div class="binding-option-wrapper">
+                <div class="binding-card" 
+                    [class.selected]="calculatorForm.get('binding')?.value === option.value && isAvailable"
+                    [class.disabled]="!isAvailable"
+                    (click)="isAvailable ? calculatorForm.patchValue({binding: option.value}) : null">
+                  
+                  <span class="material-icons card-icon">
+                    {{ option.value === 'NONE' ? 'description' : option.value === 'RINGED' ? 'menu_book' : 'push_pin' }}
+                  </span>
+                  <span class="card-label">{{ option.label }}</span>
+                </div>
+
+                @if (!isAvailable) {
+                  <span class="external-disabled-hint">
+                    {{ option.value === 'RINGED' ? 'Más de 8 págs.' : '2 a 50 págs.' }}
+                  </span>
+                }
               </div>
             }
           </div>

@@ -1,8 +1,14 @@
 <div class="account-container">
   @if (isLoading) {
-    <div class="loading-overlay">
+    <div class="loading-state">
       <div class="spinner"></div>
       <p>Cargando tu perfil...</p>
+    </div>
+  } @else if (errorType === 'CONNECTION') {
+    <div class="error-state">
+      <span class="material-icons">cloud_off</span>
+      <p>No se pudo conectar con el servidor. Verifica tu conexión.</p>
+      <button (click)="loadProfile()" class="btn-retry">Reintentar</button>
     </div>
   } @else if (currentUser) {
     <div class="profile-layout">

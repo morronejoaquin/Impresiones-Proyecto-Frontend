@@ -54,7 +54,7 @@ export class MakeOrderPage implements OnInit {
   ) {
     this.orderForm = this.fb.group({
       pages: [1, [Validators.required, Validators.min(1)]],
-      copies: [1, [Validators.required, Validators.min(1)]],
+      copies: [1, [Validators.required, Validators.min(1), Validators.max(10000)]],
       doubleSided: [false],
       binding: ['NONE', [Validators.required]],
       color: [false],

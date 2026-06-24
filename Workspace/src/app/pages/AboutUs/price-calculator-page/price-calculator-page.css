@@ -120,10 +120,18 @@
 .binding-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
+  gap: 1rem;
+}
+
+.binding-option-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; /* Espacio entre la tarjeta y el mensaje */
 }
 
 .binding-card {
+  width: 90%;
   border: 2px solid #f1f5f9;
   border-radius: 14px;
   padding: 1rem 0.4rem;
@@ -142,6 +150,21 @@
   border-color: #3b82f6;
   color: #2563eb;
   transform: translateY(-2px);
+}
+
+.binding-card.disabled {
+  opacity: 0.5;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+/* El mensaje queda debajo, pequeño y discreto */
+.external-disabled-hint {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .card-label { 
@@ -169,7 +192,8 @@
 .amount { 
   font-size: clamp(3rem, 8vw, 4.5rem); 
   font-weight: 900; 
-  letter-spacing: -2px; 
+  letter-spacing: -2px;
+  word-break: break-all;
 }
 
 .price-info { 
@@ -232,6 +256,10 @@
 
   .toggle-btn span:not(.material-icons) {
     font-size: 0.8rem;
+  }
+
+  .amount {
+    font-size: 2.5rem;
   }
 }
 

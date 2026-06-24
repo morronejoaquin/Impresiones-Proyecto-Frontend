@@ -34,14 +34,26 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.calculatorForm = this.fb.group({
-      pages: [1, [Validators.required, Validators.min(1)]],
-      copies: [1, [Validators.required, Validators.min(1)]],
+      pages: [1, [Validators.required, Validators.min(1), Validators.max(10000)]],
+      copies: [1, [Validators.required, Validators.min(1), Validators.max(10000)]],
       binding: [BindingTypeEnum.NONE, Validators.required],
       color: [false, Validators.required]
     });
   }
 
   ngOnInit(): void {
+    this.calculatorForm.get('pages')?.valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(pages => {
+      const currentBinding = this.calculatorForm.get('binding')?.value;
+      
+      // Si la opción actual ya no es válida según las reglas, reseteamos a NONE
+      if ((currentBinding === BindingTypeEnum.RINGED && pages <= 8) ||
+          (currentBinding === BindingTypeEnum.STAPLED && (pages < 2 || pages > 50))) {
+        this.calculatorForm.patchValue({ binding: BindingTypeEnum.NONE });
+      }
+    });
+
     this.calculatorForm.valueChanges
       .pipe(
         debounceTime(300),
@@ -89,5 +101,13 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  isOptionAvailable(binding: string): boolean {
+    const pages = this.calculatorForm.get('pages')?.value || 0;
+    
+    if (binding === BindingTypeEnum.RINGED) return pages >= 8;
+    if (binding === BindingTypeEnum.STAPLED) return pages >= 2 && pages <= 50;
+    return true;
   }
 }

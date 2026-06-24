@@ -19,6 +19,7 @@ export class AccountPage implements OnInit {
   isLoading = true;
   isEditing = false;
   isSaving = false;
+  errorType: 'NONE' | 'CONNECTION' = 'NONE';
 
   constructor(
     private userService: UserService, 
@@ -38,6 +39,9 @@ export class AccountPage implements OnInit {
   }
 
   loadProfile(): void {
+    this.isLoading = true;
+    this.errorType = 'NONE';
+
     this.userService.getProfile().subscribe({
       next: (profile) => {
         this.currentUser = profile;
@@ -47,6 +51,7 @@ export class AccountPage implements OnInit {
       error: () => {
         this.isLoading = false;
         this.notificationService.error("No se pudo cargar la información del perfil");
+        this.errorType = 'CONNECTION';
       }
     });
   }
