@@ -5,4 +5,5 @@ export default interface UserCreateRequest{
   email: string;
   phone: string;
   password: string;
+  notificationsEnabled: boolean;
 }

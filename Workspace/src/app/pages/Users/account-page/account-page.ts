@@ -22,7 +22,7 @@ export class AccountPage implements OnInit {
   errorType: 'NONE' | 'CONNECTION' = 'NONE';
 
   constructor(
-    private userService: UserService, 
+    public userService: UserService, 
     private fb: FormBuilder, 
     private router: Router, 
     private notificationService: NotificationService
@@ -30,12 +30,14 @@ export class AccountPage implements OnInit {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
+      phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      notificationsEnabled: [false]
     });
   }
 
   ngOnInit(): void {
     this.loadProfile();
+    this.userForm.get('notificationsEnabled')?.disable();
   }
 
   loadProfile(): void {
@@ -58,7 +60,16 @@ export class AccountPage implements OnInit {
 
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
-    if (!this.isEditing) this.userForm.patchValue(this.currentUser!);
+
+    const notificationControl = this.userForm.get('notificationsEnabled');
+
+    if (this.isEditing) {
+      this.userForm.patchValue(this.currentUser!);
+      notificationControl?.enable();
+    } else {
+      this.userForm.patchValue(this.currentUser!);
+      notificationControl?.disable();
+    }
   }
 
   onSubmit(): void {
@@ -71,7 +82,7 @@ export class AccountPage implements OnInit {
         this.loadProfile();
         this.notificationService.success('Perfil actualizado');
       },
-      error: () => { this.isSaving = false; }
+      error: (error) => { this.isSaving = false; console.log(error) }
     });
   }
 

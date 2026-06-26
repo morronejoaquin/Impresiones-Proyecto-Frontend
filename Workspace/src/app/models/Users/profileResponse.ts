@@ -5,4 +5,5 @@ export default interface ProfileResponse{
     email: string;
     phone: string;
     role: string;
+    notificationsEnabled: boolean;
 }

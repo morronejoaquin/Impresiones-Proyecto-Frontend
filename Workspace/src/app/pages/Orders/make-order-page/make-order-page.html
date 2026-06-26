@@ -129,9 +129,13 @@
       }
       
       <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || (!selectedFile && !editingOrderId) || isLoading || isUnChanged || isCartFull">
-        <span class="material-icons" *ngIf="!isLoading">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
-        <span class="spinner-sm" *ngIf="isLoading"></span>
-        {{ editingOrderId ? 'Guardar cambios' : 'Agregar al Carrito' }}
+        @if (isLoading) {
+          <span class="spinner"></span>
+          <span>Procesando...</span>
+        } @else {
+          <span class="material-icons">{{ editingOrderId ? 'save' : 'add_shopping_cart' }}</span>
+          <span>{{ editingOrderId ? 'Guardar cambios' : 'Agregar al Carrito' }}</span>
+        }
       </button>
     </div>
     @if (isCartFull && !editingOrderId) {

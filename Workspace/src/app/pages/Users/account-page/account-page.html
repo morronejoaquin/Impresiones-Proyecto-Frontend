@@ -60,6 +60,18 @@
               <label>Teléfono</label>
               <input type="text" formControlName="phone" [readonly]="!isEditing" [class.editable]="isEditing">
             </div>
+            
+            @if(userService.profile$ | async; as profile) {
+              @if(profile.role !== 'administrador') {
+                <div class="form-group full-width">
+                  <label>Recibir correos con novedades y actualizaciones de mi pedido.</label>
+                  <label class="switch">
+                    <input type="checkbox" formControlName="notificationsEnabled">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              }
+            }
           </div>
 
           @if (isEditing) {

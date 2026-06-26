@@ -48,7 +48,8 @@ export class UserRegisterPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]], 
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(18), Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      notificationsEnabled: [true]
     }, { validators: this.passwordMatchValidator });
   }
 
