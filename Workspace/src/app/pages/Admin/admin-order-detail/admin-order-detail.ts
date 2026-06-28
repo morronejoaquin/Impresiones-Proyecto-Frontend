@@ -118,26 +118,37 @@ export class AdminOrderDetailPage implements OnInit {
 
   onStatusChange(newStatus: string): void {
     const cartId = this.cart()?.id;
-    if (!cartId) return;
+    const currentStatus = this.cart()?.status;
+    if (!cartId || !currentStatus) return;
 
     const statusEnum = newStatus as OrderStatusEnum;
-    this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(statusEnum)}?`;
+
+    const isMovingBackwards = currentStatus === OrderStatusEnum.READY && 
+                              [OrderStatusEnum.PENDING, OrderStatusEnum.PRINTING, OrderStatusEnum.BINDING].includes(statusEnum);
+    
+    const isFinalState = [OrderStatusEnum.READY, OrderStatusEnum.DELIVERED, OrderStatusEnum.CANCELLED].includes(statusEnum);
+
+    this.message = `¿Confirmar cambio de estado a ${this.statusLabel(statusEnum)}?`;
 
     const action: PendingAction = {
       execute: () => this.updateStatus(cartId, statusEnum),
       message: this.message,
       cancel: () => {
         if (this.statusSelect) {
-          this.statusSelect.nativeElement.value = this.cart()?.status || '';
+          this.statusSelect.nativeElement.value = currentStatus;
         }
       }
     };
 
-    if (statusEnum == OrderStatusEnum.READY){
+    if (isMovingBackwards) {
+      action.subMessage = `Este pedido ya estaba listo y el cliente fue notificado`;
+    }
+
+    if (statusEnum === OrderStatusEnum.READY) {
       action.subMessage = 'Se le enviará una notificación al usuario';
     }
 
-    if ([OrderStatusEnum.READY, OrderStatusEnum.DELIVERED, OrderStatusEnum.CANCELLED].includes(statusEnum)) {
+    if (isFinalState || isMovingBackwards) {
       this.openConfirmModal(action);
     } else {
       action.execute();

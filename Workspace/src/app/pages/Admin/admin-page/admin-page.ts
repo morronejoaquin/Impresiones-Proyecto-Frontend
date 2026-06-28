@@ -112,13 +112,21 @@ export class AdminPage implements OnInit {
   }
 
   onStatusChange(cart: CartResponse, newStatus: OrderStatusEnum) {
-    this.message = `¿Confirmar cambio de estado a: ${this.statusLabel(newStatus)}?`;
+    const isMovingBackwards = cart.status === OrderStatusEnum.READY && 
+                            [OrderStatusEnum.PENDING, OrderStatusEnum.PRINTING, OrderStatusEnum.BINDING].includes(newStatus);
+  
+    const isFinalState = [OrderStatusEnum.READY, OrderStatusEnum.DELIVERED, OrderStatusEnum.CANCELLED].includes(newStatus);
 
-    const statusLabel = this.statusLabel(newStatus);
+    this.message = `¿Confirmar cambio de estado a ${this.statusLabel(newStatus)}?`;
+
     const action: PendingAction = {
       execute: () => this.executeStatusUpdate(cart, newStatus),
       message: this.message
     };
+
+    if (isMovingBackwards) {
+      action.subMessage = `Este pedido ya estaba listo y el cliente fue notificado`;
+    }
 
     if (newStatus === OrderStatusEnum.READY) {
       action.subMessage = 'Se le enviará una notificación al usuario';
@@ -126,7 +134,7 @@ export class AdminPage implements OnInit {
 
     this.pendingAction = action;
 
-    if ([OrderStatusEnum.READY, OrderStatusEnum.DELIVERED, OrderStatusEnum.CANCELLED].includes(newStatus)) {
+    if (isFinalState || isMovingBackwards) {
       this.showConfirm = true;
     } else {
       action.execute();
@@ -155,7 +163,14 @@ export class AdminPage implements OnInit {
     this.cartService.actualizarEstado(cart.id, request).subscribe({
       next: (updatedCart) => {
         cart.status = updatedCart.status;
-        this.notificationService.success(`Pedido actualizado a ${this.statusLabel(newStatus)}`);
+
+        let msg = `Pedido actualizado a ${this.statusLabel(newStatus)}`;
+      
+        if (newStatus === 'READY') {
+          msg += ". Se notificó al usuario";
+        }
+
+        this.notificationService.success(msg);
         
         // Simulación de guardado para la UI
         setTimeout(() => this.savingIds.delete(cart.id), 1000);

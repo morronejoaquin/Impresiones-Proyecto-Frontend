@@ -22,6 +22,11 @@
       </div>
 
       <div class="meta-item">
+        <span class="meta-label">Numero de teléfono</span>
+        <span class="meta-value">{{ c.customer.phone }}</span>
+      </div>
+
+      <div class="meta-item">
         <span class="meta-label">Estado</span>
         <div class="status-wrapper">
           <select #statusSelect
@@ -69,10 +74,12 @@
         <span class="meta-value">{{ c.completedAt ? (c.completedAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
       </div>
       
-      <div class="meta-item">
-        <span class="meta-label">Fecha Entrega</span>
-        <span class="meta-value">{{ c.deliveredAt ? (c.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
-      </div>
+      @if (c.deliveredAt){
+        <div class="meta-item">
+          <span class="meta-label">Fecha Entrega</span>
+          <span class="meta-value">{{ c.deliveredAt ? (c.deliveredAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
+        </div>
+      }
     </div>
 
     <div class="section-header">
