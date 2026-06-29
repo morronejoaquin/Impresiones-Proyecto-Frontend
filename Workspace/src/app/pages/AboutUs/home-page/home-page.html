@@ -3,12 +3,13 @@
         <div class="container content-overlay">
           <div class="hero-content">
             <h1>Bienvenido a Puerto Colores</h1>
-            <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
             <div class="hero-actions">
                 @if(authService.getToken()) {
                   @if(userService.profile$ | async; as profile) {
                     
                     @if(profile.role !== 'administrador') {
+                    <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
+
                     <a routerLink="/make-order" class="btn btn-primary btn-lg">
                       <span class="material-icons">add</span>
                       Nuevo Pedido
@@ -19,6 +20,8 @@
                     }
 
                     @if(profile.role === 'administrador') {
+                    <p>Tu gestor de centro de impresiones de confianza. Gestiona todos los pedidos de los clientes de una manera más eficiente en un solo lugar.</p>
+
                     <a routerLink="/admin" class="btn btn-primary btn-lg">
                       Gestionar pedidos
                     </a>
@@ -29,6 +32,8 @@
                   }
                 
                 } @else {
+                <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
+
                 <a routerLink="/user-login" class="btn btn-primary btn-lg">
                   Empezar Ahora
                 </a>
@@ -55,6 +60,55 @@
     </section>
 
     <section class="features">
+      @if (isAdmin$ | async) {
+        <div class="container">
+          <h2 class="section-title">Tus funciones</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">list_alt</span>
+              </div>
+              <h3>Gestión de Pedidos</h3>
+              <p>Gestiona los pedidos de tus clientes por su orden de llegada.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">file_download</span>
+              </div>
+              <h3>Descarga los archivos</h3>
+              <p>Descarga los archivos de los pedidos haciendo click en un botón.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">attach_money</span>
+              </div>
+              <h3>Gestión de Precios</h3>
+              <p>Modifica los precios a tu manera.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">receipt_long</span>
+              </div>
+              <h3>Gestión de Pagos</h3>
+              <p>Gestiona los pagos de los cliente para organizar los pedidos.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">bar_chart</span>
+              </div>
+              <h3>Análisis del Dashboard</h3>
+              <p>Visualiza tendencias de impresiones o metodos de pago en tu Dashboard.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <span class="material-icons">notifications</span>
+              </div>
+              <h3>Notificaciones</h3>
+              <p>Notifica automáticamente a los clientes cuando su pedido esté listo</p>
+            </div>
+          </div>
+        </div>
+      } @else {
         <div class="container">
           <h2 class="section-title">Nuestros Servicios</h2>
           <div class="features-grid">
@@ -102,9 +156,46 @@
             </div>
           </div>
         </div>
+      }
     </section>
 
     <section class="how-it-works">
+      @if (isAdmin$ | async) {
+        <div class="container">
+          <h2 class="section-title">¿Cómo Funciona?</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <h3>Recibe el Pedido.</h3>
+              <p>Recibirás el pedido del cliente y podrás ver sus archivos.</p>
+            </div>
+            <div class="step-arrow">
+              <span class="material-icons">arrow_forward</span>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <h3>Gestiona el pago.</h3>
+              <p>Aprueba manualmente los pagos en Efectivo y Tranferencia para un mayor control.</p>
+            </div>
+            <div class="step-arrow">
+              <span class="material-icons">arrow_forward</span>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <h3>Cambialo de estado.</h3>
+              <p>Cambia el estado a Listo cuando hayas terminado de imprimir todos los archivos del pedido.</p>
+            </div>
+            <div class="step-arrow">
+              <span class="material-icons">arrow_forward</span>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <h3>Entrega el pedido.</h3>
+              <p>El cliente recibirá una notificación en su inicio o en su correo para avisarle que puede retirar su pedido.</p>
+            </div>
+          </div>
+        </div>
+      } @else {
         <div class="container">
           <h2 class="section-title">¿Cómo Funciona?</h2>
           <div class="steps">
@@ -131,9 +222,22 @@
             </div>
           </div>
         </div>
+      }
     </section>
 
     <section class="cta">
+      @if (isAdmin$ | async) {
+        <div class="container">
+          <div class="cta-content">
+            <h2>¿Listo para empezar?</h2>
+            <p>Empieza a gestionar los pedidos de una manera mas eficiente.</p>
+            <a routerLink="/admin" class="btn btn-primary btn-lg">
+              <span class="material-icons">rocket_launch</span>
+              Empezar
+            </a>
+          </div>
+        </div>
+      } @else {
         <div class="container">
           <div class="cta-content">
             <h2>¿Listo para imprimir?</h2>
@@ -144,5 +248,6 @@
             </a>
           </div>
         </div>
+      }
     </section>
 </div>

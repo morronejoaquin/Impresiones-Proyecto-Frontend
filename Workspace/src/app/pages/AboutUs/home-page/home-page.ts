@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/Auth/auth.service';
 import { UserService } from '../../../services/Users/user-service';
 import { AsyncPipe } from '@angular/common';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -11,6 +12,12 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './home-page.css'
 })
 export class HomePage implements OnInit{
+
+  get isAdmin$(): Observable<boolean> {
+    return this.userService.profile$.pipe(
+      map(profile => profile?.role === 'administrador')
+    );
+  }
 
   constructor(public authService: AuthService, public userService: UserService) {
   }
