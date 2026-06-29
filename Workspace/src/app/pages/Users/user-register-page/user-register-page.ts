@@ -81,8 +81,12 @@ export class UserRegisterPage implements OnInit {
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        const data = error.error;
-        this.errorMessage = data.mensaje || data.error || data.message || "El email ya está registrado";
+        if (error?.status === 400){
+          const data = error.error;
+          this.errorMessage = data.mensaje || data.error || data.message || "El email ya está registrado";
+        } else {
+          this.errorMessage = "No se pudo hacer el registro. Inténtelo más tarde."
+        }
       }
     });
   }

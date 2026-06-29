@@ -39,7 +39,6 @@ export class AdminOrderDetailPage implements OnInit {
 
   isLoading = false;
   isUpdating = false;
-  notFound = false;
 
   pendingAction: PendingAction | null = null;
   showConfirm = false;
@@ -52,6 +51,8 @@ export class AdminOrderDetailPage implements OnInit {
   // para que el select vuelva a su estado original al cancelar
   @ViewChild('statusSelect') statusSelect!: ElementRef<HTMLSelectElement>;
 
+  errorType: 'NONE' | 'CONNECTION' | 'NOT_FOUND' = 'NONE';
+
   ngOnInit(): void {
     this.loadDetail();
   }
@@ -61,7 +62,7 @@ export class AdminOrderDetailPage implements OnInit {
     if (!id) return;
 
     this.isLoading = true;
-    this.notFound = false;
+    this.errorType = 'NONE';
 
     this.cartsApi.getCartItems(id).subscribe({
       next: (data: CartWithItemsResponse) => {
@@ -70,11 +71,10 @@ export class AdminOrderDetailPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Error loading order detail:', err);
         if (err?.status === 404) {
-          this.notFound = true;
+          this.errorType = 'NOT_FOUND';
         } else {
-          this.notification.error('Error al cargar el pedido.');
+          this.errorType = 'CONNECTION';
         }
       }
     });
@@ -196,6 +196,7 @@ export class AdminOrderDetailPage implements OnInit {
 
   updateStatus(cartId: string, status: OrderStatusEnum): void {
     this.isUpdating = true;
+    this.errorType = 'NONE';
 
     this.cartsApi.actualizarEstado(cartId, { status }).subscribe({
       next: (resp: CartResponse) => {
@@ -217,8 +218,9 @@ export class AdminOrderDetailPage implements OnInit {
         this.isUpdating = false;
         console.error('Error updating status', err);
         if (err?.status === 404) {
-          this.notFound = true;
+          this.errorType = 'NOT_FOUND';
         } else {
+          this.errorType = 'CONNECTION';
           this.notification.error('No se pudo actualizar el estado.');
 
           this.loadDetail();

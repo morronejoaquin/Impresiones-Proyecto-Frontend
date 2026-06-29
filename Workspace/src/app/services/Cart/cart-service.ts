@@ -26,13 +26,7 @@ export class CartService {
 
   getMyCart(): Observable<CartWithItemsResponse> {
     return this.http.get<CartWithItemsResponse>(`${this.apiUrl}/my-cart`).pipe(
-      tap((cart) => this.cartUpdatedSubject.next(cart)),
-      catchError((err) => {
-        if (err.status === 404 && err.error?.codigo === 'CART_001') {
-          return of(null as any);
-        }
-        return throwError(() => err);
-      })
+      tap((cart) => this.cartUpdatedSubject.next(cart))
     );
   }
 

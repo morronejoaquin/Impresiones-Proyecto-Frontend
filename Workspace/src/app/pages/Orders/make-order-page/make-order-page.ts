@@ -206,12 +206,8 @@ export class MakeOrderPage implements OnInit {
   ngOnInit(): void {
     this.cartService.getMyCart().subscribe({
       next: (cart) => {
-        if (cart) {
         this.currentCartItemsCount = cart.items.length;
-        } else {
-          this.cartService.createCart().subscribe();
-        }
-      },
+      }
     });
 
     this.route.paramMap.subscribe((params) => {
@@ -310,21 +306,10 @@ export class MakeOrderPage implements OnInit {
       return;
     }
 
-    this.cartService.getMyCart().subscribe({
-      next: (cart) => {
-        this.createOrderItem(cart.id);
-      },
-      error: (err) => {
-        this.cartService.createCart().subscribe({
-          next: (newCart) => {
-            this.createOrderItem(newCart.id);
-          },
-        });
-      },
-    });
+    this.createOrderItem();
   }
 
-  private createOrderItem(cartId: string) {
+  private createOrderItem() {
     this.isLoading = true;
     const orderItemRequest: OrderItemCreateRequest = {
       color: this.orderForm.get('color')?.value,

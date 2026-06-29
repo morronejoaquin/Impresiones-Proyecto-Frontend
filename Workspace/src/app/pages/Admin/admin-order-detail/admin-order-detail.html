@@ -5,16 +5,26 @@
     </a>
   </div>
 
-  @if (!notFound) {
-    <h1 class="title">Pedido #{{ cart()?.id }}</h1>
-  } @else {
-    <div class="error-container">
-      <h2>404 - Carrito no encontrado</h2>
-      <p>El ID del carrito no es válido o el pedido no existe.</p>
+  @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando pedido...</p>
+    </div>
+  } @else if (errorType === 'CONNECTION') {
+    <div class="error-state">
+      <span class="material-icons">cloud_off</span>
+      <p>No se pudo conectar con el servidor. Verifica tu conexión.</p>
+      <button (click)="loadDetail()" class="btn-retry">Reintentar</button>
+    </div>
+  } @else if (errorType === 'NOT_FOUND') {
+    <div class="empty-state">
+      <span class="material-icons">search_off</span>
+      <p>Pedido no encontrado.</p>
     </div>
   }
 
   @if (cart(); as c) {
+    <h1 class="title">Pedido #{{ cart()?.id }}</h1>
     <div class="meta-card">
       <div class="meta-item">
         <span class="meta-label">Cliente</span>

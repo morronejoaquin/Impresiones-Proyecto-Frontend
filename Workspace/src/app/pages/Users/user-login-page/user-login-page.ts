@@ -50,7 +50,11 @@ export class UserLoginPage {
         this.handleLogin(response.token);
       }, 
       error: (err) =>{
-        this.errorMessage = "Email o contraseña incorrectos";
+        if (err?.status === 401) {
+          this.errorMessage = "Email o contraseña incorrectos";
+        } else {
+          this.errorMessage = "No se pudo iniciar sesión. Inténtelo más tarde.";
+        }
         console.error(err);
       }
     })
