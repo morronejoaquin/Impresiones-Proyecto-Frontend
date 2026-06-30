@@ -68,7 +68,17 @@
     <section class="result-card">
       <h2 class="section-title">Resultado</h2>
       <div class="result-content">
-        @if (calculatorForm.get('pages')?.value > 0 && calculatorForm.get('copies')?.value > 0 && priceResult) {
+        @if (isLoading) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Cargando resultado...</p>
+          </div>
+        } @else if (errorType === 'CONNECTION') {
+          <div class="error-state">
+            <span class="material-icons large-icon">calculate</span>
+            <p>No se pudo realizar el cálculo. Inténtalo más tarde.</p>
+          </div>
+        } @else if (calculatorForm.get('pages')?.value > 0 && calculatorForm.get('copies')?.value > 0 && priceResult) {
           <div class="price-display">
             <div class="main-total">
               <span class="currency">$</span>
@@ -95,6 +105,7 @@
             <p>Ingresa los datos para calcular</p>
           </div>
         }
+        
       </div>
     </section>
   </div>

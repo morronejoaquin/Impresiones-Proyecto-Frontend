@@ -68,7 +68,7 @@ export class AdminPage implements OnInit {
       this.cartService.filterCartsForAdmin(this.filters, this.currentPage, this.pageSize).subscribe({
         next: (res) => this.handleResponse(res),
         error: () => {
-          this.isLoading = false
+          this.isLoading = false;
           this.errorType = 'CONNECTION';
         }
       });
@@ -76,7 +76,7 @@ export class AdminPage implements OnInit {
       this.cartService.getActiveCartsForAdmin(this.currentPage, this.pageSize).subscribe({
         next: (res) => this.handleResponse(res),
         error: () => {
-          this.isLoading = false
+          this.isLoading = false;
           this.errorType = 'CONNECTION';
         }
       });

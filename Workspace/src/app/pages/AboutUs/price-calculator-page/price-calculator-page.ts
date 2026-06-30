@@ -19,7 +19,7 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
   calculatorForm: FormGroup;
   priceResult: PriceCalculationResponse | null = null;
   isLoading = false;
-  errorMessage: string | null = null;
+  errorType: 'NONE' | 'CONNECTION' = 'NONE';
 
   bindingOptions = [
     { value: BindingTypeEnum.NONE, label: 'Ninguno' },
@@ -76,7 +76,7 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
   calcularPrecio(): void {
     if (this.calculatorForm.valid) {
       this.isLoading = true;
-      this.errorMessage = null;
+      this.errorType = 'NONE';
 
       const formValue = this.calculatorForm.value;
       const request: PriceCalculationRequest = {
@@ -95,9 +95,8 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
             this.isLoading = false;
           },
           error: (error) => {
-            console.error('Error al calcular precio:', error);
-            this.errorMessage = 'Error al calcular el precio. Intente nuevamente.';
             this.isLoading = false;
+            this.errorType = 'CONNECTION';
           }
         });
     }

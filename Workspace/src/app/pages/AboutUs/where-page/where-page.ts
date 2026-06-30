@@ -12,18 +12,22 @@ import { SafeUrlPipe } from '../pipes/safe-url.pipe'; // Asegurate que la ruta a
 })
 export class WherePage implements OnInit {
   location: any;
+  isLoading = false;
 
   constructor(private storeService: StoreLocationService) {}
 
   ngOnInit() {
+    this.isLoading = true;
+
     this.storeService.getLocation().subscribe({
       next: (loc) => {
         this.location = loc;
+        this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error obteniendo ubicación:', err);
         // Fallback: Coordenadas por defecto (ej. Mar del Plata) si falla el back
         this.location = { lat: -38.0055, lng: -57.5426 };
+        this.isLoading = false;
       }
     });
   }
