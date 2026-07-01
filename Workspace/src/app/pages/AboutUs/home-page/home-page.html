@@ -4,10 +4,8 @@
           <div class="hero-content">
             <h1>Bienvenido a Puerto Colores</h1>
             <div class="hero-actions">
-                @if(authService.getToken()) {
-                  @if(userService.profile$ | async; as profile) {
-                    
-                    @if(profile.role !== 'administrador') {
+                @if(authService.getToken()) {                    
+                    @if(!isAdmin) {
                     <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
 
                     <a routerLink="/make-order" class="btn btn-primary btn-lg">
@@ -19,7 +17,7 @@
                     </a>
                     }
 
-                    @if(profile.role === 'administrador') {
+                    @if(isAdmin) {
                     <p>Tu gestor de centro de impresiones de confianza. Gestiona todos los pedidos de los clientes de una manera más eficiente en un solo lugar.</p>
 
                     <a routerLink="/admin" class="btn btn-primary btn-lg">
@@ -29,8 +27,6 @@
                       Calculadora
                     </a>
                     }
-                  }
-                
                 } @else {
                 <p>Tu centro de impresiones de confianza. Imprime tus documentos de manera rápida, sencilla y con la mejor calidad. Carga tus archivos, personaliza tus preferencias y recibe tu pedido.</p>
 
@@ -60,7 +56,7 @@
     </section>
 
     <section class="features">
-      @if (isAdmin$ | async) {
+      @if (isAdmin) {
         <div class="container">
           <h2 class="section-title">Tus funciones</h2>
           <div class="features-grid">
@@ -160,73 +156,86 @@
     </section>
 
     <section class="how-it-works">
-      @if (isAdmin$ | async) {
-        <div class="container">
-          <h2 class="section-title">¿Cómo Funciona?</h2>
-          <div class="steps">
-            <div class="step">
-              <div class="step-number">1</div>
-              <h3>Recibe el Pedido.</h3>
-              <p>Recibirás el pedido del cliente y podrás ver sus archivos.</p>
+      <section class="how-it-works-slider">
+        <div class="hiw-slider-background">
+          @for (img of currentSliderImages; track img; let i = $index) {
+            <div class="hiw-slide" [class.active]="i === currentHowItWorksIndex">
+              <picture>
+                <source media="(max-width: 768px)" [srcset]="img.replace('.png', '-mobile.png')">
+                <img [src]="img" alt="Proceso" class="slide-img">
+              </picture>
             </div>
-            <div class="step-arrow">
-              <span class="material-icons">arrow_forward</span>
-            </div>
-            <div class="step">
-              <div class="step-number">2</div>
-              <h3>Gestiona el pago.</h3>
-              <p>Aprueba manualmente los pagos en Efectivo y Tranferencia para un mayor control.</p>
-            </div>
-            <div class="step-arrow">
-              <span class="material-icons">arrow_forward</span>
-            </div>
-            <div class="step">
-              <div class="step-number">3</div>
-              <h3>Cambialo de estado.</h3>
-              <p>Cambia el estado a Listo cuando hayas terminado de imprimir todos los archivos del pedido.</p>
-            </div>
-            <div class="step-arrow">
-              <span class="material-icons">arrow_forward</span>
-            </div>
-            <div class="step">
-              <div class="step-number">4</div>
-              <h3>Entrega el pedido.</h3>
-              <p>El cliente recibirá una notificación en su inicio o en su correo para avisarle que puede retirar su pedido.</p>
+          }
+          <div class="glass-gradient-dark"></div>
+        </div>
+        @if (isAdmin) {
+          <div class="container content-overlay">
+            <h2 class="section-title">¿Cómo Funciona?</h2>
+            <div class="steps">
+              <div class="step">
+                <div class="step-number">1</div>
+                <h3>Recibe el Pedido.</h3>
+                <p>Recibirás el pedido del cliente y podrás ver sus archivos.</p>
+              </div>
+              <div class="step-arrow">
+                <span class="material-icons">arrow_forward</span>
+              </div>
+              <div class="step">
+                <div class="step-number">2</div>
+                <h3>Gestiona el pago.</h3>
+                <p>Aprueba manualmente los pagos en Efectivo y Tranferencia para un mayor control.</p>
+              </div>
+              <div class="step-arrow">
+                <span class="material-icons">arrow_forward</span>
+              </div>
+              <div class="step">
+                <div class="step-number">3</div>
+                <h3>Cambialo de estado.</h3>
+                <p>Cambia el estado a Listo cuando hayas terminado de imprimir todos los archivos del pedido.</p>
+              </div>
+              <div class="step-arrow">
+                <span class="material-icons">arrow_forward</span>
+              </div>
+              <div class="step">
+                <div class="step-number">4</div>
+                <h3>Entrega el pedido.</h3>
+                <p>El cliente recibirá una notificación en su inicio o en su correo para avisarle que puede retirar su pedido.</p>
+              </div>
             </div>
           </div>
-        </div>
-      } @else {
-        <div class="container">
-          <h2 class="section-title">¿Cómo Funciona?</h2>
-          <div class="steps">
-            <div class="step">
-              <div class="step-number">1</div>
-              <h3>Sube tu Archivo</h3>
-              <p>Carga tu documento PDF o imagen desde el carrito de compras.</p>
+        } @else {
+            <div class="container content-overlay">
+              <h2 class="section-title">¿Cómo Funciona?</h2>
+              <div class="steps">
+                <div class="step">
+                  <div class="step-number">1</div>
+                  <h3>Sube tu Archivo</h3>
+                  <p>Carga tu documento PDF o imagen desde el carrito de compras.</p>
+                </div>
+                <div class="step-arrow">
+                  <span class="material-icons">arrow_forward</span>
+                </div>
+                <div class="step">
+                  <div class="step-number">2</div>
+                  <h3>Personaliza</h3>
+                  <p>Elige color, copias, anillado y otras opciones de impresión.</p>
+                </div>
+                <div class="step-arrow">
+                  <span class="material-icons">arrow_forward</span>
+                </div>
+                <div class="step">
+                  <div class="step-number">3</div>
+                  <h3>Paga y Retira</h3>
+                  <p>Elige tu método de pago y retira cuando esté listo.</p>
+                </div>
+              </div>
             </div>
-            <div class="step-arrow">
-              <span class="material-icons">arrow_forward</span>
-            </div>
-            <div class="step">
-              <div class="step-number">2</div>
-              <h3>Personaliza</h3>
-              <p>Elige color, copias, anillado y otras opciones de impresión.</p>
-            </div>
-            <div class="step-arrow">
-              <span class="material-icons">arrow_forward</span>
-            </div>
-            <div class="step">
-              <div class="step-number">3</div>
-              <h3>Paga y Retira</h3>
-              <p>Elige tu método de pago y retira cuando esté listo.</p>
-            </div>
-          </div>
-        </div>
-      }
+        }
+      </section>
     </section>
 
     <section class="cta">
-      @if (isAdmin$ | async) {
+      @if (isAdmin) {
         <div class="container">
           <div class="cta-content">
             <h2>¿Listo para empezar?</h2>

@@ -8,14 +8,13 @@ import OrderItem from '../../../models/OrderItem/orderItemResponse';
 import { CartService } from '../../../services/Cart/cart-service';
 import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
 import { Subject, takeUntil } from 'rxjs';
-import { CartTotalComponent } from '../../../components/cart-total/cart-total';
 import { NotificationService } from '../../../services/Notification/notification-service';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-show-cart-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CartTotalComponent, ConfirmModal],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModal],
   templateUrl: './show-cart-page.html',
   styleUrl: './show-cart-page.css',
 })
@@ -117,7 +116,7 @@ export class ShowCartPage implements OnInit, OnDestroy {
 
   confirmDelete(): void {
     if (this.itemToDeleteId) {
-      this.isDeleting = true; // Activa estado de carga
+      this.isDeleting = true;
       this.executeDelete();
     }
   }
@@ -130,11 +129,9 @@ export class ShowCartPage implements OnInit, OnDestroy {
 
   this.cartService.eliminarItem(idABorrar).subscribe({
     next: () => {
-      // Éxito: Filtramos y cerramos
       this.finalizarEliminacionLocal(idABorrar);
     },
     error: (err) => {
-      // Manejo del error de parsing (Status 200 pero texto plano)
       if (err.status === 200 || err.ok) {
         this.finalizarEliminacionLocal(idABorrar);
       } else {
@@ -147,17 +144,13 @@ export class ShowCartPage implements OnInit, OnDestroy {
 }
 
 private finalizarEliminacionLocal(id: string): void {
-  // 1. Quitamos el item del array local INMEDIATAMENTE
   this.orders = [...this.orders.filter(o => o.id !== id)];
   
-  // 2. Limpiamos estados
   this.itemToDeleteId = null;
   this.isDeleting = false;
   
-  // 3. Feedback visual
   this.notificationService.success('Archivo eliminado correctamente');
   
-  // 4. Forzamos al servicio a refrescar (opcional pero recomendado)
   this.cartService.refreshCart();
 }
   

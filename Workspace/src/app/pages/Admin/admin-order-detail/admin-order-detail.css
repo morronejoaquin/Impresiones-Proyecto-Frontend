@@ -366,19 +366,16 @@
 
 @media (max-width: 600px) {
   .meta-card {
-    /* Aumentamos el espacio vertical cuando los items se apilan */
     gap: 2rem; 
     padding: 1.25rem;
   }
 
   .meta-item {
-    /* Opcional: Centrar el contenido en móvil para que luzca mejor */
     text-align: center;
     align-items: center;
   }
 
   .meta-label {
-    /* Un poquito más de separación entre el label y el valor en móvil */
     margin-bottom: 4px;
   }
 }

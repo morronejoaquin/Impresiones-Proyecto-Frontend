@@ -25,7 +25,7 @@ export class WherePage implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        // Fallback: Coordenadas por defecto (ej. Mar del Plata) si falla el back
+        // Fallback: Las coordenadas por defecto seran Mar del Plata si falla el back
         this.location = { lat: -38.0055, lng: -57.5426 };
         this.isLoading = false;
       }
@@ -34,7 +34,7 @@ export class WherePage implements OnInit {
 
   get mapUrl() {
     if (!this.location) return '';
-    // URL ESTÁNDAR DE GOOGLE MAPS (Corregida)
+    // URL ESTÁNDAR DE GOOGLE MAPS
     return `https://maps.google.com/maps?q=${this.location.lat},${this.location.lng}&z=16&output=embed`;
   }
 

@@ -285,8 +285,8 @@ select:focus, input:focus {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 0.5rem; /* Separación del mensaje con los botones de arriba */
-  background: #fff5f5; /* Un fondo sutil lo hace ver más profesional */
+  margin-top: 0.5rem;
+  background: #fff5f5;
   padding: 8px 12px;
   border-radius: 8px;
   border-left: 4px solid #d32f2f;

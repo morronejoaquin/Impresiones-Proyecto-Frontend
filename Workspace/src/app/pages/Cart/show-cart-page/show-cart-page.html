@@ -66,7 +66,12 @@
         <div class="summary-card">
           <h3>Resumen</h3>
 
-            <app-cart-total [total]="calculatedCartTotal"></app-cart-total>
+          <div class="cart-total-wrapper">
+            <div class="total-row">
+              <span class="label">Total a pagar:</span>
+              <span class="amount">$ {{calculatedCartTotal | number:'1.2-2'}}</span>
+            </div>
+          </div>
                       
           <button class="btn-primary full-width" (click)="proceedToPayment()">
             Proceder al Pago <span class="material-icons">arrow_forward</span>

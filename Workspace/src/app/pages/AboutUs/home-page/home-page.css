@@ -195,8 +195,61 @@
 }
 
 .how-it-works {
-  padding: 5rem 0;
+  padding: 1.5rem 0;
   background: var(--bg-secondary);
+}
+
+.how-it-works-slider {
+  position: relative;
+  padding: 5rem 0;
+  overflow: hidden;
+  color: white; /* Ajusta los colores de texto si el fondo es oscuro */
+}
+
+.hiw-slider-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hiw-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hiw-slide.active {
+  opacity: 1; /* Ajusta la opacidad según el contraste que necesites */
+}
+
+.hiw-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.glass-gradient-dark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Capa oscura para que el texto sea legible */
+  z-index: 2;
+}
+
+.content-overlay {
+  position: relative;
+  z-index: 3;
+}
+
+.content-overlay .section-title {
+  color: white;
 }
 
 .steps {
@@ -232,17 +285,17 @@
 .step h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: white;
   margin-bottom: 0.5rem;
 }
 
 .step p {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: white;
 }
 
 .step-arrow {
-  color: var(--text-muted);
+  color: white;
 }
 
 .step-arrow .material-icons {

@@ -31,7 +31,7 @@ export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
     return true;
   } else {
     console.warn('Acceso denegado: el usuario no tiene los roles necesarios.');
-    // Si el usuario está logueado pero no tiene permiso, mándalo a HOME, no al LOGIN
+    // Si el usuario está logueado pero no tiene permiso, va a HOME, no al LOGIN
     return router.createUrlTree(['/home']);
   }
 };

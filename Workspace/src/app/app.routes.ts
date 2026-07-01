@@ -13,7 +13,6 @@ import { CartPaymentPage } from './pages/Cart/cart-payment-page/cart-payment-pag
 import { OrderReceivedPage } from './pages/Cart/order-received-page/order-received-page';
 import { AdminRecordPage } from './pages/Admin/admin-record-page/admin-record-page';
 import { AdminDashboardComponent } from './pages/Admin/admin-dashboard/admin-dashboard.component';
-import { PaymentReconciliationComponent } from './pages/Admin/payment-reconciliation/payment-reconciliation';
 import { PriceHistoryAdmin } from './pages/Admin/price-history-admin/price-history-admin';
 
 export const routes: Routes = [
@@ -119,12 +118,6 @@ export const routes: Routes = [
   {
     path: 'admin/dashboard',
     component: AdminDashboardComponent,
-    canActivate: [permissionGuard],
-    data: { allowedRoles: ['administrador'] },
-  },
-  {
-    path: 'admin/reconciliation',
-    component: PaymentReconciliationComponent,
     canActivate: [permissionGuard],
     data: { allowedRoles: ['administrador'] },
   },
