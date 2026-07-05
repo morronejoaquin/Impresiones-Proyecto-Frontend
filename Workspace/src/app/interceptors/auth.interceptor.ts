@@ -1,15 +1,21 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from 'rxjs';
 import { NotificationService } from '../services/Notification/notification-service';
 import { ApiError } from '../models/Error/apiError';
+import { AuthService } from '../services/Auth/auth.service';
+
+let isRefreshing = false;
+const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastr = inject(NotificationService);
-  const token = localStorage.getItem('token');
+  const authService = inject(AuthService); // Debes tener acceso al servicio
+  const token = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
   
   // 1. Identifica si la petición es para login o registro
   const isAuthRequest = req.url.includes('/auth/login') || req.url.includes('/auth/register');
@@ -27,6 +33,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       
+      if (error.status === 401 && refreshToken) {
+        return handle401Error(req, next, authService, refreshToken);
+      }
+      
       // 3. Si es una petición de autenticación, no se maneja aca
       if (isAuthRequest) {
         return throwError(() => error);
@@ -40,7 +50,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         case 401:
           toastr.clearAndStop();
           toastr.error('Tu sesión ha expirado, por favor ingresa nuevamente');
-          localStorage.removeItem('token');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
           router.navigate(['/login']);
           break;
           
@@ -68,3 +79,26 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+
+// Función auxiliar para manejar el refresco
+function handle401Error(req: HttpRequest<any>, next: HttpHandlerFn, authService: any, refreshToken: string): Observable<HttpEvent<unknown>> {
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshTokenSubject.next(null);
+
+    return authService.refreshToken(refreshToken).pipe(
+      switchMap((res: any) => {
+        isRefreshing = false;
+        refreshTokenSubject.next(res.accessToken);
+        return next(req.clone({ setHeaders: { Authorization: `Bearer ${res.accessToken}` } }));
+      })
+    );
+  } else {
+    // Si ya se está refrescando, espera a que el subject emita el nuevo token
+    return refreshTokenSubject.pipe(
+      filter(token => token !== null),
+      take(1),
+      switchMap(token => next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })))
+    );
+  }
+}

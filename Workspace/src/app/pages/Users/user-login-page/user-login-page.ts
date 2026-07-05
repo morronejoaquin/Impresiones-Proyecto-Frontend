@@ -47,7 +47,7 @@ export class UserLoginPage {
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        this.handleLogin(response.token);
+        this.handleLogin(response.accessToken);
       }, 
       error: (err) =>{
         if (err?.status === 401) {
@@ -62,7 +62,6 @@ export class UserLoginPage {
 
   
   private handleLogin(token: string) {
-    localStorage.setItem('token', token); 
 
     this.userService.getProfile().subscribe({
       next: (data) => {

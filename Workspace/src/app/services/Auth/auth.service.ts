@@ -35,7 +35,8 @@ export class AuthService {
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
       tap(res => {
-        localStorage.setItem('token', res.token);
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
         setTimeout(() => {
           this.checkAndInitNotifications();
         }, 500);
@@ -46,8 +47,18 @@ export class AuthService {
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request).pipe(
       tap(res => {
-        localStorage.setItem('token', res.token)
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
         this.checkAndInitNotifications();
+      })
+    );
+  }
+
+  refreshToken(refreshToken: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+      tap(res => {
+        localStorage.setItem('accessToken', res.accessToken); // Guardamos el nuevo access
+        localStorage.setItem('refreshToken', res.refreshToken); // Guardamos el nuevo refresh
       })
     );
   }
@@ -64,7 +75,8 @@ export class AuthService {
     // se detienen las notificaciones
     this.notificationService.clearAndStop();
 
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 
     this.router.navigate(['/user-login']);
     
@@ -72,7 +84,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('accessToken');
   }
 
 }

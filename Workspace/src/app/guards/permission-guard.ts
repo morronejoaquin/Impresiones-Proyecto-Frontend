@@ -6,7 +6,7 @@ const LOGIN_URL = '/user-login';
 
 export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
   const router = inject(Router);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
 
   if (!token) return router.createUrlTree(['/user-login']);
 
