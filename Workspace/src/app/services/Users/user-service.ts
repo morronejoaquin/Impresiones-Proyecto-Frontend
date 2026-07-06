@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import Page from '../../models/PageModel/page';
 import UserResponse from '../../models/Users/userResponse';
 import ProfileResponse from '../../models/Users/profileResponse';
@@ -24,13 +24,17 @@ export class UserService {
   }
 
   getProfile(): Observable<ProfileResponse> {
-    return this.http.get<ProfileResponse>(`${this.apiUrl}/profile`);
+    return this.http.get<ProfileResponse>(`${this.apiUrl}/profile`).pipe(
+      tap(profile => this.profileSubject.next(profile))
+    );
   }
 
   loadProfile() {
     this.getProfile().subscribe({
-      next: (profile) => this.profileSubject.next(profile),
-      error: () => this.profileSubject.next(null)
+      next: (profile) => {
+        this.profileSubject.next(profile)},
+      error: () => {
+        this.profileSubject.next(null)}
     });
   }
 

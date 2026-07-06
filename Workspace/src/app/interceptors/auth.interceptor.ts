@@ -6,6 +6,7 @@ import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throw
 import { NotificationService } from '../services/Notification/notification-service';
 import { ApiError } from '../models/Error/apiError';
 import { AuthService } from '../services/Auth/auth.service';
+import { UserService } from '../services/Users/user-service';
 
 let isRefreshing = false;
 const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
@@ -14,6 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastr = inject(NotificationService);
   const authService = inject(AuthService); // Debes tener acceso al servicio
+  const userService = inject(UserService);
   const token = localStorage.getItem('accessToken');
   const refreshToken = localStorage.getItem('refreshToken');
   
@@ -34,7 +36,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       
       if (error.status === 401 && refreshToken) {
-        return handle401Error(req, next, authService, refreshToken);
+        return handle401Error(req, next, authService, userService, refreshToken);
       }
       
       // 3. Si es una petición de autenticación, no se maneja aca
@@ -46,42 +48,33 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       const data = error.error;
       const message = data?.mensaje || data?.error || data?.message || 'Ocurrió un error inesperado.';
 
-      switch (error.status) {
-        case 401:
-          toastr.clearAndStop();
-          toastr.error('Tu sesión ha expirado, por favor ingresa nuevamente');
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          router.navigate(['/login']);
-          break;
-          
-        case 403:
-          toastr.error('No tienes permisos suficientes.');
-          break;
-          
-        case 400:
-        case 404:
-        case 409:
-          toastr.error(message);
-          break;
+        switch (error.status) {
+          case 403:
+            toastr.error('No tienes permisos suficientes.');
+            break;
+            
+          case 400:
+          case 404:
+          case 409:
+            toastr.error(message);
+            break;
 
-        case 500:
-          toastr.error('Error interno del servidor.');
-          break;
-        
-        case 0:
-          toastr.clearAndStop();
-          toastr.error('No se pudo conectar con el servidor. Verifica tu conexión.');
-          break;  
-      }
-      
+          case 500:
+            toastr.error('Error interno del servidor.');
+            break;
+          
+          case 0:
+            toastr.clearAndStop();
+            toastr.error('No se pudo conectar con el servidor. Verifica tu conexión.');
+            break;  
+        }
       return throwError(() => error);
     })
   );
 };
 
 // Función auxiliar para manejar el refresco
-function handle401Error(req: HttpRequest<any>, next: HttpHandlerFn, authService: any, refreshToken: string): Observable<HttpEvent<unknown>> {
+function handle401Error(req: HttpRequest<any>, next: HttpHandlerFn, authService: any, userService: any, refreshToken: string): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
@@ -90,11 +83,19 @@ function handle401Error(req: HttpRequest<any>, next: HttpHandlerFn, authService:
       switchMap((res: any) => {
         isRefreshing = false;
         refreshTokenSubject.next(res.accessToken);
-        return next(req.clone({ setHeaders: { Authorization: `Bearer ${res.accessToken}` } }));
+        return userService.getProfile().pipe(
+            switchMap(() => next(req.clone({ setHeaders: { Authorization: `Bearer ${res.accessToken}` } })))
+        );
+      }),
+      catchError((err) => {
+        isRefreshing = false;
+        // Si el refresh falla, es que el usuario realmente debe loguearse de nuevo
+        authService.cleanStorageAndRedirect();
+        return throwError(() => err);
       })
     );
   } else {
-    // Si ya se está refrescando, espera a que el subject emita el nuevo token
+    // Si ya se está refrescando, espera el nuevo token
     return refreshTokenSubject.pipe(
       filter(token => token !== null),
       take(1),

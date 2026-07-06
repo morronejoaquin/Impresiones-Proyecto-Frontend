@@ -5,6 +5,7 @@ import { UserService } from '../../services/Users/user-service';
 import { AuthService } from '../../services/Auth/auth.service';
 import { NotificationDropdown } from '../notification-dropdown/notification-dropdown';
 import { filter } from 'rxjs';
+import ProfileResponse from '../../models/Users/profileResponse';
 
 @Component({
   selector: 'app-header',
@@ -16,14 +17,15 @@ import { filter } from 'rxjs';
 export class Header implements OnInit{
   isMobileOpen = false;
   showUserMenu = false;
+  user: ProfileResponse | null = null;
   
   constructor(public authService: AuthService, public userService: UserService, private router: Router){
   }
 
   ngOnInit(): void {
-    if(this.authService.getToken()){
-      this.userService.loadProfile();
-    }
+    this.userService.profile$.subscribe(profile => {
+      this.user = profile;
+    });
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)

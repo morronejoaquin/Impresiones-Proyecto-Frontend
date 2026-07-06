@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/Auth/auth.service';
 import { UserService } from '../../../services/Users/user-service';
 import { map, Observable } from 'rxjs';
+import ProfileResponse from '../../../models/Users/profileResponse';
 
 @Component({
   selector: 'app-home-page',
@@ -12,9 +13,11 @@ import { map, Observable } from 'rxjs';
 })
 export class HomePage implements OnInit{
 
+  profile$: Observable<ProfileResponse | null>;
   isAdmin: boolean = false;
-
+  
   constructor(public authService: AuthService, public userService: UserService) {
+    this.profile$ = this.userService.profile$;
   }
 
   images = [
@@ -42,10 +45,6 @@ export class HomePage implements OnInit{
   }
 
   ngOnInit(): void {
-    if(this.authService.getToken()){
-      this.userService.loadProfile();
-    }
-
     this.userService.profile$.subscribe(profile => {
       this.isAdmin = profile?.role === 'administrador';
       this.currentHowItWorksIndex = 0;

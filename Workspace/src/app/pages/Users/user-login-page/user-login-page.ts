@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/Auth/auth.service';
 import ProfileResponse from '../../../models/Users/profileResponse';
 import { UserService } from '../../../services/Users/user-service';
+import { NotificationService } from '../../../services/Notification/notification-service';
 
 @Component({
   selector: 'app-user-login-page',
@@ -23,6 +24,7 @@ export class UserLoginPage {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private notificationService: NotificationService,
     private fb: FormBuilder,
     private router: Router
   ) {

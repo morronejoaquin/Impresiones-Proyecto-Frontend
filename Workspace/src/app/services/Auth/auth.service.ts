@@ -20,16 +20,25 @@ export class AuthService {
     private notificationService: NotificationService,
     private userService: UserService
   ){
-    this.checkAndInitNotifications();
   }
 
   private checkAndInitNotifications() {
     if (this.getToken()) {
+      // detiene cualquier polling previo antes de empezar uno nuevo
+      this.notificationService.clearAndStop();
+
       this.userService.getProfile().subscribe({
-        next: (user) => this.notificationService.initPolling(user.role),
-        error: () => this.notificationService.clearAndStop()
+        next: (user) => {
+          this.notificationService.initPolling(user.role)},
+        error: () => {
+          this.notificationService.clearAndStop()}
       });
     }
+  }
+
+  public initAppSession(): void {
+    // Solo se dispara la carga una vez al inicio
+    this.userService.loadProfile();
   }
   
   login(request: LoginRequest): Observable<AuthResponse> {
@@ -37,9 +46,7 @@ export class AuthService {
       tap(res => {
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
-        setTimeout(() => {
-          this.checkAndInitNotifications();
-        }, 500);
+        this.checkAndInitNotifications();
       })
     );
   }
@@ -57,20 +64,23 @@ export class AuthService {
   refreshToken(refreshToken: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
       tap(res => {
-        localStorage.setItem('accessToken', res.accessToken); // Guardamos el nuevo access
-        localStorage.setItem('refreshToken', res.refreshToken); // Guardamos el nuevo refresh
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
       })
     );
   }
 
   logout(): void {
-    this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+    const token = localStorage.getItem('accessToken');
+    const headers = { 'Authorization': `Bearer ${token}` };
+
+    this.http.post(`${this.apiUrl}/logout`, {}, {headers}).subscribe({
       next: () => this.cleanStorageAndRedirect(),
       error: () => this.cleanStorageAndRedirect()
     });
   }
 
-  private cleanStorageAndRedirect(): void {
+  public cleanStorageAndRedirect(): void {
 
     // se detienen las notificaciones
     this.notificationService.clearAndStop();
@@ -80,7 +90,6 @@ export class AuthService {
 
     this.router.navigate(['/user-login']);
     
-    window.location.reload();
   }
 
   getToken(): string | null {

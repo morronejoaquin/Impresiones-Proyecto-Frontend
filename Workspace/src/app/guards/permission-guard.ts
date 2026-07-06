@@ -1,37 +1,38 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { decodeToken } from '../utils/jwt-utils';
+import { catchError, map, Observable, of } from 'rxjs';
+import { AuthService } from '../services/Auth/auth.service';
+import { UserService } from '../services/Users/user-service';
 
 const LOGIN_URL = '/user-login';
 
-export const permissionGuard: CanActivateFn = (route): boolean | UrlTree => {
+export const permissionGuard: CanActivateFn = (route): Observable<boolean | UrlTree> => {
   const router = inject(Router);
+  const userService = inject(UserService);
+
   const token = localStorage.getItem('accessToken');
+  if (!token) return of(router.createUrlTree(['/user-login']));
 
-  if (!token) return router.createUrlTree(['/user-login']);
+  return userService.getProfile().pipe(
+    map(profile => {
+      // 1. Normalizar profile.role a un array (por si el backend devuelve un solo string)
+      const rolesArray = Array.isArray(profile.role) ? profile.role : [profile.role];
 
-  const payload = decodeToken(token);
-  if (!payload || !payload.roles) {
-    return router.createUrlTree(['/user-login']);
-  }
+      // 2. Limpiar los roles
+      const userRoles = rolesArray.map((r: string) => r.replace('ROLE_', '').toLowerCase());
+      
+      const allowedRoles = route.data?.['allowedRoles'] as string[] | undefined;
+      if (!allowedRoles || allowedRoles.length === 0) return true;
 
-  // 1. Obtener roles permitidos de la ruta
-  const allowedRoles = route.data?.['allowedRoles'] as string[] | undefined;
-  if (!allowedRoles || allowedRoles.length === 0) return true;
-
-  // 2. Limpiar los roles que vienen del Token (quitar 'ROLE_' si existe)
-  const userRoles = payload.roles.map(role => role.replace('ROLE_', '').toLowerCase());
-  
-  // 3. Normalizar los roles permitidos de la ruta a minúsculas
-  const requiredRoles = allowedRoles.map(r => r.toLowerCase());
-
-  const hasPermission = userRoles.some(role => requiredRoles.includes(role));
-
-  if (hasPermission) {
-    return true;
-  } else {
-    console.warn('Acceso denegado: el usuario no tiene los roles necesarios.');
-    // Si el usuario está logueado pero no tiene permiso, va a HOME, no al LOGIN
-    return router.createUrlTree(['/home']);
-  }
+      const requiredRoles = allowedRoles.map((r: string) => r.toLowerCase());
+      
+      return userRoles.some(r => requiredRoles.includes(r)) 
+             ? true 
+             : router.createUrlTree(['/home']);
+    }),
+    catchError(() => {
+      return of(router.createUrlTree(['/user-login']));
+    })
+  );
 };
