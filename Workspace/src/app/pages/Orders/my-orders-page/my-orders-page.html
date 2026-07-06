@@ -56,9 +56,13 @@
                     <div class="item-specs">
                       <span class="spec-tag">{{ item.copies }} {{ item.copies === 1 ? 'copia' : 'copias' }}</span>
                       <span class="separator">•</span>
-                      <span class="spec-tag">{{ item.doubleSided ? 'Doble faz' : 'Simple faz' }}</span>
-                      <span class="separator">•</span>
-                      <span class="spec-tag">{{ getBindingText(item.binding) }}</span>
+                      <span class="spec-tag">{{ item.color === true ? 'Color' : 'B/N' }}</span>
+                      @if(item.fileName.toLowerCase().endsWith('.pdf')){
+                        <span class="separator">•</span>
+                        <span class="spec-tag">{{ item.doubleSided ? 'Doble faz' : 'Simple faz' }}</span>
+                        <span class="separator">•</span>
+                        <span class="spec-tag">{{ getBindingText(item.binding) }}</span>
+                      }
                     </div>
                   </div>
                 </div>

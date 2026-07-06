@@ -156,6 +156,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  width: 100%;
 }
 
 .btn-small-approve {
@@ -377,5 +378,13 @@
 
   .meta-label {
     margin-bottom: 4px;
+  }
+
+  .payment-info-group {
+    align-items: center;
+  }
+
+  .btn-small-approve {
+    align-self: center;
   }
 }
