@@ -1,13 +1,13 @@
 *{
-    margin : 0
+  margin : 0
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 select, input[type="number"], textarea {
-    font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 main, .page-container {

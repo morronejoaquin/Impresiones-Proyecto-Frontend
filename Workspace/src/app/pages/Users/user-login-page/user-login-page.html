@@ -1,37 +1,39 @@
-<form [formGroup]="formUser" (ngSubmit)="verificarLogin()">
-  <h1>Bienvenido</h1>
-  <p>Ingresa tus credenciales para continuar</p>
+<div class="login-page">
+  <form [formGroup]="formUser" (ngSubmit)="verificarLogin()">
+    <h1>Bienvenido</h1>
+    <p>Ingresa tus credenciales para continuar</p>
 
-  @if (errorMessage) {
-    <div class="alert-error">
-      {{ errorMessage }}
+    @if (errorMessage) {
+      <div class="alert-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <div class="field-container">
+      <label>Email</label>
+      <input type="email" formControlName="email" placeholder="ejemplo@correo.com">
+      @if (formUser.get('email')?.touched && formUser.get('email')?.invalid) {
+        <span class="error-message">Email requerido o formato inválido</span>
+      }
     </div>
-  }
 
-  <div class="field-container">
-    <label>Email</label>
-    <input type="email" formControlName="email" placeholder="ejemplo@correo.com">
-    @if (formUser.get('email')?.touched && formUser.get('email')?.invalid) {
-      <span class="error-message">Email requerido o formato inválido</span>
-    }
-  </div>
+    <div class="field-container">
+      <label>Contraseña</label>
+      <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="********">
+      <button class="password-button" type="button" (click)="togglePasswordVisibility()" >
+        <span class="material-icons">
+          {{ showPassword ? 'visibility_off' : 'visibility' }}
+        </span>
+      </button>
+      @if (formUser.get('password')?.touched && formUser.get('password')?.invalid) {
+        <span class="error-message">La contraseña es obligatoria</span>
+      }
+    </div>
 
-  <div class="field-container">
-    <label>Contraseña</label>
-    <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="********">
-    <button class="password-button" type="button" (click)="togglePasswordVisibility()" >
-      <span class="material-icons">
-        {{ showPassword ? 'visibility_off' : 'visibility' }}
-      </span>
-    </button>
-    @if (formUser.get('password')?.touched && formUser.get('password')?.invalid) {
-      <span class="error-message">La contraseña es obligatoria</span>
-    }
-  </div>
+    <button type="submit" [disabled]="formUser.invalid">Acceder</button>
 
-  <button type="submit" [disabled]="formUser.invalid">Entrar</button>
-
-  <div class="footer-links">
-    ¿No tienes cuenta? <a routerLink="/user-register">Regístrate aquí</a>
-  </div>
-</form>
+    <div class="footer-links">
+      ¿No tienes cuenta? <a routerLink="/user-register">Regístrate aquí</a>
+    </div>
+  </form>
+</div>
