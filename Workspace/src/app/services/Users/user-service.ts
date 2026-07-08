@@ -6,6 +6,7 @@ import UserResponse from '../../models/Users/userResponse';
 import ProfileResponse from '../../models/Users/profileResponse';
 import UpdateProfileRequest from '../../models/Users/updateProfileRequest';
 import { environment } from '../../../environments/environment';
+import { NotificationService } from '../Notification/notification-service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class UserService {
   private profileSubject = new BehaviorSubject<ProfileResponse | null>(null);
   public profile$ = this.profileSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private notificationService: NotificationService) {}
 
   getAllUsers(page: number = 0, size: number = 20): Observable<Page<UserResponse>> {
     const params = new HttpParams().set('page', page).set('size', size);
@@ -32,7 +33,9 @@ export class UserService {
   loadProfile() {
     this.getProfile().subscribe({
       next: (profile) => {
-        this.profileSubject.next(profile)},
+        this.profileSubject.next(profile)
+        this.notificationService.initPolling(profile.role);
+      },
       error: () => {
         this.profileSubject.next(null)}
     });
