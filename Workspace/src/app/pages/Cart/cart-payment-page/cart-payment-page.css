@@ -181,7 +181,9 @@
   transition: all 0.2s ease;
 }
 
-.payment-options input { display: none; }
+.payment-options input { 
+  display: none; 
+}
 
 .option-content {
   display: flex;
@@ -251,6 +253,66 @@
   color: #10b981;
   margin-top: 1rem;
   font-weight: 500;
+}
+
+.payment-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.payment-modal {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  border: 1px solid #e2e8f0;
+}
+
+.payment-modal h3 {
+  margin: 1rem 0 0.5rem;
+  color: #1e293b;
+}
+
+.payment-modal p {
+  color: #64748b;
+  margin: 0;
+}
+
+.payment-modal .small-text {
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
 }
 
 @media (max-width: 850px) {

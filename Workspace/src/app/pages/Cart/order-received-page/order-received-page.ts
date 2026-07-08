@@ -23,34 +23,38 @@ export class OrderReceivedPage {
       this.orderId = params['orderId'] || params['external_reference'];
       this.mpPaymentId = params['payment_id'];
       
-      const status = params['collection_status'] || params['status'];
+      // Manejo de parámetros de estado
+      const statusFromParam = params['status'] || params['collection_status'];
+      const methodFromParam = params['method'];
 
-      const methodFromUrl = params['method'] as any;
-      
-      if (this.mpPaymentId || status) {
+      if (this.mpPaymentId || statusFromParam || methodFromParam === 'MERCADO_PAGO') {
         this.paymentMethod = 'MERCADO_PAGO';
-        
-        // Mapeo preciso de estados de Mercado Pago
-        switch (status) {
-          case 'approved':
-            this.paymentStatus = 'success';
-            break;
-          case 'rejected':
-          case 'cancelled':
-            this.paymentStatus = 'failure';
-            break;
-          case 'in_process':
-          case 'pending':
-            this.paymentStatus = 'pending';
-            break;
-          default:
-            this.paymentStatus = 'success';
-        }
+        this.updateMercadoPagoStatus(statusFromParam);
       } else {
-        this.paymentMethod = methodFromUrl || 'CASH';
+        // Solo aca se manejan los manuales
+        this.paymentMethod = methodFromParam === 'TRANSFER' ? 'TRANSFER' : 'CASH';
         this.paymentStatus = 'success';
       }
     });
+  }
+
+  private updateMercadoPagoStatus(status: string): void {
+    switch (status) {
+      case 'success':
+      case 'approved':
+        this.paymentStatus = 'success';
+        break;
+      case 'rejected':
+      case 'cancelled':
+        this.paymentStatus = 'failure';
+        break;
+      case 'in_process':
+      case 'pending':
+        this.paymentStatus = 'pending';
+        break;
+      default:
+        this.paymentStatus = 'pending';
+    }
   }
 
   async copyToClipboard(fullId: string | null) {

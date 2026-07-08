@@ -9,6 +9,7 @@ import PaymentCreateRequest from '../../../models/Payment/paymentCreateRequest';
 import OrderItemResponse from '../../../models/OrderItem/orderItemResponse';
 import CartWithItemsResponse from '../../../models/Cart/cartWithItemsResponse';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
+import { finalize, interval, switchMap, takeWhile } from 'rxjs';
 
 @Component({
   selector: 'app-cart-payment-page',
@@ -95,6 +96,14 @@ export class CartPaymentPage implements OnInit{
     this.showConfirmModal = false;
     this.isLoading = true;
 
+    // previene el cierre accidental
+    const beforeUnloadListener = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    
+    window.addEventListener('beforeunload', beforeUnloadListener);
+
     const request: PaymentCreateRequest = {
       paymentMethod: this.cartForm.value.paymentMethod
     };
@@ -102,7 +111,29 @@ export class CartPaymentPage implements OnInit{
     this.paymentService.checkout(request).subscribe({
       next: (response) => {
         if (response.action === 'REDIRECT' && response.checkoutUrl) {
-          window.location.href = response.checkoutUrl; // Redirige a Mercado Pago
+          window.open(response.checkoutUrl, '_blank');
+        
+          // inicia el polling y consulta el estado cada 3 segundos
+          interval(3000)
+            .pipe(
+              switchMap(() => this.paymentService.getStatus(response.cartId)),
+              // sigue consultando mientras sea PENDING
+              takeWhile(status => status === 'PENDING', true),
+              finalize(() => {
+                window.removeEventListener('beforeunload', beforeUnloadListener);
+                this.isLoading = false;
+              })
+            )
+            .subscribe(status => {
+              if (status === 'APPROVED') {
+                this.router.navigate(['/order-received'], { 
+                  queryParams: { orderId: response.cartId, status: 'success' } 
+                });
+              } else if (status === 'REJECTED') {
+                this.notificationService.error("El pago fue rechazado. Intenta nuevamente.");
+              }
+            });
+
         } else {
           this.isLoading = false;
           this.router.navigate(['/order-received'], { 
@@ -112,6 +143,7 @@ export class CartPaymentPage implements OnInit{
       },
       error: (err) => {
         this.isLoading = false;
+        window.removeEventListener('beforeunload', beforeUnloadListener);
         
         const errorMsg = err.status === 0 || err.status === 503 
         ? "No pudimos conectar con la pasarela, intenta más tarde" 

@@ -108,5 +108,16 @@
         (cancelled)="cancelPayment()"
       ></app-confirm-modal>
     }
+
+    @if (isLoading) {
+      <div class="payment-overlay">
+        <div class="payment-modal">
+          <div class="spinner"></div>
+          <h3>Procesando tu pago</h3>
+          <p>Estamos esperando la confirmación de Mercado Pago...</p>
+          <p class="small-text">No cierres esta pestaña mientras se procesa.</p>
+        </div>
+      </div>
+    }
   </div>
 </div>

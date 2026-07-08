@@ -1,22 +1,21 @@
 .login-page {
-  min-height: 90vh;
+  height: 100vh; 
   width: 100%;
-
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; 
+  padding-top: 10vh;
   background-image: url('/assets/fondo-login.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll; 
-  
 }
 
 form {
   max-width: 400px;
   width: 100%;
-  margin: auto;
+  margin: 0;
   padding: 2rem;
   background: #ffffff;
   border-radius: 20px;

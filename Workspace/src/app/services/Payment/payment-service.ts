@@ -33,6 +33,10 @@ export class PaymentService {
     return this.http.post<PaymentResponse>(`${this.apiUrl}/checkout`, request)
   }
 
+  getStatus(cartId: string): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/${cartId}/status`);
+  }
+
   getMyPayments(page: number = 0, size: number = 20, sort: string = 'orderDate,desc'){
     const params = new HttpParams()
       .set('page', page.toString())
