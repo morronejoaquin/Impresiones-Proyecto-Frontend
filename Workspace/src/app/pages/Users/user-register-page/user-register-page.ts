@@ -43,10 +43,10 @@ export class UserRegisterPage implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
+      name: ['', [Validators.required, Validators.maxLength(30)]],
+      surname: ['', [Validators.required, Validators.maxLength(30)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]], 
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(15)]], 
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(18), Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)]],
       confirmPassword: ['', Validators.required],
       notificationsEnabled: [true]

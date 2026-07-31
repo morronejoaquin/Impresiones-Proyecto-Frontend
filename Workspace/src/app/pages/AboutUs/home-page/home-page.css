@@ -126,7 +126,7 @@
 .btn:hover {
   background: var(--btn-primary);
   color: #ffffff !important;
-  transform: translateY(-2px); /* Pequeño salto hacia arriba */
+  transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
@@ -139,7 +139,7 @@
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--bg-secondary);
   margin-bottom: 3rem;
 }
 
@@ -203,7 +203,7 @@
   position: relative;
   padding: 5rem 0;
   overflow: hidden;
-  color: white; /* Ajusta los colores de texto si el fondo es oscuro */
+  color: white;
 }
 
 .hiw-slider-background {
@@ -224,7 +224,7 @@
 }
 
 .hiw-slide.active {
-  opacity: 1; /* Ajusta la opacidad según el contraste que necesites */
+  opacity: 1;
 }
 
 .hiw-slide img {
@@ -239,7 +239,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Capa oscura para que el texto sea legible */
+  background: rgba(0, 0, 0, 0.6);
   z-index: 2;
 }
 

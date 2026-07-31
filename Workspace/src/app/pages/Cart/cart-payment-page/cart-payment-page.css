@@ -17,12 +17,10 @@
   text-decoration: none; 
   padding: 8px 14px; 
   border-radius: 10px; 
-  background: #0369a1; 
+  background: #2563eb; 
   color: #fff; 
   font-weight: 600; 
   font-size: 0.95rem; 
-  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.25); 
-  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
   margin-bottom: 30px;
 }
 
@@ -112,7 +110,7 @@
   flex-wrap: wrap;
 }
 
-.mini-chip {
+.chip {
   background: white;
   padding: 2px 8px;
   border-radius: 6px;
@@ -121,9 +119,9 @@
   border: 1px solid #e2e8f0;
 }
 
-.mini-chip.is-color {
-  border-color: #fbd38d;
-  color: #c05621;
+.chip.active {
+  background: #e3f2fd;
+  color: var(--primary);
 }
 
 .item-price-tag {

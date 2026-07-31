@@ -26,10 +26,10 @@
                   <div class="item-info">
                     <span class="file-name">{{ item.fileName }}</span>
                     <div class="chips-group">
-                      <span class="mini-chip"><b>{{ item.pages }}</b> pág.</span>
-                      <span class="mini-chip"><b>{{ item.copies }}</b> cop.</span>
-                      <span class="mini-chip" [class.is-color]="item.color">{{ item.color ? 'Color' : 'B&N' }}</span>
-                      <span class="mini-chip">{{ getBindingText(item.binding) }}</span>
+                      <span class="chip"><b>{{ item.pages }}</b> pág.</span>
+                      <span class="chip"><b>{{ item.copies }}</b> cop.</span>
+                      <span class="chip" [class.active]="item.color">{{ item.color ? 'Color' : 'B&N' }}</span>
+                      <span class="chip">{{ getBindingText(item.binding) }}</span>
                     </div>
                   </div>
                 </div>

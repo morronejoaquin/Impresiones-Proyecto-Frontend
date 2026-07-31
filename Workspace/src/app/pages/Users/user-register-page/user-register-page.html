@@ -20,6 +20,8 @@
       <input formControlName="name" type="text" placeholder="Nombre" />
       @if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')) {
         <small>El nombre es obligatorio</small>
+      }@else if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('maxlength')) {
+        <small>El nombre es muy largo</small>
       }
     </fieldset>
   
@@ -27,13 +29,19 @@
       <input formControlName="surname" type="text" placeholder="Apellido" />
       @if (registerForm.get('surname')?.touched && registerForm.get('surname')?.hasError('required')) {
         <small>El apellido es obligatorio</small>
+      }@else if (registerForm.get('surname')?.touched && registerForm.get('surname')?.hasError('maxlength')) {
+        <small>El apellido es muy largo</small>
       }
     </fieldset>
   
     <fieldset>
       <input formControlName="phone" type="text" placeholder="Teléfono" />
       @if (registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('required')) {
-        <small>El teléfono es obligatorio</small>
+        <small>El número de teléfono es obligatorio</small>
+      }@else if (registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('pattern')) {
+      <small>El teléfono solo debe contener números (sin espacios ni símbolos)</small>
+      }@else if (registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('maxlength')) {
+        <small>El número de teléfono es muy largo</small>
       }
     </fieldset>
   
@@ -79,7 +87,7 @@
     <fieldset class="checkbox-container">
       <label class="checkbox-label">
         <input type="checkbox" formControlName="notificationsEnabled" />
-        Acepto recibir correos con novedades y actualizaciones de mi pedido.
+        Acepto recibir correos con novedades y actualizaciones de mis pedidos.
       </label>
     </fieldset>
   
