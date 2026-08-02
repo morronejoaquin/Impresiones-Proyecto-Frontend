@@ -71,8 +71,14 @@
             @for (cart of deliveredCarts; track cart.id) {
               <tr class="table-row">
                 <td class="cart-id">#{{ cart.id.substring(0, 8) }}</td>
-                <td class="font-bold">{{ cart.customer.name }} {{ cart.customer.surname }}</td>
-                <td class="client-email">{{ cart.customer.email || '—' }}</td>
+                <td class="font-bold">
+                  @let fullName = (cart.customer.name + ' ' + (cart.customer.surname || ''));
+                  {{ fullName.length > 20 ? (fullName | slice:0:20) + '...' : fullName }}
+                </td>
+                <td class="client-email">
+                  @let email = cart.customer.email;
+                  {{ email.length > 20 ? (email | slice:0:24) + '...' : email }}
+                </td>
                 <td class="delivery-date">{{ formatDate(cart.deliveredAt) }}</td>
                 <td class="total text-right">
                   <strong>${{ cart.total | number:'1.2-2' }}</strong>

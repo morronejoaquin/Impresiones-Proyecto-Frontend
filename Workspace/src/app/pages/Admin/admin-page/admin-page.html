@@ -68,11 +68,17 @@
             <div class="card-body">
               <div class="info-row">
                 <span class="label">Cliente:</span>
-                <span class="value">{{ cart.customer.name }} {{ cart.customer.surname || '' }}</span>
+                <span class="value">
+                  @let fullName = (cart.customer.name + ' ' + (cart.customer.surname || ''));
+                  {{ fullName.length > 20 ? (fullName | slice:0:20) + '...' : fullName }}
+                </span>
               </div>
               <div class="info-row">
                 <span class="label">Email:</span>
-                <span class="value">{{ cart.customer.email }}</span>
+                <span class="value">
+                  @let email = cart.customer.email;
+                  {{ email.length > 24 ? (email | slice:0:24) + '...' : email }}
+                </span>
               </div>
               <div class="info-row">
                 <span class="label">Total:</span>

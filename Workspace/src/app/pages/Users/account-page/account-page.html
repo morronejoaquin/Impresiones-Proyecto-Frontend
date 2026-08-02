@@ -43,12 +43,26 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Nombre</label>
-              <input type="text" formControlName="name" [readonly]="!isEditing" [class.editable]="isEditing">
+              <div class="input-wrapper">
+                <input type="text" formControlName="name" [readonly]="!isEditing" [class.editable]="isEditing">
+                @if (userForm.get('name')?.touched && userForm.get('name')?.hasError('required')) {
+                  <small class="error-message">El nombre es obligatorio</small>
+                }@else if (userForm.get('name')?.touched && userForm.get('name')?.hasError('maxlength')) {
+                  <small class="error-message">El nombre es muy largo</small>
+                }
+              </div>
             </div>
 
             <div class="form-group">
               <label>Apellido</label>
-              <input type="text" formControlName="surname" [readonly]="!isEditing" [class.editable]="isEditing">
+              <div class="input-wrapper">
+                <input type="text" formControlName="surname" [readonly]="!isEditing" [class.editable]="isEditing">
+                @if (userForm.get('surname')?.touched && userForm.get('surname')?.hasError('required')) {
+                  <small class="error-message">El apellido es obligatorio</small>
+                }@else if (userForm.get('surname')?.touched && userForm.get('surname')?.hasError('maxlength')) {
+                  <small class="error-message">El apellido es muy largo</small>
+                }
+              </div>
             </div>
 
             <div class="form-group full-width">
@@ -58,7 +72,16 @@
 
             <div class="form-group full-width">
               <label>Teléfono</label>
-              <input type="text" formControlName="phone" [readonly]="!isEditing" [class.editable]="isEditing">
+              <div class="input-wrapper">
+                <input type="text" formControlName="phone" [readonly]="!isEditing" [class.editable]="isEditing">
+                @if (userForm.get('phone')?.touched && userForm.get('phone')?.hasError('required')) {
+                  <small class="error-message">El número de teléfono es obligatorio</small>
+                }@else if (userForm.get('phone')?.touched && userForm.get('phone')?.hasError('pattern')) {
+                <small class="error-message">El teléfono solo debe contener números (sin espacios ni símbolos)</small>
+                }@else if (userForm.get('phone')?.touched && userForm.get('phone')?.hasError('maxlength')) {
+                  <small class="error-message">El número de teléfono es muy largo</small>
+                }
+              </div>
             </div>
             
             @if(userService.profile$ | async; as profile) {
@@ -79,7 +102,7 @@
               <button type="button" class="btn-cancel" (click)="toggleEdit()" [disabled]="isSaving">
                 Cancelar
               </button>
-              <button type="submit" class="btn-save" [disabled]="userForm.invalid || isSaving">
+              <button type="submit" class="btn-save" [disabled]="userForm.invalid || !hasChanges || isSaving">
                 {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
               </button>
             </div>

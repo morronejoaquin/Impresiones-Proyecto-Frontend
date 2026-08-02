@@ -9,39 +9,39 @@
     <fieldset>
       <input formControlName="email" type="email" placeholder="Correo electrónico" />
       @if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')) {
-        <small>El correo electrónico es obligatorio</small>
+        <small class="error-message">El correo electrónico es obligatorio</small>
       }
       @else if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')) {
-        <small>El correo electrónico no es válido</small>
+        <small class="error-message">El correo electrónico no es válido</small>
       }
     </fieldset>
   
     <fieldset>
       <input formControlName="name" type="text" placeholder="Nombre" />
       @if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')) {
-        <small>El nombre es obligatorio</small>
+        <small class="error-message">El nombre es obligatorio</small>
       }@else if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('maxlength')) {
-        <small>El nombre es muy largo</small>
+        <small class="error-message">El nombre es muy largo</small>
       }
     </fieldset>
   
     <fieldset>
       <input formControlName="surname" type="text" placeholder="Apellido" />
       @if (registerForm.get('surname')?.touched && registerForm.get('surname')?.hasError('required')) {
-        <small>El apellido es obligatorio</small>
+        <small class="error-message">El apellido es obligatorio</small>
       }@else if (registerForm.get('surname')?.touched && registerForm.get('surname')?.hasError('maxlength')) {
-        <small>El apellido es muy largo</small>
+        <small class="error-message">El apellido es muy largo</small>
       }
     </fieldset>
   
     <fieldset>
       <input formControlName="phone" type="text" placeholder="Teléfono" />
       @if (registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('required')) {
-        <small>El número de teléfono es obligatorio</small>
+        <small class="error-message">El número de teléfono es obligatorio</small>
       }@else if (registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('pattern')) {
-      <small>El teléfono solo debe contener números (sin espacios ni símbolos)</small>
+        <small class="error-message">El teléfono solo debe contener números (sin espacios ni símbolos)</small>
       }@else if (registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('maxlength')) {
-        <small>El número de teléfono es muy largo</small>
+        <small class="error-message">El número de teléfono es muy largo</small>
       }
     </fieldset>
   
@@ -51,7 +51,7 @@
          placeholder="Contraseña" />
   
       @if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')) {
-        <small>La contraseña es obligatoria</small>
+        <small class="error-message">La contraseña es obligatoria</small>
       }
 
       <button class="password-button" type="button" (click)="togglePasswordVisibility()" >
@@ -80,7 +80,7 @@
       </button>
 
       @if (registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')) {
-        <small>Las contraseñas no coinciden</small>
+        <small class="error-message">Las contraseñas no coinciden</small>
       }
     </fieldset>
 

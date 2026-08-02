@@ -28,9 +28,9 @@ export class AccountPage implements OnInit {
     private notificationService: NotificationService
   ) {
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      name: ['', [Validators.required, Validators.maxLength(30)]],
+      surname: ['', [Validators.required, Validators.maxLength(30)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       notificationsEnabled: [false]
     });
   }
@@ -70,6 +70,19 @@ export class AccountPage implements OnInit {
       this.userForm.patchValue(this.currentUser!);
       notificationControl?.disable();
     }
+  }
+
+  get hasChanges(): boolean {
+    if (!this.currentUser) return false;
+    
+    const formValues = this.userForm.value;
+    
+    return (
+      formValues.name !== this.currentUser.name ||
+      formValues.surname !== this.currentUser.surname ||
+      formValues.phone !== this.currentUser.phone ||
+      formValues.notificationsEnabled !== (this.currentUser as any).notificationsEnabled
+    );
   }
 
   onSubmit(): void {
