@@ -4,6 +4,32 @@
     <p class="subtitle">Historial de tus impresiones confirmadas</p>
   </div>
 
+  <div class="filters-panel">
+    <div class="filter-group">
+      <label>Estado del Pedido</label>
+      <select [(ngModel)]="filters.orderStatus" (change)="applyFilters()">
+        <option [ngValue]="null">Todos</option>
+        @for (s of orderStatusOptions; track s) {
+          <option [value]="s">{{ getOrderStatusLabel(s) }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Estado del Pago</label>
+      <select [(ngModel)]="filters.paymentStatus" (change)="applyFilters()">
+        <option [ngValue]="null">Todos</option>
+        @for (p of paymentStatusOptions; track p) {
+          <option [value]="p">{{ getPaymentStatusLabel(p) }}</option>
+        }
+      </select>
+    </div>
+
+    @if (hasActiveFilters()) {
+      <button class="btn-clear" (click)="clearFilters()">Limpiar</button>
+    }
+  </div>
+  
   @if (loading) {
     <div class="loading-state">
       <div class="spinner"></div>
@@ -16,6 +42,11 @@
       <button (click)="loadOrders()" class="btn-retry">Reintentar</button>
     </div>
 
+  } @else if (errorType === 'NO_RESULTS') {
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h2>No tienes pedidos con estos filtros</h2>
+    </div>
   } @else if (errorType === 'NO_DATA') {
     <div class="empty-state">
       <div class="empty-icon">📦</div>
@@ -30,7 +61,7 @@
           <div class="order-header">
             <div class="order-info-main">
               <span class="order-date">{{ getFormattedDate(order.admReceivedAt) }}</span>
-              <span class="order-id-label">Seguimiento: {{ order.cartId.toString().substring(0,16) }}</span>
+              <span class="order-id-label">Seguimiento: {{ order.cartId }}</span>
             </div>
             <div class="status-group">
               <span class="badge payment-badge" [class]="'pay-' + (order.paymentStatus || 'PENDING').toLowerCase()">

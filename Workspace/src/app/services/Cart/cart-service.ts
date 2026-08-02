@@ -109,8 +109,16 @@ export class CartService {
     return this.http.get<OrderItemResponse>(`${this.apiUrl}/${cartId}/ordenes/${orderId}`);
   }
 
-  getMyOrders(page: number = 0, size: number = 20): Observable<Page<CartHistoryResponse>> {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getMyOrders(filters: any, page: number = 0, size: number = 20): Observable<Page<CartHistoryResponse>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+
+    if (filters.orderStatus && filters.orderStatus !== '') {
+        params = params.set('orderStatus', filters.orderStatus);
+    }
+    if (filters.paymentStatus && filters.paymentStatus !== '') {
+        params = params.set('paymentStatus', filters.paymentStatus);
+    }
+
     return this.http.get<Page<CartHistoryResponse>>(`${this.apiUrl}/my-orders`, { params });
   }
 

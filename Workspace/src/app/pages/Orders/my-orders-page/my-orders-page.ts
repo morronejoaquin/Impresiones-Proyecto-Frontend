@@ -6,11 +6,14 @@ import Page from '../../../models/PageModel/page';
 import CartHistoryResponse from '../../../models/Cart/cartHistoryResponse';
 import { ConfirmModal } from '../../../components/confirm-modal/confirm-modal';
 import { NotificationService } from '../../../services/Notification/notification-service';
+import { OrderStatusEnum } from '../../../models/Enums/orderStatusEnum';
+import { PaymentStatusEnum } from '../../../models/Enums/paymentStatusEnum';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-my-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule, ConfirmModal],
+  imports: [CommonModule, RouterModule, ConfirmModal, FormsModule],
   templateUrl: './my-orders-page.html',
   styleUrls: ['./my-orders-page.css']
 })
@@ -23,11 +26,19 @@ export class MyOrdersPage implements OnInit {
   totalElements = 0;
   hasNextPage = false;
 
+  filters = {
+    orderStatus: null as OrderStatusEnum | null,
+    paymentStatus: null as PaymentStatusEnum | null
+  };
+
+  orderStatusOptions = Object.values(OrderStatusEnum);
+  paymentStatusOptions = Object.values(PaymentStatusEnum);
+
   cancelCartId: string | null = null;
   showConfirm = false;
   message = '';
 
-  errorType: 'NONE' | 'CONNECTION' | 'NO_DATA' = 'NONE';
+  errorType: 'NONE' | 'CONNECTION' | 'NO_DATA' | 'NO_RESULTS' = 'NONE';
 
   @ViewChild('top') topElement!: ElementRef;
 
@@ -45,7 +56,8 @@ export class MyOrdersPage implements OnInit {
     'PENDING': 'Pago Pendiente',
     'APPROVED': 'Pago Aprobado',
     'REJECTED': 'Pago Rechazado',
-    'UNKNOWN': 'Pendiente de Pago',
+    'CANCELLED': 'Cancelado',
+    'UNKNOWN': 'Pendiente de Pago'
   };
 
   constructor(private cartService: CartService, private router: Router, private notificationService: NotificationService, private route: ActivatedRoute) {}
@@ -65,13 +77,19 @@ export class MyOrdersPage implements OnInit {
     this.loading = true;
     this.errorType = 'NONE';
 
-    this.cartService.getMyOrders(this.currentPage, this.pageSize).subscribe({
+    this.cartService.getMyOrders(this.filters, this.currentPage, this.pageSize).subscribe({
       next: (page: Page<CartHistoryResponse>) => {
         this.orders = page.content || [];
         this.totalPages = page.totalPages || 0;
         this.totalElements = page.totalElements || 0;
         this.hasNextPage = !page.last;
-        this.errorType = this.orders.length === 0 ? 'NO_DATA' : 'NONE';
+        
+        if (this.orders.length === 0) {
+          this.errorType = this.hasActiveFilters() ? 'NO_RESULTS' : 'NO_DATA';
+        } else {
+          this.errorType = 'NONE';
+        }
+
         this.loading = false;
 
         if (shouldScroll) {
@@ -84,6 +102,24 @@ export class MyOrdersPage implements OnInit {
         this.errorType = 'CONNECTION';
       }
     });
+  }
+
+  applyFilters() {
+    this.currentPage = 0;
+    this.loadOrders();
+  }
+
+  clearFilters() {
+    this.filters = {
+      orderStatus: null,
+      paymentStatus: null
+    };
+    this.currentPage = 0;
+    this.loadOrders();
+  }
+
+  hasActiveFilters(): boolean {
+    return !!(this.filters.orderStatus || this.filters.paymentStatus);
   }
 
   scrollToTop(): void {

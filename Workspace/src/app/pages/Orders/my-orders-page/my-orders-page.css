@@ -21,6 +21,48 @@
   font-size: 0.95rem; 
 }
 
+.filters-panel { 
+  background: white; 
+  padding: 20px; 
+  border-radius: 12px; 
+  display: flex; 
+  gap: 15px; 
+  flex-wrap: wrap; 
+  align-items: flex-end;
+  margin-bottom: 30px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-group { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 5px; 
+}
+
+.filter-group label { 
+  font-size: 0.8rem; 
+  font-weight: 700; 
+  color: #64748b; 
+}
+
+.filter-group input, .filter-group select { 
+  padding: 8px; 
+  border: 1px solid #e2e8f0; 
+  border-radius: 6px; 
+}
+
+.btn-clear {
+  background: #2563eb;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100px;
+}
+
 .loading-state, .error-state {
   display: flex;
   flex-direction: column;
