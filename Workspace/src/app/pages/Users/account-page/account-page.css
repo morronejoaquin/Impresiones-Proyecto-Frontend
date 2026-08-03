@@ -306,6 +306,143 @@ input:disabled + .slider {
   cursor: pointer;
 }
 
+.security-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.security-section h3 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.security-section .form-group {
+  margin-top: 20px;
+}
+
+.password, .password-confirm {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+}
+
+.password-field-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.password-field-wrapper input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 45px 10px 14px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #1e293b;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.password-field-wrapper input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.password-button, .password-button-confirm {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 4px;
+}
+
+.password-button .material-icons, 
+.password-button-confirm .material-icons {
+  font-size: 1.4rem;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.password-button:hover .material-icons, 
+.password-button-confirm:hover .material-icons {
+  color: #1e293b;
+}
+
+.requirements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  transition: background-color 0.3s ease;
+}
+
+.requirement.met .dot {
+  background-color: #059669;
+}
+
+.requirement small {
+  font-size: 0.75rem;
+  margin-top: 0;
+}
+
+.error-message {
+  margin-top: 4px;
+}
+
+.btn-secondary {
+  background: white;
+  color: #5D6DFF;
+  border: 1px solid #5D6DFF;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #f0f3ff;
+}
+
+.btn-secondary .material-icons {
+  font-size: 1.2rem;
+  color: #5D6DFF;
+}
+
 @media (max-width: 768px) {
   .profile-layout { 
     flex-direction: column; 

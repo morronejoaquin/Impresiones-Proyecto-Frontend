@@ -14,19 +14,19 @@ const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastr = inject(NotificationService);
-  const authService = inject(AuthService); // Debes tener acceso al servicio
+  const authService = inject(AuthService);
   const userService = inject(UserService);
   const token = localStorage.getItem('accessToken');
   const refreshToken = localStorage.getItem('refreshToken');
   
   // 1. Identifica si la petición es para login o registro
-  const isAuthRequest = req.url.includes('/auth/login') || req.url.includes('/auth/register');
+  const isAuthLoginOrRegister = req.url.endsWith('/auth/login') || req.url.endsWith('/auth/register');
   const isApiRequest = req.url.startsWith(environment.apiUrl);
 
   let authReq = req;
 
   // 2. Solo añade el token si es una petición a nuestra API Y no es de login o registro
-  if (token && isApiRequest && !isAuthRequest) {
+  if (token && isApiRequest && !isAuthLoginOrRegister) {
     authReq = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` }
     });
@@ -35,19 +35,37 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       
+      // 3. Si es una petición de autenticación (login/registro), no se maneja acá
+      if (isAuthLoginOrRegister) {
+        return throwError(() => error);
+      }
+
+      // 4. Manejo de token expirado (401) para el resto de peticiones protegidas
       if (error.status === 401 && refreshToken) {
         return handle401Error(req, next, authService, userService, refreshToken);
       }
       
-      // 3. Si es una petición de autenticación, no se maneja aca
-      if (isAuthRequest) {
-        return throwError(() => error);
+      // 5. Extracción de error
+      let message = 'Ocurrió un error inesperado.';
+      let errorBody = error.error;
+
+      if (errorBody) {
+        // Si por alguna razón el body viene como un string que contiene JSON plano, intentamos parsearlo
+        if (typeof errorBody === 'string') {
+          try {
+            errorBody = JSON.parse(errorBody);
+          } catch (e) {
+            // Si no es un JSON válido, asumimos que es el mensaje de texto plano directamente
+            message = errorBody;
+          }
+        }
+
+        // Si ya es un objeto (o se pudo parsear), extraemos el texto limpio priorizando 'mensaje'
+        if (typeof errorBody === 'object' && errorBody !== null) {
+          message = errorBody.mensaje || errorBody.error || errorBody.message || message;
+        }
       }
       
-      // 4. Extracción de error para otras peticiones
-      const data = error.error;
-      const message = data?.mensaje || data?.error || data?.message || 'Ocurrió un error inesperado.';
-
         switch (error.status) {
           case 403:
             toastr.error('No tienes permisos suficientes.');

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreLocationService } from '../../../services/Location/StoreLocationService';
-import { SafeUrlPipe } from '../pipes/safe-url.pipe'; // Asegurate que la ruta al pipe sea correcta
+import { SafeUrlPipe } from '../pipes/safe-url.pipe';
 
 @Component({
   selector: 'app-where-page',

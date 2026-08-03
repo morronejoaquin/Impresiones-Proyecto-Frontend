@@ -76,6 +76,12 @@
   font-weight: bold;
 }
 
+.dropdown-body {
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .btn-link {
   background: #FF935D;
   color: white;

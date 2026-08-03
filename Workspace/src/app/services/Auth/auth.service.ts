@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { NotificationService } from '../Notification/notification-service';
 import { UserService } from '../Users/user-service';
+import ChangePasswordRequest from '../../models/Auth/changePasswordRequest';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -94,6 +95,12 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('accessToken');
+  }
+
+  changePassword(data: ChangePasswordRequest): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/auth/change-password`, data, {
+      responseType: 'text' as 'json'
+    });
   }
 
 }
