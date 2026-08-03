@@ -343,6 +343,11 @@
   transition: 0.2s;
 }
 
+.info-msg {
+  font-size: 0.7rem; 
+  color: #64748b;
+}
+
 .total-amount {
   font-size: 1.4rem;
   font-weight: 800;

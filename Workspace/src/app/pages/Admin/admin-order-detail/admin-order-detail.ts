@@ -247,7 +247,8 @@ export class AdminOrderDetailPage implements OnInit {
     'APPROVED': 'Pago Aprobado',
     'REJECTED': 'Pago Rechazado',
     'CANCELLED': 'Pago Cancelado',
-    'UNKNOWN': 'Pendiente de Pago',
+    'REFUNDED': 'Pago reembolsado',
+    'UNKNOWN': 'Pendiente de Pago'
   };
 
   public paymentMethodMap: { [key: string]: string } = {
@@ -273,6 +274,32 @@ export class AdminOrderDetailPage implements OnInit {
       error: (err) => {
         console.error('Error downloading file', err);
         this.notification.error('No se pudo descargar el archivo.');
+      }
+    });
+  }
+
+  onRefundPayment(): void {
+    const cartId = this.cart()?.id;
+    if (!cartId) return;
+    
+    this.openConfirmModal({
+      message: '¿Estás seguro de que deseas reembolsar este pago y cancelar el pedido?',
+      subMessage: 'Esta acción devolverá el dinero y anulará la orden.',
+      execute: () => {
+        this.isUpdating = true;
+        // Llamamos al endpoint de reembolso enviando el motivo
+        this.paymentService.refundPayment(cartId, { reason: 'Reembolso autorizado por administración' }).subscribe({
+          next: () => {
+            this.notification.success('Reembolso procesado correctamente');
+            this.loadDetail(); // Recargamos el detalle para reflejar el cambio de estado
+            this.isUpdating = false;
+          },
+          error: (err) => {
+            this.isUpdating = false;
+            console.error('Error al procesar reembolso', err);
+            this.notification.error(err?.error?.message || 'No se pudo procesar el reembolso');
+          }
+        });
       }
     });
   }

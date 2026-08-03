@@ -2,5 +2,6 @@ export enum PaymentStatusEnum{
     PENDING = 'PENDING',
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
-    CANCELLED = 'CANCELLED'
+    CANCELLED = 'CANCELLED',
+    REFUNDED = 'REFUNDED'
 }

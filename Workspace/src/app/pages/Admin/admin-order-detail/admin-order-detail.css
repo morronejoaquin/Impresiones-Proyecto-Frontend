@@ -181,6 +181,28 @@
   transform: translateY(-1px);
 }
 
+.btn-small-refund {
+  width: fit-content; 
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.btn-small-refund:hover {
+  background-color: #2658c4;
+  transform: translateY(-1px);
+}
+
 .btn-small-approve:disabled {
   display: none;
 }

@@ -56,7 +56,8 @@ export class MyOrdersPage implements OnInit {
     'PENDING': 'Pago Pendiente',
     'APPROVED': 'Pago Aprobado',
     'REJECTED': 'Pago Rechazado',
-    'CANCELLED': 'Cancelado',
+    'CANCELLED': 'Pago Cancelado',
+    'REFUNDED': 'Pago reembolsado',
     'UNKNOWN': 'Pendiente de Pago'
   };
 

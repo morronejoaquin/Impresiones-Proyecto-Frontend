@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import Page from '../../models/PageModel/page';
 import PaymentCreateRequest from '../../models/Payment/paymentCreateRequest';
 import PaymentStatusUpdateRequest from '../../models/Payment/paymentStatusUpdateRequest';
+import PaymentRefundRequest from '../../models/Payment/paymentRefundRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +48,9 @@ export class PaymentService {
 
   updatePaymentStatus(cartId: string, request: PaymentStatusUpdateRequest): Observable<PaymentResponse>{
     return this.http.patch<PaymentResponse>(`${this.apiUrl}/${cartId}/update-status`, request)
+  }
+
+  refundPayment(cartId: string, request: PaymentRefundRequest): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${cartId}/refund`, request);
   }
 }

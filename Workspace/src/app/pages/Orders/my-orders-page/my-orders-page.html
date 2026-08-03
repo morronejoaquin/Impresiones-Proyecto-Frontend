@@ -61,7 +61,7 @@
           <div class="order-header">
             <div class="order-info-main">
               <span class="order-date">{{ getFormattedDate(order.admReceivedAt) }}</span>
-              <span class="order-id-label">Seguimiento: {{ order.cartId }}</span>
+              <span class="order-id-label">Seguimiento: {{ order.cartId.toString().substring(0,16) }}</span>
             </div>
             <div class="status-group">
               <span class="badge payment-badge" [class]="'pay-' + (order.paymentStatus || 'PENDING').toLowerCase()">
@@ -114,6 +114,10 @@
                   <span class="material-icons">close</span>
                   Cancelar
                 </button>
+              }
+
+              @if (order.paymentStatus === 'APPROVED') {
+                <span class="info-msg">Para reembolsos comuniquese con nosotros a través de WhatsApp.</span>
               }
               
               <div class="total-section">

@@ -35,7 +35,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       
-      // 3. Si es una petición de autenticación (login/registro), no se maneja acá
+      // 3. Si es una petición de autenticación no se maneja acá
       if (isAuthLoginOrRegister) {
         return throwError(() => error);
       }
@@ -50,17 +50,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       let errorBody = error.error;
 
       if (errorBody) {
-        // Si por alguna razón el body viene como un string que contiene JSON plano, intentamos parsearlo
         if (typeof errorBody === 'string') {
           try {
             errorBody = JSON.parse(errorBody);
           } catch (e) {
-            // Si no es un JSON válido, asumimos que es el mensaje de texto plano directamente
             message = errorBody;
           }
         }
 
-        // Si ya es un objeto (o se pudo parsear), extraemos el texto limpio priorizando 'mensaje'
         if (typeof errorBody === 'object' && errorBody !== null) {
           message = errorBody.mensaje || errorBody.error || errorBody.message || message;
         }

@@ -71,6 +71,16 @@
               Confirmar Pago
             </button>
           }
+
+          @if (c.paymentStatus === 'APPROVED') {
+            <button 
+              class="btn-small-refund" 
+              (click)="onRefundPayment()"
+              [disabled]="isUpdating || c.status === orderStatusEnum.CANCELLED">
+              <span class="material-icons">replay</span>
+              Reembolsar
+            </button>
+          }
         </div>
       </div>
 
