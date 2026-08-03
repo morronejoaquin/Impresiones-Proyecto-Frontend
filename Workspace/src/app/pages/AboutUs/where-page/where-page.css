@@ -81,14 +81,28 @@
 
 .content-wrapper {
   background: white;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  padding: 3rem 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
 }
 
 .contact-header {
   text-align: center;
   margin-bottom: 3rem;
+}
+
+.header-badge {
+  width: 50px;
+  height: 50px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.1);
 }
 
 .contact-header h2 {
@@ -103,60 +117,66 @@
   font-size: 1.1rem;
 }
 
+/* Grid de Información */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  gap: 1.5rem;
   margin-bottom: 3rem;
 }
 
 .info-item {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 1.5rem;
+  gap: 1.25rem;
+  padding: 1.75rem;
   background: #f8fafc;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid #f1f5f9;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
 }
 
 .info-item:hover {
   border-color: #cbd5e1;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
 }
 
 .icon-circle {
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   background: white;
-  border-radius: 50%;
+  color: #2563eb;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
 }
 
-.info-item h3 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1rem;
-  color: #475569;
+.info-content h3 {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.85rem;
+  color: #64748b;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
-.info-item p {
+.info-content p {
   margin: 0;
   color: #1e293b;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.5;
+  font-size: 1.05rem;
 }
 
+/* Sección de Redes Sociales */
 .social-section {
   text-align: center;
-  border-top: 2px solid #f1f5f9;
-  padding-top: 2rem;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 2.5rem;
 }
 
 .social-section h3 {
@@ -164,6 +184,8 @@
   color: #64748b;
   font-size: 0.9rem;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
 .social-buttons {
@@ -174,32 +196,29 @@
 }
 
 .btn-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   text-decoration: none;
   color: white;
-  padding: 10px 24px;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 0.95rem;
-  transition: all 0.2s;
-  min-width: 140px;
+  transition: all 0.2s ease;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.whatsapp { 
-  background-color: #25D366; 
-}
-
-.facebook { 
-  background-color: #1877F2; 
-}
-
-.instagram { 
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
-}
+.whatsapp { background-color: #25D366; }
+.facebook { background-color: #1877F2; }
+.instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
 .btn-social:hover {
   transform: translateY(-3px);
-  filter: brightness(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
