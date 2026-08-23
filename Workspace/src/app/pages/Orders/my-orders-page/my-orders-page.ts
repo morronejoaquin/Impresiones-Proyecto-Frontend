@@ -57,7 +57,7 @@ export class MyOrdersPage implements OnInit {
     'APPROVED': 'Pago Aprobado',
     'REJECTED': 'Pago Rechazado',
     'CANCELLED': 'Pago Cancelado',
-    'REFUNDED': 'Pago reembolsado',
+    'REFUNDED': 'Pago Reembolsado',
     'UNKNOWN': 'Pendiente de Pago'
   };
 
@@ -184,12 +184,12 @@ export class MyOrdersPage implements OnInit {
   }
 
   getBindingText(binding?: string): string {
-    if (!binding) return 'Sin anillado';
+    if (!binding) return 'Sin terminación';
 
     const bindingMap: { [key: string]: string } = {
       RINGED: 'Anillado',
       STAPLED: 'Abrochado',
-      NONE: 'Sin anillar',
+      NONE: 'Sin terminación',
     };
 
     return bindingMap[binding] || binding;

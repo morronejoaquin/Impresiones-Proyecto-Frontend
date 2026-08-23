@@ -28,15 +28,6 @@ export class AccountPage implements OnInit {
 
   showOldPassword = false;
   showNewPassword = false;
-  showConfirmPassword = false;
-
-  passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('newPassword');
-    const confirmPassword = control.get('confirmPassword');
-    return password && confirmPassword && password.value !== confirmPassword.value 
-      ? { passwordMismatch: true } 
-      : null;
-  };
 
   toggleOldPasswordVisibility() { 
     this.showOldPassword = !this.showOldPassword; 
@@ -44,10 +35,6 @@ export class AccountPage implements OnInit {
 
   toggleNewPasswordVisibility() { 
     this.showNewPassword = !this.showNewPassword; 
-  }
-
-  toggleConfirmPasswordVisibility() { 
-    this.showConfirmPassword = !this.showConfirmPassword; 
   }
 
   constructor(
@@ -72,8 +59,7 @@ export class AccountPage implements OnInit {
         Validators.maxLength(18), 
         Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)
       ]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator });
+    });
   }
 
   ngOnInit(): void {

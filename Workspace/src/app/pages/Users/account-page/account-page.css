@@ -323,7 +323,7 @@ input:disabled + .slider {
   margin-top: 20px;
 }
 
-.password, .password-confirm {
+.password {
   border: none;
   padding: 0;
   margin: 0;
@@ -358,7 +358,7 @@ input:disabled + .slider {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.password-button, .password-button-confirm {
+.password-button {
   position: absolute;
   display: flex;
   align-items: center;
@@ -372,15 +372,13 @@ input:disabled + .slider {
   padding: 4px;
 }
 
-.password-button .material-icons, 
-.password-button-confirm .material-icons {
+.password-button .material-icons {
   font-size: 1.4rem;
   color: #64748b;
   transition: color 0.2s;
 }
 
-.password-button:hover .material-icons, 
-.password-button-confirm:hover .material-icons {
+.password-button:hover .material-icons {
   color: #1e293b;
 }
 

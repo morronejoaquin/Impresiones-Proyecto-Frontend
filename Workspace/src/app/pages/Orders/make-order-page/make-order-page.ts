@@ -58,7 +58,7 @@ export class MakeOrderPage implements OnInit {
       doubleSided: [false],
       binding: ['NONE', [Validators.required]],
       color: [false],
-      comments: [''],
+      comments: ['', [Validators.maxLength(200)]],
       file: [null],
       amount: [0],
     });

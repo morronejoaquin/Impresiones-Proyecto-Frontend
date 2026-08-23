@@ -348,6 +348,26 @@
   color: #64748b;
 }
 
+.btn-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.whatsapp { 
+  background-color: #25D366; 
+}
+
 .total-amount {
   font-size: 1.4rem;
   font-weight: 800;

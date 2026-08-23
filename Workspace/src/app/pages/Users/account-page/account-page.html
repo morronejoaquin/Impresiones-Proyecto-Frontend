@@ -169,27 +169,6 @@
                 </fieldset>
               </div>
 
-              <div class="form-group full-width">
-                <label>Confirmar Nueva Contraseña</label>
-                <fieldset class="password-confirm">
-                  <div class="password-field-wrapper">
-                    <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirmar nueva contraseña" />
-
-                    <button class="password-button-confirm" type="button" (click)="toggleConfirmPasswordVisibility()">
-                      <span class="material-icons">
-                        {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
-                      </span>
-                    </button>
-                  </div>
-
-                  @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('required')) {
-                    <small class="error-message">Debes confirmar la contraseña</small>
-                  } @else if (passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched) {
-                    <small class="error-message">Las contraseñas no coinciden</small>
-                  }
-                </fieldset>
-              </div>
-
               <div class="form-actions">
                 <button type="button" class="btn-cancel" (click)="toggleChangePassword()" [disabled]="isSavingPassword">
                   Cancelar

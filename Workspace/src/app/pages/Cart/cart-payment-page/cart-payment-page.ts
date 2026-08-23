@@ -65,10 +65,10 @@ export class CartPaymentPage implements OnInit{
   }
 
   getBindingText(binding?: string): string {
-    if (!binding) return 'Sin anillado';
+    if (!binding) return 'Sin terminación';
 
     const options: { [key: string]: string } = {
-      'NONE': 'Sin anillar',
+      'NONE': 'Sin terminación',
       'RINGED': 'Anillado',
       'STAPLED': 'Abrochado'
     };

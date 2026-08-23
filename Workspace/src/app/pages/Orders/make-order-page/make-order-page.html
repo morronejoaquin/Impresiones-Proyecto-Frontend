@@ -57,7 +57,7 @@
   <div class="options-grid" [class.is-locked]="(!isPdf || !editingOrderId) && orderForm.get('pages')?.value <= 1">
     <div class="checkbox-card">
       <label class="form-label" for="doubleSided">
-        Doble cara <span class="material-icons">import_export</span>
+        Doble faz <span class="material-icons">import_export</span>
       </label>
       <div class="checkbox-input-wrapper">
         <input type="checkbox" id="doubleSided" formControlName="doubleSided">
@@ -68,12 +68,12 @@
         }
       </div>
       @if (isPdf && orderForm.get('pages')?.value === 1) {
-        <small class="info-msg">* Doble cara no disponible.</small>
+        <small class="info-msg">* Doble faz no disponible.</small>
       }
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="binding">Anillado / Terminación</label>
+      <label class="form-label" for="binding">Terminación</label>
       <select id="binding" formControlName="binding" [attr.disabled]="isPdf ? null : true">
         <option value="NONE">Ninguno</option>
    
@@ -112,6 +112,9 @@
   <div class="form-group">
     <label class="form-label" for="comments">Instrucciones especiales</label>
     <textarea id="comments" formControlName="comments" placeholder="Ej: Anillar por el margen izquierdo..."></textarea>
+    @if (orderForm.get('comments')?.hasError('maxlength')) {
+      <small class="error-msg">El mensaje es demasiado largo</small>
+    }
   </div>
 
   <div class="form-footer">

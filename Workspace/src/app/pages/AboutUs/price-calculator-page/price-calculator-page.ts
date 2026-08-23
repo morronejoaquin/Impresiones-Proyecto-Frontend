@@ -24,7 +24,7 @@ export class PriceCalculatorPage implements OnInit, OnDestroy {
   bindingOptions = [
     { value: BindingTypeEnum.NONE, label: 'Ninguno' },
     { value: BindingTypeEnum.RINGED, label: 'Anillado' },
-    { value: BindingTypeEnum.STAPLED, label: 'Grapado' }
+    { value: BindingTypeEnum.STAPLED, label: 'Abrochado' }
   ];
 
   private destroy$ = new Subject<void>();

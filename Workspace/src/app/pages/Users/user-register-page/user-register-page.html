@@ -70,20 +70,6 @@
       </div>
     </fieldset>
 
-    <fieldset class="password-confirm">
-      <input [type]="showPasswordConfirm ? 'text' : 'password'" formControlName="confirmPassword" type="password" placeholder="Confirmar Contraseña" />
-
-      <button class="password-button-confirm" type="button" (click)="togglePasswordConfirmVisibility()" >
-        <span class="material-icons">
-          {{ showPasswordConfirm ? 'visibility_off' : 'visibility' }}
-        </span>
-      </button>
-
-      @if (registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')) {
-        <small class="error-message">Las contraseñas no coinciden</small>
-      }
-    </fieldset>
-
     <fieldset class="checkbox-container">
       <label class="checkbox-label">
         <input type="checkbox" formControlName="notificationsEnabled" />

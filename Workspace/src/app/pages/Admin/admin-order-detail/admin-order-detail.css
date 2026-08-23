@@ -406,7 +406,7 @@
     align-items: center;
   }
 
-  .btn-small-approve {
+  .btn-small-approve, .btn-small-refund {
     align-self: center;
   }
 }

@@ -16,23 +16,9 @@ export class UserRegisterPage implements OnInit {
   errorMessage: string | null = null;
 
   showPassword = false;
-  showPasswordConfirm = false;
-
-  // Validador personalizado para confirmar contraseña
-  passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('password');
-    const confirmPassword = control.get('confirmPassword');
-    return password && confirmPassword && password.value !== confirmPassword.value 
-      ? { passwordMismatch: true } 
-      : null;
-  };
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
-  }
-
-  togglePasswordConfirmVisibility() {
-    this.showPasswordConfirm = !this.showPasswordConfirm;
   }
 
   constructor(
@@ -48,9 +34,8 @@ export class UserRegisterPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(15)]], 
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(18), Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)]],
-      confirmPassword: ['', Validators.required],
       notificationsEnabled: [true]
-    }, { validators: this.passwordMatchValidator });
+    });
   }
 
   passwordRequirements = [
