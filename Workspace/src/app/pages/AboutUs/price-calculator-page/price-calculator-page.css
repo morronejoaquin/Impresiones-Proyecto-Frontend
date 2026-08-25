@@ -86,6 +86,12 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+.info-msg {
+  color: #666;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
 .toggle-group {
   display: flex;
   background: #f1f5f9;

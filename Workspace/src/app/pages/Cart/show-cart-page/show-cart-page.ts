@@ -146,6 +146,10 @@ export class ShowCartPage implements OnInit, OnDestroy {
 private finalizarEliminacionLocal(id: string): void {
   this.orders = [...this.orders.filter(o => o.id !== id)];
   
+  if (this.orders.length === 0) {
+    this.errorType = 'EMPTY';
+  }
+
   this.itemToDeleteId = null;
   this.isDeleting = false;
   

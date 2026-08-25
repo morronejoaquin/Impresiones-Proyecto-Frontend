@@ -33,14 +33,14 @@ export class UserRegisterPage implements OnInit {
       surname: ['', [Validators.required, Validators.maxLength(30)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(15)]], 
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(18), Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(60), Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)]],
       notificationsEnabled: [true]
     });
   }
 
   passwordRequirements = [
     { label: 'Al menos 8 caracteres', regex: /.{8,}/ },
-    { label: 'Máximo 18 caracteres', regex: /^.{1,18}$/ },
+    { label: 'Máximo 60 caracteres', regex: /^.{1,60}$/ },
     { label: 'Una mayúscula', regex: /[A-ZÑ]/ },
     { label: 'Una minúscula', regex: /[a-zñ]/ },
     { label: 'Un número', regex: /\d/ },

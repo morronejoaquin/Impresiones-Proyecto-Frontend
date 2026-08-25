@@ -56,7 +56,7 @@ export class AccountPage implements OnInit {
       newPassword: ['', [
         Validators.required, 
         Validators.minLength(8), 
-        Validators.maxLength(18), 
+        Validators.maxLength(60), 
         Validators.pattern(/^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñA-ZÑ\d@$!%*?&]{8,}$/)
       ]],
     });
@@ -69,7 +69,7 @@ export class AccountPage implements OnInit {
 
   passwordRequirements = [
     { label: 'Al menos 8 caracteres', regex: /.{8,}/ },
-    { label: 'Máximo 18 caracteres', regex: /^.{1,18}$/ },
+    { label: 'Máximo 60 caracteres', regex: /^.{1,60}$/ },
     { label: 'Una mayúscula', regex: /[A-ZÑ]/ },
     { label: 'Una minúscula', regex: /[a-zñ]/ },
     { label: 'Un número', regex: /\d/ },

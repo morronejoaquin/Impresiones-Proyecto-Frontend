@@ -13,11 +13,17 @@
           <div class="form-group">
             <label class="form-label">Cantidad de Páginas</label>
             <input type="number" formControlName="pages" class="form-control" placeholder="1">
+            @if (calculatorForm.get('pages')?.hasError('max')) {
+              <small class="info-msg">Máximo 10000 páginas</small>
+            }
           </div>
 
           <div class="form-group">
             <label class="form-label">Cantidad de Copias</label>
             <input type="number" formControlName="copies" class="form-control" placeholder="1">
+            @if (calculatorForm.get('copies')?.hasError('max')) {
+              <small class="info-msg">Máximo 10000 copias</small>
+            }
           </div>
         </div>
 

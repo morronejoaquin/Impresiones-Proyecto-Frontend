@@ -102,6 +102,8 @@
   font-size: 0.9rem;
   color: #1e293b;
   margin-bottom: 4px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .chips-group {

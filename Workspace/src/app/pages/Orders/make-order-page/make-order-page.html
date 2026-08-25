@@ -51,6 +51,9 @@
         Copias <span class="material-icons sm-icon">content_copy</span>
       </label>
         <input type="number" id="copies" formControlName="copies" min="1">
+        @if (orderForm.get('copies')?.hasError('max')) {
+          <small class="info-msg">Máximo 10000 copias</small>
+        }
     </div>
   </div>
 
